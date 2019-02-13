@@ -1,0 +1,22 @@
+<page-header title="Settings"></page-header>
+
+<div class="page-content">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4" *ngFor="let model of models" (click)="gotoSetting(model)">
+            <div class="card settings-box">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3">
+                            <i class="fa-3x left" [ngClass]="model.icon"></i>
+                        </div>
+                        <div class="col-sm-12 col-md-9">
+                            <b>{{model.label}}</b>
+                            <br> <span class="truncate">{{model.description}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</div>

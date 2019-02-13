@@ -1,0 +1,13 @@
+.btn-flat {
+    border: none;
+    cursor: pointer;
+}
+
+.abc-checkbox label {
+    display: inline-block;
+}
+
+.fixed-height {
+    height: 350px;
+    overflow: auto;
+}

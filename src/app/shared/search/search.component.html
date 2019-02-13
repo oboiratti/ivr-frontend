@@ -1,0 +1,59 @@
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle float-right" type="button" id="dropdownMenu2" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">
+    <i class="fa fa-search"></i> Search
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenu2" (click)="$event.stopPropagation()">
+    <form [formGroup]="form">
+      <div class="row mx-2 mt-2">
+        <div class="col-sm-12 col-md-3 pr-0 mb-2">
+          <select class="form-control" formControlName="param" *ngIf="filters.length > 0">
+            <option *ngFor="let filter of filters" [ngValue]="filter">{{filter.label}}</option>
+          </select>
+        </div>
+
+        <div class="col-sm-12 col-md-3 pr-0 mb-2">
+          <select class="form-control" formControlName="operation">
+            <option *ngFor="let operation of operations" [ngValue]="operation">{{operation.label}}</option>
+          </select>
+        </div>
+
+        <div class="col-sm-12 col-md-4 pr-0 mb-2">
+          <input type="text" class="form-control" placeholder="Value" formControlName="value" *ngIf="param.value?.type === 'text'"
+            [class.invalid-input]="value.dirty && value.invalid">
+          <select class="form-control" formControlName="value" *ngIf="param.value?.type === 'select'"
+            [class.invalid-input]="value.dirty && value.invalid">
+            <option value="">Select</option>
+            <option [ngValue]="obj.id" *ngFor="let obj of lookups[param.value?.lookupStore]">{{obj.name}}</option>
+          </select>
+          <input type="number" class="form-control" placeholder="Value" formControlName="value" *ngIf="param.value?.type === 'number'"
+            [class.invalid-input]="value.dirty && value.invalid">
+          <input type="date" class="form-control" formControlName="value" *ngIf="param.value?.type === 'date'" [class.invalid-input]="value.dirty && value.invalid">
+          <div class="invalid-msg" *ngIf="value.dirty && value.errors">
+            This field is required
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-2">
+          <button type="button" class="btn btn-info btn-sm rounded-circle" *ngIf="param.value?.type" (click)="addToList()">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="invalid-msg mx-3" *ngIf="isDuplicate">
+        {{param.value.label}} has already been added
+      </div>
+
+      <div class="mx-3 my-3">
+        <span class="badge badge-secondary mr-2" *ngFor="let l of list; let i = index">
+          {{l.param.label}} {{l.operation.value}} {{l.value}} <i class="fa fa-close" (click)="remove(i)"></i>
+        </span>
+      </div>
+
+      <div class="mx-3">
+        <button type="button" class="btn btn-success btn-block" (click)="submit()">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

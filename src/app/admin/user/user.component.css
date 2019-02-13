@@ -1,0 +1,15 @@
+label {
+    font-size: 1rem;
+}
+
+.card-panel {
+    padding: 12px
+}
+
+.input-field .float-label {
+    -webkit-transform: translateY(-14px) scale(0.8) !important;
+    transform: translateY(-14px) scale(0.8) !important;
+    -webkit-transform-origin: 0 0 !important;
+    transform-origin: 0 0 !important;
+    font-size: 17px;
+}

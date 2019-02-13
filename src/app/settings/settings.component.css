@@ -1,0 +1,16 @@
+.settings-box {
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.settings-label {
+    margin-left: 75px;
+}
+
+.truncate {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden
+}

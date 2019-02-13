@@ -1,0 +1,120 @@
+$navbar-color: linear-gradient(120deg, #3085d6, #f1a2a2);
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    overflow: auto;
+    transition: all 0.3s;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12), 0 3px 1px -2px rgba(0,0,0,.2);
+
+    .user-view {
+        padding: 32px 10px;
+        background: $navbar-color;
+    }
+
+    .image {
+        width: 50px;
+    }
+
+    .user-info {
+        font-size: 14px;
+        line-height: 24px;
+        color: #fff;
+        font-weight: 500;
+    }
+
+    .truncate-text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .nav {
+        a {
+            color: #728196;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 35px;
+            border-bottom: solid 1px #ddd;
+        }
+
+        i {
+            margin-right: 20px;
+            color: #638dc9;
+        }
+    }
+
+    li > a:hover {
+        color: #3a97f9!important;
+    }
+
+    .active {
+        border-right: solid 5px #e4b7b8;
+        background-color: rgba(0, 0, 0, 0.05);
+        
+        a {
+            color: #e65d5f!important;
+        }
+    }
+}
+
+.sidebar.toggle {
+    margin-left: -250px;
+}
+
+.main-content {
+    position: relative;
+    // width: calc(100% - 250px);
+    width: 100%;
+    min-height: 92vh;
+    // right: 0;
+    margin-left: 250px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.main-content.toggle {
+    width: 100%;
+    margin-left: 0px;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+        z-index: 2000;
+    }
+
+    .sidebar.toggle {
+        margin-left: 0px;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 1998;
+        opacity: 0;
+        transition: all 0.5s ease-in-out;
+    }
+    
+    .overlay.toggle {
+        display: block;
+        opacity: 0.5;
+    }
+}

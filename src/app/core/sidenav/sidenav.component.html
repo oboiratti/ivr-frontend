@@ -1,0 +1,28 @@
+<div class="wrapper">
+  <nav class="sidebar" *ngIf="authenticated" #sidebar>
+    <div class="user-view">
+      <div class="row">
+        <div class="col-sm-4">
+          <img class="img-fluid rounded-circle image" src="../assets/images/user_default.png">
+        </div>
+        <div class="col-sm-8 user-info">
+          <div class="truncate-text">{{username}}</div>
+          <div class="truncate-text">{{email}}</div>
+        </div>
+      </div>
+    </div>
+    <ul class="nav flex-column flex-nowrap">
+      <li class="nav-item" *ngFor="let menu of menus" routerLinkActive="active">
+        <a class="nav-link" routerLink="{{menu.route}}">
+          <i [ngClass]="menu.icon"></i> {{menu.label}}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content" #content>
+    <router-outlet></router-outlet>
+  </main>
+
+  <div class="overlay" #overlay></div>
+</div>

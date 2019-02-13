@@ -1,0 +1,125 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/css/variables.scss";
+
+body {
+    padding-top: 53px;
+    background-color: #f5f5f5;
+}
+
+label {
+    font-size: $font-size-base!important;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    padding-top: 100px;
+    padding-right: 10px;
+    border-left: 1px solid #F9F9F9;
+    border-right: 1px solid #F9F9F9;
+    -ms-background-clip: padding-box;
+    background-clip: padding-box;
+    background-color: #d0cece;
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.07);
+    -webkit-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+}
+
+
+::-webkit-scrollbar-button {
+    height: 0;
+    width: 0;
+}
+
+::-webkit-scrollbar-track {
+    -ms-background-clip: padding-box;
+    background-clip: padding-box;
+    background-color: #F5F5F5;
+}
+
+.page-header {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #e4e5e7;
+    /* border-radius: 4px; */
+    box-shadow: 0px 1px 9px #ddd !important;
+}
+
+.page-content {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.table {
+    margin-bottom: 0!important
+}
+
+.table-index {
+    width: 40px;
+    text-align: center;
+}
+
+.btn {
+    margin-right: 10px;
+}
+
+.card-footer {
+    padding: 0.75rem;
+}
+
+.invalid-msg {
+    padding: 10px;
+    color: red !important;
+    font-size: 12px !important;
+    text-align: left;
+}
+
+.invalid-input {
+    border: solid 1px red !important;
+}
+
+.invalid-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(251, 199, 204, 0.78)!important;
+}
+
+@media screen and (max-width: 500px) {
+    .card-table-sm {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left:-9999px
+        }
+        td {
+            position: relative;
+            padding-left: 50%!important;
+            border-top: none!important;
+        }
+        td:before {
+            position: absolute;
+            left: 10px;
+            content: attr(data-th);
+            font-weight: bold;
+        }
+    
+        td:first-child {
+            display: none
+        }
+    
+        td:last-child {
+            margin-bottom: 10px;
+            border-bottom: 2px dashed #5a5a5a;
+        }
+    }
+}
