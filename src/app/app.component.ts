@@ -1,14 +1,9 @@
 import { Component, OnInit, Renderer2, ElementRef, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { startWith, delay } from "rxjs/operators";
+import { Router, NavigationEnd } from '@angular/router';
+import { startWith, delay, filter } from "rxjs/operators";
 import { AuthService } from './auth/auth.service';
-import { Route } from './shared/constants';
-
-export interface IMenuItem {
-  label: string
-  route: string
-  icon: string
-}
+import { RouteNames } from './shared/constants';
+import { IMenuItem } from './shared/common-entities.model';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +12,7 @@ export interface IMenuItem {
 })
 export class AppComponent implements OnInit {
   menus: IMenuItem[];
+  submenus: IMenuItem[];
   loading: boolean;
   isLoggedIn: boolean
   name: string
@@ -27,7 +23,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.checkLogin();
     this.setMenuItems();
-    this.setName()
+    //this.setName()
   }
 
   checkLogin() {
@@ -57,10 +53,12 @@ export class AppComponent implements OnInit {
 
   private setMenuItems() {
     this.menus = [
-      { label: "Dashboard", route: Route.dashboard, icon: "fa fa-dashboard fa-lg" },
-      { label: "Settings", route: Route.settings, icon: "fa fa-cogs fa-lg" },
-      { label: "Roles", route: Route.roles, icon: "fa fa-cubes fa-lg" },
-      { label: "Users", route: Route.users, icon: "fa fa-users fa-lg" }
+      { label: "Dashboard", route: RouteNames.dashboard, icon: "fa fa-home fa-lg" },
+      { label: "Subscribers", route: RouteNames.subscriber, icon: "fa fa-users fa-lg" },
+      { label: "Content", route: RouteNames.roles, icon: "fa fa-object-group fa-lg" },
+      { label: "Campaigns", route: RouteNames.roles, icon: "fa fa-bullhorn fa-lg" },
+      { label: "Account", route: RouteNames.profile, icon: "fa fa-user fa-lg" },
+      { label: "Help", route: RouteNames.users, icon: "fa fa-question-circle-o fa-lg" }
     ];
   }
 }

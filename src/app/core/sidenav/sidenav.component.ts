@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
-import { IMenuItem } from '../../app.component';
 import { AuthService } from '../../auth/auth.service';
+import { IMenuItem } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-sidenav',

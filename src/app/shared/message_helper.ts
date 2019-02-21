@@ -38,28 +38,28 @@ export class Toast {
 
 export class MessageDialog {
     static success(message: string) {
-        swal("Success", message, "success");
+        swal.fire("Success", message, "success");
     }
 
     static error(message: string) {
-        swal("Error", message, "error");
+        swal.fire("Error", message, "error");
     }
 
     static info(message: string) {
-        swal("Info", message, "info");
+        swal.fire("Info", message, "info");
     }
 
     static warning(message: string) {
-        swal("Warning", message, "warning");
+        swal.fire("Warning", message, "warning");
     }
 
     static show(message: string, success: boolean) {
         let type: SweetAlertType = success ? "success" : "error";
-        swal(type.toUpperCase(), message, type);
+        swal.fire(type.toUpperCase(), message, type);
     }
 
     static confirm(title: string, message: string) {
-        return swal({
+        return swal.fire({
             title: title,
             text: message,
             type: "warning",

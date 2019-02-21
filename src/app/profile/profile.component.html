@@ -1,12 +1,16 @@
 <page-header title="Profile"></page-header>
 
 <div class="page-content">
-    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Profile Links">
-        <button type="button" class="btn btn-outline-secondary" routerLink="profile-form" routerLinkActive="active">Edit Profile</button>
-        <button type="button" class="btn btn-outline-secondary" routerLink="change-password" routerLinkActive="active">Change Password</button>
-      </div>
+  <div class="text-center">
+    <div class="btn-group" role="group" aria-label="Profile Links">
+      <button type="button" class="btn btn-outline-secondary" routerLink="profile-form" routerLinkActive="active">Edit
+        Profile</button>
+      <button type="button" class="btn btn-outline-secondary" routerLink="change-password"
+        routerLinkActive="active">Change Password</button>
+    </div>
+  </div>
 
-      <div class="col-sm-12 col-md-10 offset-md-1 mt-3">
-        <router-outlet></router-outlet>
-      </div>
+  <div class="col-sm-12 col-md-10 offset-md-1 mt-3">
+    <router-outlet></router-outlet>
+  </div>
 </div>

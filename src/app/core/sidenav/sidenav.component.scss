@@ -1,4 +1,5 @@
-$navbar-color: linear-gradient(120deg, #3085d6, #f1a2a2);
+$sidebar-top-color: #992e77;
+$sidebar-text-color: #59334d;
 
 .wrapper {
     display: flex;
@@ -7,7 +8,7 @@ $navbar-color: linear-gradient(120deg, #3085d6, #f1a2a2);
 
 .sidebar {
     position: fixed;
-    width: 250px;
+    width: 180px;
     height: 100%;
     overflow: auto;
     transition: all 0.3s;
@@ -15,60 +16,39 @@ $navbar-color: linear-gradient(120deg, #3085d6, #f1a2a2);
     background-color: #fff;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12), 0 3px 1px -2px rgba(0,0,0,.2);
 
-    .user-view {
+    .logo {
         padding: 32px 10px;
-        background: $navbar-color;
+        background: $sidebar-top-color;
     }
 
     .image {
-        width: 50px;
-    }
-
-    .user-info {
-        font-size: 14px;
-        line-height: 24px;
-        color: #fff;
-        font-weight: 500;
-    }
-
-    .truncate-text {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        width: 100%;
-        overflow: hidden;
+        width: 100px;
     }
 
     .nav {
         a {
-            color: #728196;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 35px;
-            border-bottom: solid 1px #ddd;
+            color: $sidebar-text-color;
+            font-size: 13px;
+            line-height: 50px;
+            text-transform: uppercase;
         }
 
         i {
             margin-right: 20px;
-            color: #638dc9;
+            color: $sidebar-text-color;
         }
-    }
-
-    li > a:hover {
-        color: #3a97f9!important;
     }
 
     .active {
-        border-right: solid 5px #e4b7b8;
-        background-color: rgba(0, 0, 0, 0.05);
-        
-        a {
-            color: #e65d5f!important;
-        }
+        border-left: solid 5px #992e77;
+        border-top-left-radius: 5px;
+        //border-bottom-left-radius: 5px;
+        background: linear-gradient(to right, rgba(243, 49, 121, 0.102), rgba(255, 255, 255, 0.102));
     }
 }
 
 .sidebar.toggle {
-    margin-left: -250px;
+    margin-left: -180px;
 }
 
 .main-content {
@@ -77,9 +57,10 @@ $navbar-color: linear-gradient(120deg, #3085d6, #f1a2a2);
     width: 100%;
     min-height: 92vh;
     // right: 0;
-    margin-left: 250px;
+    margin-left: 180px;
     overflow: hidden;
     transition: all 0.3s;
+    //padding-top: 53px;
 }
 
 .main-content.toggle {
@@ -89,7 +70,7 @@ $navbar-color: linear-gradient(120deg, #3085d6, #f1a2a2);
 
 @media (max-width: 768px) {
     .sidebar {
-        margin-left: -250px;
+        margin-left: -180px;
         z-index: 2000;
     }
 

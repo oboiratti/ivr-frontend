@@ -6,32 +6,29 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
 import { GeneralLookupComponent } from './settings/general-lookup/general-lookup.component';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { Route } from "./shared/constants";
+import { RouteNames } from "./shared/constants";
+import { SubscriberListComponent } from './subscriber/subscriber-list/subscriber-list.component';
+import { SubscriberComponent } from './subscriber/subscriber.component';
 
 const routes: Routes = [
   {
-    path: Route.login,
+    path: RouteNames.login,
     component: LoginComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: Route.dashboard,
+    path: RouteNames.dashboard,
     component: DashboardComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: Route.settings,
-    component: SettingsComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: Route.genericSettings,
+    path: RouteNames.genericSettings,
     component: GeneralLookupComponent,
     canActivate: [AuthGuard]
   },
   {
     path: '',
-    redirectTo: `/${Route.dashboard}`,
+    redirectTo: `/${RouteNames.dashboard}`,
     pathMatch: 'full'
   },
   {

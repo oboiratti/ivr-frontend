@@ -19,6 +19,7 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { ProfileModule } from './profile/profile.module';
 import { AdminModule } from './admin/admin.module';
+import { SubscriberModule } from './subscriber/subscriber.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { AdminModule } from './admin/admin.module';
     SharedModule,
     AdminModule,
     ProfileModule,
+    SubscriberModule,
     CoreModule,
     BlockUIModule.forRoot()
   ],

@@ -19,3 +19,20 @@ export interface QueryPager {
 export interface ModelQuery {
     pager: QueryPager;
 }
+
+export interface IMenuItem {
+    label: string
+    route: string
+    icon: string
+}
+
+export interface Lookup {
+    id: number
+    name: string
+}
+
+export interface Region extends Lookup {}
+
+export interface District extends Lookup {
+    region: Region
+}

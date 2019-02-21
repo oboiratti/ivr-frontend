@@ -1,0 +1,150 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase form-header-text">Subscriber Form</div>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col-sm-12 col-md-10 offset-md-1">
+    <form [formGroup]="form">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Phone Number</label>
+              <input type="text" class="form-control" formControlName="phonenumber"
+                [class.is-invalid]="phonenumber.dirty && phonenumber.invalid">
+              <div class="invalid-feedback" *ngIf="phonenumber.dirty && phonenumber.invalid">
+                <div *ngIf="phonenumber.errors.required">
+                  This field is required
+                </div>
+                <div *ngIf="phonenumber.errors.pattern">
+                  Phone number must start with 0 and must be 10 digits long
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Name</label>
+              <input type="text" class="form-control" formControlName="name"
+                [class.is-invalid]="name.dirty && name.invalid">
+              <div class="invalid-feedback" *ngIf="name.dirty && name.invalid">
+                <div *ngIf="name.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Preferred Language</label>
+              <select class="form-control" formControlName="language"
+                [class.is-invalid]="language.dirty && language.invalid">
+                <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="language.dirty && language.invalid">
+                <div *ngIf="language.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Gender</label><br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" class="custom-control-input" value="Male"
+                  formControlName="gender">
+                <label class="custom-control-label" for="customRadioInline1">Male</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" class="custom-control-input" value="Female"
+                  formControlName="gender">
+                <label class="custom-control-label" for="customRadioInline2">Female</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>District</label>
+              <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id" placeholder="Select District" [clearable]="false" 
+                formControlName="district" [class.is-invalid]="district.dirty && district.invalid"></ng-select>
+              <div class="invalid-feedback" *ngIf="district.dirty && district.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Location</label>
+              <input type="text" class="form-control" formControlName="location"
+                [class.is-invalid]="location.dirty && location.invalid">
+              <div class="invalid-feedback" *ngIf="location.dirty && location.invalid">
+                <div *ngIf="location.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Start Date</label>
+              <input type="date" class="form-control" formControlName="startdate"
+                [class.is-invalid]="startdate.dirty && startdate.invalid">
+              <div class="invalid-feedback" *ngIf="startdate.dirty && startdate.invalid">
+                <div *ngIf="startdate.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Receive</label><br>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" id="customcheckboxInline1" name="customcheckboxInline1"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="customcheckboxInline1">Voice</label>
+              </div>
+              <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" id="customcheckboxInline2" name="customcheckboxInline1"
+                  class="custom-control-input">
+                <label class="custom-control-label" for="customcheckboxInline2">SMS</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Comments</label>
+              <input type="text" class="form-control" formControlName="comments">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+                <label>Subscriber Group</label>
+                <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select District" [clearable]="false" 
+                  [multiple]="true" formControlName="subscribergroups" [class.is-invalid]="subscribergroups.dirty && subscribergroups.invalid"></ng-select>
+                <!-- <div class="invalid-feedback" *ngIf="subscribergroups.dirty && subscribergroups.errors">
+                  This field is required
+                </div> -->
+              </div>
+          </div>
+
+          <div>
+            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
+              <i class="fa fa-trash"></i> Delete
+            </button> -->
+            <button type="submit" class="btn btn-primary-custom float-right" [validate-form]="form"
+              (valid)="save(form.value)">
+              <i class="fa fa-save"></i> Save
+            </button>
+            <button type="button" class="btn float-right" (click)="closeForm()">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

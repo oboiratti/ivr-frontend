@@ -1,8 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./assets/css/variables.scss";
+@import "../node_modules/toastr/toastr.scss";
 
 body {
-    padding-top: 53px;
+    //padding-top: 53px;
     background-color: #f5f5f5;
 }
 
@@ -89,6 +90,12 @@ label {
 
 .invalid-input:focus {
     box-shadow: 0 0 0 0.2rem rgba(251, 199, 204, 0.78)!important;
+}
+
+.form-header-text {
+    color: #59334d;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 @media screen and (max-width: 500px) {

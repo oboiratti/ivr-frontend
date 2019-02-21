@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-sm-12">
+    <button type="button" class="btn btn-primary-custom float-right" routerLink="form">New Subscriber</button>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="table-responsive-sm">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Start Date</th>
+              <th>Language</th>
+              <th>Content</th>
+              <th>Receive Outgoing Calls</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let subscriber of subscribers$ | async; let i = index">
+              <td>{{i + 1}}</td>
+              <td>{{subscriber.name}}</td>
+              <td>{{subscriber.phonenumber}}</td>
+              <td>{{subscriber.startdate | date:'mediumDate'}}</td>
+              <td>{{subscriber.language.name}}</td>
+              <td>
+                <i class="fa fa-volume-up"></i> &nbsp;
+                <i class="fa fa-envelope"></i>
+              </td>
+              <td>Yes</td>
+              <td>
+                <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="delete(subscriber.id)"><i class="fa fa-trash"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

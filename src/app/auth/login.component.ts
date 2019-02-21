@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      identifier: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -31,11 +31,14 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.authenticate(params).subscribe((res) => {
         this.loading = false;
-        if (res.success) {
-          this.authService.announceLogin(res.success)
-          this.authService.setUser(res.data);
+        //if (res.success) {
+          console.log(res);
+          
+          this.authService.announceLogin(true)
+          this.authService.setUser(res.user);
+          this.authService.setToken(res.jwt)
           this.router.navigate(['/dashboard']);
-        }
+        //}
       }, err => {
         this.loading = false;
         this.loginForm.reset();

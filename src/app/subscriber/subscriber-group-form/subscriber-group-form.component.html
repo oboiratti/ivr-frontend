@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase form-header-text">Group Form</div>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col-sm-12 col-md-10 offset-md-1">
+    <form [formGroup]="form">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group col-sm-12">
+              <label>Name</label>
+              <input type="text" class="form-control" formControlName="name"
+                [class.is-invalid]="name.dirty && name.invalid">
+              <div class="invalid-feedback" *ngIf="name.dirty && name.invalid">
+                <div *ngIf="name.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12">
+              <label>Description</label>
+              <textarea class="form-control" rows="3" formControlName="description"></textarea>
+              <div class="invalid-feedback" *ngIf="description.dirty && description.invalid">
+                <div *ngIf="description.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12">
+              <label>Subscribers</label>
+              <ng-select [items]="subscribers$ | async" bindLabel="phonenumber" bindValue="id" placeholder="Select Subscribers"
+                [clearable]="false" [multiple]="true" formControlName="subscribers"
+                [class.is-invalid]="subscribers.dirty && subscribers.invalid"></ng-select>
+              <!-- <div class="invalid-feedback" *ngIf="subscribers.dirty && subscribers.errors">
+                    This field is required
+                  </div> -->
+            </div>
+          </div>
+
+          <div>
+            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
+                <i class="fa fa-trash"></i> Delete
+              </button> -->
+            <button type="submit" class="btn btn-primary-custom float-right" [validate-form]="form"
+              (valid)="save(form.value)">
+              <i class="fa fa-save"></i> Save
+            </button>
+            <button type="button" class="btn float-right" (click)="closeForm()">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

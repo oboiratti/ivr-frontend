@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { Route } from '../shared/constants';
+import { RouteNames } from '../shared/constants';
 import { ProfileComponent } from './profile.component';
 import { AuthGuard } from '../auth-guard.service';
 import { ProfileFormComponent } from './profile-form/profile-form.component';
@@ -8,17 +8,17 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 
 const routes: Routes = [
   {
-    path: Route.profile,
+    path: RouteNames.profile,
     component: ProfileComponent,
     canActivate: [AuthGuard],
     children: [
       {
-        path: Route.profileForm,
+        path: RouteNames.profileForm,
         component: ProfileFormComponent,
         canActivate: [AuthGuard]
       },
       {
-        path: Route.changePassword,
+        path: RouteNames.changePassword,
         component: ChangePasswordComponent,
         canActivate: [AuthGuard]
       }

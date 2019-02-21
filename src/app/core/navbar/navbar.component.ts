@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { IMenuItem } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +10,7 @@ export class NavbarComponent implements OnInit {
 
   @Input() authenticated: boolean
   @Input() name: string
+  @Input() submenus: IMenuItem[]
   @Output() toggle = new EventEmitter()
   @Output() logout = new EventEmitter()
 

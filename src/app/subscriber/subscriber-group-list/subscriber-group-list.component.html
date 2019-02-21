@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-sm-12">
+    <button type="button" class="btn btn-primary-custom float-right" routerLink="form">New Group</button>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="table-responsive-sm">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Subscribers</th>
+              <th>Date Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let group of subscriberGroups$ | async; let i = index">
+              <td>{{i + 1}}</td>
+              <td>{{group.name}}</td>
+              <td>{{group.description}}</td>
+              <td>{{group.subscribers}}</td>
+              <td>{{group.updated_at | date:'medium'}}</td>
+              <td>
+                <a class="pointer" (click)="editForm(group.id)"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="delete(group.id)"><i class="fa fa-trash"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

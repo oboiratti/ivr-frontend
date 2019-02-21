@@ -11,6 +11,7 @@ export class AuthService {
   loggedInSource = new Subject<boolean>()
   loggedIn$ = this.loggedInSource.asObservable()
   baseApi = environment.apiUrl
+  token: string
 
   constructor(private httpClient: HttpClient) {
     if (localStorage.getItem("currentUser")) {
@@ -19,7 +20,7 @@ export class AuthService {
   }
 
   authenticate(params: LoginParams) {
-    return this.httpClient.post<ResponseObject<User>>(`${this.baseApi}/auth/login`, params)
+    return this.httpClient.post<any>(`${this.baseApi}/auth/local`, params)
   }
 
   invalidate() {
@@ -29,6 +30,11 @@ export class AuthService {
   setUser(user: User) {
     this.currentUser = user;
     localStorage.setItem("currentUser", JSON.stringify(user));
+  }
+
+  setToken(token: string) {
+    this.token = token
+    localStorage.setItem("token", token)
   }
 
   getUser() {
