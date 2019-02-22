@@ -7,6 +7,8 @@ import { SubscriberListComponent } from './subscriber-list/subscriber-list.compo
 import { SubscriberGroupListComponent } from './subscriber-group-list/subscriber-group-list.component';
 import { SubscriberFormComponent } from './subscriber-form/subscriber-form.component';
 import { SubscriberGroupFormComponent } from './subscriber-group-form/subscriber-group-form.component';
+import { SubscriberImportComponent } from './subscriber-import/subscriber-import.component';
+import { SubscriberExportComponent } from './subscriber-export/subscriber-export.component';
 
 const routes: Routes = [
   {
@@ -47,6 +49,16 @@ const routes: Routes = [
       {
         path: RouteNames.subscriberGroupFormEdit,
         component: SubscriberGroupFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.subscriberImport,
+        component: SubscriberImportComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.subscriberExport,
+        component: SubscriberExportComponent,
         canActivate: [AuthGuard]
       }
     ]

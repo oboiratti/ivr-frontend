@@ -27,7 +27,7 @@ export class SubscriberGroupListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.deleteSubscription.unsubscribe()
+    // this.deleteSubscription.unsubscribe()
   }
 
   editForm(id: number) {

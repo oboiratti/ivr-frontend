@@ -10,7 +10,8 @@ import { SubscriberFormComponent } from './subscriber-form/subscriber-form.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SubscriberGroupFormComponent } from './subscriber-group-form/subscriber-group-form.component';
-import { ImportComponent } from './import/import.component';
+import { SubscriberImportComponent } from './subscriber-import/subscriber-import.component';
+import { SubscriberExportComponent } from './subscriber-export/subscriber-export.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ImportComponent } from './import/import.component';
     SubscriberListComponent, 
     SubscriberGroupListComponent, 
     SubscriberFormComponent, 
-    SubscriberGroupFormComponent, ImportComponent
+    SubscriberGroupFormComponent, 
+    SubscriberImportComponent, SubscriberExportComponent
   ],
   imports: [
     CommonModule,

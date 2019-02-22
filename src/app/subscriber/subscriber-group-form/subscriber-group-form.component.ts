@@ -33,8 +33,8 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.saveSubscription.unsubscribe()
-    this.findSubscription.unsubscribe()
+    if (this.saveSubscription) this.saveSubscription.unsubscribe()
+    if (this.findSubscription) this.findSubscription.unsubscribe()
   }
 
   save(formData: SubscriberGroup) {
@@ -70,7 +70,7 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
     this.findSubscription = this.subscriberService.findSubscriberGroup(id).subscribe(data => {
       this.blockUi.stop()
       this.form.patchValue(data)
-      this.form.patchValue({subscribers: data.subscribers.map(sub => {return sub.id})})
+      //this.form.patchValue({subscribers: data.subscribers.map(sub => {return sub.id})})
     }, () => this.blockUi.stop())
   }
 }

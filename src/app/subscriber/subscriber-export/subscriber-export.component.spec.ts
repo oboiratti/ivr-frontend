@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImportComponent } from './import.component';
+import { SubscriberExportComponent } from './subscriber-export.component';
 
-describe('ImportComponent', () => {
-  let component: ImportComponent;
-  let fixture: ComponentFixture<ImportComponent>;
+describe('SubscriberExportComponent', () => {
+  let component: SubscriberExportComponent;
+  let fixture: ComponentFixture<SubscriberExportComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ImportComponent ]
+      declarations: [ SubscriberExportComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImportComponent);
+    fixture = TestBed.createComponent(SubscriberExportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

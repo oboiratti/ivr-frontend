@@ -1,0 +1,51 @@
+<div class="row mx-5">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase form-header-text">Export Subscribers</div>
+  </div>
+</div><br>
+
+<div class="alert alert-primary mx-3" role="alert">
+  <h6 class="alert-heading text-uppercase"><u>Instructions</u></h6>
+  <div class="ml-2">
+    <ol>
+      <li>
+        Select whether to export all subscribers, or only subscribers belonging to certain groups
+      </li>
+      <li>
+        Choose which groups to include
+      </li>
+      <li>
+        Click to download the Microsoft Excel file to your computer
+      </li>
+    </ol>
+  </div>
+</div>
+
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="form-group col-sm-12 col-md-4">
+      <label>Export Data</label>
+      <select class="form-control" formControlName="groupType">
+        <option value="All">All Subscribers</option>
+        <option value="Selected">Selected Groups</option>
+      </select>
+    </div>
+    <div class="form-group col-sm-12 col-md-4">
+      <label>Export DateTime Format</label>
+      <select class="form-control" formControlName="dateTimeFormat"></select>
+    </div>
+  </div>
+
+  <div class="form-row" *ngIf="groupType.value === 'Selected'">
+    <div class="form-group col-sm-12 col-md-4">
+      <label>Groups</label>
+      <select class="form-control" formControlName="groupId">
+
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-primary-custom float-right">Export Subscriber Records</button>
+  </div>
+</form>
