@@ -1,5 +1,5 @@
-$sidebar-top-color: #992e77;
-$sidebar-text-color: #59334d;
+$sidebar-top-color: #ffcc00;
+$sidebar-text-color: #000;
 
 .wrapper {
     display: flex;
@@ -18,7 +18,7 @@ $sidebar-text-color: #59334d;
 
     .logo {
         padding: 32px 10px;
-        background: $sidebar-top-color;
+        background: linear-gradient(150deg, $sidebar-top-color, #cc9900);
     }
 
     .image {
@@ -40,10 +40,10 @@ $sidebar-text-color: #59334d;
     }
 
     .active {
-        border-left: solid 5px #992e77;
+        border-left: solid 5px #ffc800;
         border-top-left-radius: 5px;
         //border-bottom-left-radius: 5px;
-        background: linear-gradient(to right, rgba(243, 49, 121, 0.102), rgba(255, 255, 255, 0.102));
+        background: linear-gradient(to right, #ecf7fb, #fff);
     }
 }
 

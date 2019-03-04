@@ -1,0 +1,213 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase form-header-text">Outbound Campaign Form</div>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col-sm-12 col-md-10 offset-md-1">
+    <form [formGroup]="form">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group col-12">
+              <label>Campaign Name</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Subscribers</label>
+              <ng-select [items]="subscriberTypes" bindLabel="label" bindValue="value"
+                placeholder="Send this campaign to..." [clearable]="false" formControlName="subscriberType"
+                [class.invalid-input]="subscriberType.dirty && subscriberType.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="subscriberType.dirty && subscriberType.invalid">
+                <div *ngIf="subscriberType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="subscriberType.value === 1">
+              <label>Subscriber Group</label>
+              <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
+                [clearable]="false" [multiple]="true" formControlName="subscriberGroups"
+                [class.invalid-input]="subscriberGroups.dirty && subscriberGroups.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="subscriberGroups.dirty && subscriberGroups.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="subscriberType.value === 2">
+              <label>Subscribers</label>
+              <ng-select [items]="subscribers$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscribers"
+                [clearable]="false" [multiple]="true" formControlName="subscribers"
+                [class.invalid-input]="subscribers.dirty && subscribers.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="subscribers.dirty && subscribers.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Schedule Type</label>
+              <ng-select [items]="scheduleTypes" bindLabel="label" bindValue="value" placeholder="Schedule Type"
+                [clearable]="false" formControlName="scheduleType"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="scheduleType.dirty && scheduleType.invalid">
+                <div *ngIf="scheduleType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 1">
+              <label>Date</label>
+              <input type="date" class="form-control">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 1">
+              <label>Time</label>
+              <input type="time" class="form-control" formControlName="time">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 2">
+              <label>Days after start date</label>
+              <input type="number" class="form-control">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 2">
+              <label>Time</label>
+              <input type="time" class="form-control">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="scheduleType.value === 3">
+              <label>Period</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Repeat Every</span>
+                </div>
+                <input type="number" class="form-control">
+                <div class="input-group-append">
+                  <select class="form-control">
+                    <option *ngFor="let period of periods" value="period.value">{{period.label}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="scheduleType.value === 3">
+              <label>Start Date</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Starts On</span>
+                </div>
+                <input type="date" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="scheduleType.value === 3">
+              <label>Ends</label><br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" class="custom-control-input" value="0"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline1">Never</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" class="custom-control-input" value="1"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline2">After Occurances</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline3" class="custom-control-input" value="2"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline3">On</label>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 3 && ends.value === '1'">
+              <label>No. of Occurances</label>
+              <input type="number" class="form-control">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 3 && ends.value === '2'">
+              <label>Date</label>
+              <input type="date" class="form-control">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3"
+              *ngIf="scheduleType.value === 3 && (ends.value === '1' || ends.value === '2')">
+              <label>Time</label>
+              <input type="time" class="form-control">
+            </div>
+          </div>
+
+          <!-- <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Content</label><br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" class="custom-control-input" value="0"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline1">Message</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" class="custom-control-input" value="1"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline2">Tree</label>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Tree Details</label>
+              <ng-select [items]="scheduleTypes" bindLabel="label" bindValue="value" placeholder="Select Tree"
+                [clearable]="false" formControlName="scheduleType"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Version</label>
+              <ng-select [items]="scheduleTypes" bindLabel="label" bindValue="value" placeholder="Select Tree Version"
+                [clearable]="false" formControlName="scheduleType"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-12">
+              <div><b>Title:</b> PRODUCTION: Harvesting of Cocoa: Jan - Feb</div>
+              <div><b>Last Updated:</b> 10 Nov 2017 10:25:27</div>
+              <div><b>Blocks:</b> 12</div>
+              <div><b>Type:</b> Voice</div>
+            </div>
+          </div><br>
+
+          <div class="ml-n3">
+            <button type="button" class="btn btn-link" (click)="doToggle()">
+              <i [ngClass]="toggleIcon" class="text-dark"></i> Advanced Options
+            </button>
+          </div>
+
+          <div>
+            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
+              <i class="fa fa-trash"></i> Delete
+            </button> -->
+            <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
+              (valid)="save(form.value)">
+              <i class="fa fa-save"></i> Save
+            </button>
+            <button type="button" class="btn float-right" (click)="closeForm()">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

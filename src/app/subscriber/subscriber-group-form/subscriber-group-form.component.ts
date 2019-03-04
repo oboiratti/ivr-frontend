@@ -50,13 +50,13 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   }
 
   get name() {return this.form.get('name')}
-  get description() {return this.form.get('description')}
+  get notes() {return this.form.get('notes')}
   get subscribers() {return this.form.get('subscribers')}
 
   private setupForm() {
     this.form = this.fb.group({
       name: new FormControl('', Validators.required),
-      description: new FormControl(''),
+      notes: new FormControl(''),
       subscribers: new FormControl('')
     })
   }

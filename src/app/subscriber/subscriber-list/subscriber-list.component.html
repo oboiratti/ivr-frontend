@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom float-right" routerLink="form">New Subscriber</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Subscriber</button>
   </div>
 </div>
 <hr>
@@ -26,12 +26,12 @@
             <tr *ngFor="let subscriber of subscribers$ | async; let i = index">
               <td>{{i + 1}}</td>
               <td>{{subscriber.name}}</td>
-              <td>{{subscriber.phonenumber}}</td>
-              <td>{{subscriber.startdate | date:'mediumDate'}}</td>
-              <td>{{subscriber.language.name}}</td>
+              <td>{{subscriber.phoneNumber}}</td>
+              <td>{{subscriber.startDate | date:'mediumDate'}}</td>
+              <td>{{subscriber.language}}</td>
               <td>
-                <i class="fa fa-volume-up"></i> &nbsp;
-                <i class="fa fa-envelope"></i>
+                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
+                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
               </td>
               <td>Yes</td>
               <td>

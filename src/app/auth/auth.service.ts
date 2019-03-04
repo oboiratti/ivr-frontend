@@ -20,11 +20,11 @@ export class AuthService {
   }
 
   authenticate(params: LoginParams) {
-    return this.httpClient.post<any>(`${this.baseApi}/auth/local`, params)
+    return this.httpClient.post<any>(`${this.baseApi}/account/login`, params)
   }
 
   invalidate() {
-    return this.httpClient.get<ResponseObject<User>>(`${this.baseApi}/auth/logout`)
+    return this.httpClient.get<ResponseObject<User>>(`${this.baseApi}/account/logout`)
   }
 
   setUser(user: User) {

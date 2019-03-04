@@ -2,15 +2,15 @@ import { Lookup, District } from "src/app/shared/common-entities.model";
 
 export interface Subscriber {
     id: number
-    phonenumber: string
+    phoneNumber: string
     name: string
     language: Lookup
-    startdate: Date
+    startDate: Date
     gender: string
     location: string
     comments: string
     district: District
-    subscribergroups: SubscriberGroup[]
+    subscriberGroups: SubscriberGroup[]
 } 
 
 export interface SubscriberGroup extends Lookup {

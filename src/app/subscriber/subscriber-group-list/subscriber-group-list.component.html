@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom float-right" routerLink="form">New Group</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Group</button>
   </div>
 </div>
 <hr>
@@ -24,9 +24,9 @@
             <tr *ngFor="let group of subscriberGroups$ | async; let i = index">
               <td>{{i + 1}}</td>
               <td>{{group.name}}</td>
-              <td>{{group.description}}</td>
-              <td>{{group.subscribers}}</td>
-              <td>{{group.updated_at | date:'medium'}}</td>
+              <td>{{group.notes}}</td>
+              <td>{{group.subscribers.length}}</td>
+              <td>{{group.modifiedAt | date:'medium'}}</td>
               <td>
                 <a class="pointer" (click)="editForm(group.id)"><i class="fa fa-edit"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(group.id)"><i class="fa fa-trash"></i></a>

@@ -20,6 +20,8 @@ import { SharedModule } from './shared/shared.module';
 import { ProfileModule } from './profile/profile.module';
 import { AdminModule } from './admin/admin.module';
 import { SubscriberModule } from './subscriber/subscriber.module';
+import { ContentModule } from './content/content.module';
+import { CampaignModule } from './campaign/campaign.module';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { SubscriberModule } from './subscriber/subscriber.module';
     AdminModule,
     ProfileModule,
     SubscriberModule,
+    ContentModule,
+    CampaignModule,
     CoreModule,
     BlockUIModule.forRoot()
   ],

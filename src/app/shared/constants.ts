@@ -19,6 +19,13 @@ export class RouteNames {
     static subscriberImport = "import"
     static subscriberExport = "export"
 
+    static content = "content"
+    static treeList = "trees"
+
+    static campaign = "campaign"
+    static outbound = "outbound"
+    static outboundForm = "outbound/form"
+
     static profile = "profile"
     static profileForm = "profile-form"
     static changePassword = "change-password"

@@ -85,7 +85,8 @@ label {
 }
 
 .invalid-input {
-    border: solid 1px red !important;
+    border: solid 1px #dc3545 !important;
+    border-radius: 5px;
 }
 
 .invalid-input:focus {

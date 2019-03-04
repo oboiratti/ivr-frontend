@@ -15,7 +15,7 @@ import { Subscriber, SubscriberGroup } from '../shared/subscriber.model';
   styleUrls: ['./subscriber-form.component.scss']
 })
 export class SubscriberFormComponent implements OnInit, OnDestroy {
-  
+
   form: FormGroup
   languages$: Observable<Lookup[]>
   districts$: Observable<Lookup[]>
@@ -38,9 +38,9 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     if (id) this.findSubscriber(id)
   }
 
-  ngOnDestroy(){
-    this.saveSubscription.unsubscribe()
-    this.findSubscription.unsubscribe()
+  ngOnDestroy() {
+    if (this.saveSubscription) this.saveSubscription.unsubscribe()
+    if (this.findSubscription) this.findSubscription.unsubscribe()
   }
 
   save(formData: Subscriber) {
@@ -56,21 +56,22 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   get id() { return this.form.get('id') }
-  get phonenumber() { return this.form.get('phonenumber') }
+  get phoneNumber() { return this.form.get('phoneNumber') }
   get name() { return this.form.get('name') }
   get language() { return this.form.get('language') }
   get gender() { return this.form.get('gender') }
-  get startdate() { return this.form.get('startdate') }
+  get startDate() { return this.form.get('startDate') }
   get district() { return this.form.get('district') }
   get location() { return this.form.get('location') }
-  get communicationmodes() { return this.form.get('communicationmodes') }
+  get voice() { return this.form.get('voice') }
+  get sms() { return this.form.get('sms') }
   get comments() { return this.form.get('comments') }
-  get subscribergroups() { return this.form.get('subscribergroups') }
+  get subscriberGroups() { return this.form.get('subscriberGroups') }
 
   private setupForm() {
     this.form = this.fb.group({
       id: new FormControl(''),
-      phonenumber: new FormControl('', Validators.compose([
+      phoneNumber: new FormControl('', Validators.compose([
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(10),
@@ -79,12 +80,13 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       name: new FormControl('', Validators.required),
       language: new FormControl('', Validators.required),
       gender: new FormControl('Male', Validators.required),
-      startdate: new FormControl('', Validators.required),
+      startDate: new FormControl('', Validators.required),
       district: new FormControl('', Validators.required),
       location: new FormControl('', Validators.required),
-      communicationmodes: new FormControl(''),
+      voice: new FormControl(''),
+      sms: new FormControl(''),
       comments: new FormControl(''),
-      subscribergroups: new FormControl('')
+      subscriberGroups: new FormControl('')
     })
   }
 
@@ -102,15 +104,18 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   private findSubscriber(id: number) {
     this.blockUi.start("Loading...")
-    this.findSubscription = this.subscriberService.findSubscriber(id).subscribe(data => {
+    this.findSubscription = this.subscriberService.findSubscriber(id).subscribe(res => {
       this.blockUi.stop()
-      this.form.patchValue(data)
-      this.form.patchValue({ 
-        startdate: new Date(data.startdate).toISOString().substring(0, 10),
-        language: data.language.id,
-        district: data.district.id,
-        subscribergroups: data.subscribergroups.map(grp => {return grp.id})
-      })
+      if (res.success) {
+        const data = res.data
+        this.form.patchValue(data)
+        this.form.patchValue({
+          startDate: new Date(data.startDate).toISOString().substring(0, 10),
+          //language: data.language.id,
+          //district: data.district.id,
+          subscriberGroups: data.subscriberGroups.map(grp => { return grp.id })
+        })
+      }
     }, () => this.blockUi.stop())
   }
 }

@@ -1,8 +1,7 @@
 {
     "/api": {
-        "target": "http://ec2-52-15-49-209.us-east-2.compute.amazonaws.com",
+        "target": "http://ivr.axonapplabs.com",
         "secure": false,
-        "changeOrigin": true,
-        "pathRewrite": {"^/api" : ""}
+        "changeOrigin": true
     }
 }

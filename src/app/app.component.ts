@@ -55,8 +55,8 @@ export class AppComponent implements OnInit {
     this.menus = [
       { label: "Dashboard", route: RouteNames.dashboard, icon: "fa fa-home fa-lg" },
       { label: "Subscribers", route: RouteNames.subscriber, icon: "fa fa-users fa-lg" },
-      { label: "Content", route: RouteNames.roles, icon: "fa fa-object-group fa-lg" },
-      { label: "Campaigns", route: RouteNames.roles, icon: "fa fa-bullhorn fa-lg" },
+      { label: "Content", route: RouteNames.content, icon: "fa fa-object-group fa-lg" },
+      { label: "Campaigns", route: RouteNames.campaign, icon: "fa fa-bullhorn fa-lg" },
       { label: "Account", route: RouteNames.profile, icon: "fa fa-user fa-lg" },
       { label: "Help", route: RouteNames.users, icon: "fa fa-question-circle-o fa-lg" }
     ];
