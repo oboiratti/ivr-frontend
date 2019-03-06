@@ -14,6 +14,7 @@ export interface Subscriber {
 } 
 
 export interface SubscriberGroup extends Lookup {
+    groupId: number
     description: string
     subscribers: Subscriber[]
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ResponseObject } from 'src/app/shared/common-entities.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { CampaignQuery } from './campaign.models';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,22 @@ export class CampaignService {
             res.data = res.data.map(data => {
               data.scheduleDetails = JSON.parse(JSON.parse(data.scheduleDetails))
               data.advancedOptions = JSON.parse(JSON.parse(data.advancedOptions))
+              return data
+            });
+            return res.data
+          }
+        })
+      )
+  }
+
+  queryCampaigns(params: CampaignQuery) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/campaign/query`, params)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            res.data = res.data.map(data => {
+              data.scheduleDetails = JSON.parse(data.scheduleDetails)
+              data.advancedOptions = JSON.parse(data.advancedOptions)
               return data
             });
             return res.data

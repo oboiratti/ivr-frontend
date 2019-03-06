@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
+import { CampaignQuery } from '../shared/campaign.models';
 
 @Component({
   selector: 'app-outbound',
@@ -16,12 +17,18 @@ export class OutboundListComponent implements OnInit {
 
   campaigns$: Observable<any>
   @BlockUI() blockUi: NgBlockUI
+  lastFilter: CampaignQuery
+  totalRecords = 0
+	currentPage = 1
+	recordSize = 20
+	totalPages = 1
+	pageNumber = 1
 
   constructor(private router: Router,
     private campaignService: CampaignService) { }
 
   ngOnInit() {
-    this.getCampaigns()
+    this.getCampaigns(<CampaignQuery>{})
   }
 
   editForm(id: number) {
@@ -34,15 +41,26 @@ export class OutboundListComponent implements OnInit {
         this.blockUi.start("Deleting...")
         this.campaignService.deleteCampaign(id).subscribe(res => {
           this.blockUi.stop()
-          if (res.success) this.getCampaigns()
+          if (res.success) this.getCampaigns(<CampaignQuery>{})
         }, () => this.blockUi.stop())
       }
     })
   }
 
-  private getCampaigns() {
+  pageChanged(page: number) {
+		this.currentPage = page;
+		this.lastFilter.pager.page = page;
+		this.blockUi.start("Loading...")
+		this.campaigns$ = this.campaignService.fetchCampaigns().pipe(
+      finalize(() => this.blockUi.stop())
+    )
+	}
+
+  private getCampaigns(filter: CampaignQuery) {
+    filter.pager = filter.pager || { page: 1, size: this.recordSize };
+		this.lastFilter = Object.assign({}, filter);
     this.blockUi.start("Loading...")
-    this.campaigns$ = this.campaignService.fetchCampaigns().pipe(
+    this.campaigns$ = this.campaignService.queryCampaigns(filter).pipe(
       finalize(() => this.blockUi.stop())
     )
   }

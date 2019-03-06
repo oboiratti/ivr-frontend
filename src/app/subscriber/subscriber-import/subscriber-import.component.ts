@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-subscriber-import',
@@ -10,6 +11,7 @@ export class SubscriberImportComponent implements OnInit {
 
   form: FormGroup
   filename: string
+  imports$: Observable<any>
 
   constructor(private fb: FormBuilder) { }
 

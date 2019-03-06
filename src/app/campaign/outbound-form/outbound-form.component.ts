@@ -56,7 +56,7 @@ export class OutboundFormComponent implements OnInit {
   }
 
   save(formData: any) {
-    const params = this.buildJsonRequest(formData)
+    let params = this.buildJsonRequest(formData)
     console.log(params);
     this.blockUi.start("Saving...")
     this.campaignService.saveCampaign(params).subscribe(res => {
@@ -72,7 +72,8 @@ export class OutboundFormComponent implements OnInit {
   get name() {return this.form.get('name')}
   get campaignRecipientType() {return this.form.get('campaignRecipientType')}
   get scheduleType() {return this.form.get('scheduleType')}
-  get campaignSubscribers() {return this.form.get('campaignSubscribers')}
+  get selectedSubscribers() {return this.form.get('selectedSubscribers')}
+  get subscriberGroups() {return this.form.get('subscriberGroups')}
   get repeatEnds() {return this.form.get('repeatEnds')}
   get treeVersion() {return this.form.get('treeVersion')}
   get voiceSenderId() {return this.form.get('voiceSenderId')}
@@ -83,7 +84,8 @@ export class OutboundFormComponent implements OnInit {
       name: new FormControl('', Validators.required), 
       campaignRecipientType: new FormControl(null, Validators.required),
       scheduleType: new FormControl(null, Validators.required),
-      campaignSubscribers: new FormControl(null),
+      selectedSubscribers: new FormControl(null),
+      subscriberGroups: new FormControl(null),
       sendDate: new FormControl(new Date().toISOString().substring(0, 10)),
       sendTime: new FormControl(new Date().toISOString().substring(11, 16)),
       routineDays: new FormControl(null),
@@ -97,8 +99,8 @@ export class OutboundFormComponent implements OnInit {
       repeatEndsTime: new FormControl(new Date().toISOString().substring(11, 16)),
       tree: new FormControl(null),
       treeVersion: new FormControl(null),
-      dontCallBefore: new FormControl(new Date().toISOString().substring(11, 16)),
-      dontCallAfter: new FormControl(new Date().toISOString().substring(11, 16)),
+      dontCallBefore: new FormControl(null),
+      dontCallAfter: new FormControl(null),
       retryTime: new FormControl(null),
       minutesApart: new FormControl(null),
       detectVoicemail: new FormControl(false),
@@ -124,7 +126,10 @@ export class OutboundFormComponent implements OnInit {
       name: formData.name,
       campaignType: "Outbound",
       campaignRecipientType: formData.campaignRecipientType,
-      campaignSubscribers: formData.campaignSubscribers,
+      campaignSubscribers: [{
+        selectedSubscribers: formData.campaignRecipientType === 1 ? formData.selectedSubscribers.join() : null,
+        subscriberGroups: formData.campaignRecipientType === 2 ? formData.subscriberGroups.join() : null
+      }],
       scheduleType: formData.scheduleType,
       scheduleDetails: JSON.stringify({
         sendDate: formData.scheduleType === 2 ? formData.sendDate : null,
@@ -152,7 +157,11 @@ export class OutboundFormComponent implements OnInit {
         },
         detectVoicemail: formData.detectVoicemail,
         voiceSenderId: formData.voiceSenderId
-      })
+      }),
+      createdAt: formData.createdAt,
+      createdBy: formData.createdBy,
+      updatedAt: formData.updatedAt,
+      updatedBy: formData.updatedBy
     }
   }
 
@@ -185,7 +194,9 @@ export class OutboundFormComponent implements OnInit {
           retryTime: data.advancedOptions.callRetryOptions.retryTime,
           minutesApart: data.advancedOptions.callRetryOptions.minutesApart,
           detectVoicemail: data.advancedOptions.detectVoicemail,
-          voiceSenderId: data.advancedOptions.voiceSenderId
+          voiceSenderId: data.advancedOptions.voiceSenderId,
+          selectedSubscribers: data.campaignSubscribers[0].selectedSubscribers ? data.campaignSubscribers[0].selectedSubscribers.split(",").map(Number) : [],
+          subscriberGroups: data.campaignSubscribers[0].subscriberGroups ? data.campaignSubscribers[0].subscriberGroups.split(",").map(Number) : []
         })
       }
     }, () => this.blockUi.stop())

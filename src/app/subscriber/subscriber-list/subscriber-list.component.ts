@@ -66,9 +66,9 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
 	}
 
   private getSubscribers(filter: SubscriberQuery) {
-    this.blockUi.start("Loading...")
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
 		this.lastFilter = Object.assign({}, filter);
+    this.blockUi.start("Loading...")
     this.subscribers$ = this.subscriberService.querySubscribers(filter).pipe(
       finalize(() => this.blockUi.stop())
     )

@@ -39,9 +39,9 @@
             <div class="form-group col-sm-12 col-md-6" *ngIf="campaignRecipientType.value === 2">
               <label>Subscriber Group</label>
               <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
-                [clearable]="false" [multiple]="true" formControlName="campaignSubscribers"
-                [class.invalid-input]="campaignSubscribers.dirty && campaignSubscribers.invalid"></ng-select>
-              <div class="invalid-msg" *ngIf="campaignSubscribers.dirty && campaignSubscribers.errors">
+                [clearable]="false" [multiple]="true" formControlName="subscriberGroups"
+                [class.invalid-input]="subscriberGroups.dirty && subscriberGroups.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="subscriberGroups.dirty && subscriberGroups.errors">
                 This field is required
               </div>
             </div>
@@ -49,9 +49,9 @@
             <div class="form-group col-sm-12 col-md-6" *ngIf="campaignRecipientType.value === 1">
               <label>Subscribers</label>
               <ng-select [items]="subscribers$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscribers"
-                [clearable]="false" [multiple]="true" formControlName="campaignSubscribers"
-                [class.invalid-input]="campaignSubscribers.dirty && campaignSubscribers.invalid"></ng-select>
-              <div class="invalid-msg" *ngIf="campaignSubscribers.dirty && campaignSubscribers.errors">
+                [clearable]="false" [multiple]="true" formControlName="selectedSubscribers"
+                [class.invalid-input]="selectedSubscribers.dirty && selectedSubscribers.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="selectedSubscribers.dirty && selectedSubscribers.errors">
                 This field is required
               </div>
             </div>

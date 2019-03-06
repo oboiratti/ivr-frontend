@@ -122,7 +122,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           startDate: new Date(data.startDate).toISOString().substring(0, 10),
           languageId: data.language.id,
           districtId: data.district.id,
-          //subscriberGroups: data.subscriberGroups.map(grp => { return grp.id })
+          subscriberGroups: data.subscriberGroups.map(grp => { return grp.groupId })
         })
       }
     }, () => this.blockUi.stop())
