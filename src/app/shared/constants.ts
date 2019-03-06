@@ -25,6 +25,7 @@ export class RouteNames {
     static campaign = "campaign"
     static outbound = "outbound"
     static outboundForm = "outbound/form"
+    static outboundFormEdit = "outbound/form/:id"
 
     static profile = "profile"
     static profileForm = "profile-form"

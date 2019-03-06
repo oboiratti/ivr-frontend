@@ -26,6 +26,11 @@ const routes: Routes = [
         path: RouteNames.outboundForm,
         component: OutboundFormComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.outboundFormEdit,
+        component: OutboundFormComponent,
+        canActivate: [AuthGuard]
       }
     ]
   }

@@ -2,7 +2,7 @@ import { SearchCriteria, ModelQuery } from "../shared/common-entities.model";
 
 export interface User {
     id: number;
-    username: string;
+    userName: string;
     password: string;
     passwordConfirmation: string;
     name: string;

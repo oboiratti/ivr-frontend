@@ -53,9 +53,9 @@ export class UserComponent implements OnInit {
       name: new FormControl('', Validators.required),
       email: new FormControl('', Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')),
       phoneNumber: new FormControl(''),
-      username: new FormControl('', Validators.compose([
+      userName: new FormControl('', Validators.compose([
         Validators.required,
-        Validators.minLength(6)
+        Validators.minLength(5)
       ])),
       password: new FormControl('', Validators.compose([
         Validators.required,
@@ -75,7 +75,7 @@ export class UserComponent implements OnInit {
   openForm() {
     this.showForm = true;
     // this.userForm.reset();
-    this.userForm.get("username").enable();
+    this.userForm.get("userName").enable();
   }
 
   closeForm() {
@@ -92,7 +92,7 @@ export class UserComponent implements OnInit {
 
   selectRow(user: User) {
     this.userForm.patchValue(user);
-    this.userForm.get("username").disable();
+    this.userForm.get("userName").disable();
     this.userForm.get('password').setValidators(null)
     this.userForm.get('passwordConfirmation').setValidators(null)
     this.userForm.updateValueAndValidity()
@@ -100,7 +100,9 @@ export class UserComponent implements OnInit {
   }
 
   save() {
-    this.user = this.userForm.value;
+    this.user = this.userForm.getRawValue();
+    console.log(this.user);
+    
 
     if (this.user.id) {
       delete this.user.password;

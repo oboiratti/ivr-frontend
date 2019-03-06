@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
-import { Subscriber, SubscriberGroup } from './subscriber.model';
+import { Subscriber, SubscriberGroup, SubscriberQuery } from './subscriber.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -39,6 +39,15 @@ export class SubscriberService {
       )
   }
 
+  querySubscribers(params: SubscriberQuery) {
+    return this.http.post<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber/query`, params)
+      .pipe(
+        map(res => {
+          if (res.success) return res.data
+        })
+      )
+  }
+
   findSubscriber(id: number) {
     return this.http.get<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/get/${id}`)
   }
@@ -53,7 +62,7 @@ export class SubscriberService {
   }
 
   fetchSubscriberGroups() {
-    return this.http.get<ResponseObject<SubscriberGroup[]>>(`${environment.baseUrl}/subscribergroup`)
+    return this.http.get<ResponseObject<SubscriberGroup[]>>(`${environment.baseUrl}/group`)
       .pipe(
         map(res => {
           if (res.success) return res.data
@@ -62,15 +71,15 @@ export class SubscriberService {
   }
 
   deleteSubscriberGroup(id: number) {
-    return this.http.delete<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/subscribergroup/${id}`)
+    return this.http.delete<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group/delete/${id}`)
   }
 
   saveSubscriberGroup(params: SubscriberGroup) {
-    if (params.id) return this.http.put<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/subscribergroup`, params)
-    return this.http.post<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/subscribergroup`, params)
+    if (params.id) return this.http.put<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group`, params)
+    return this.http.post<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group`, params)
   }
 
   findSubscriberGroup(id: number) {
-    return this.http.get<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/subscribergroup/${id}`)
+    return this.http.get<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group/get/${id}`)
   }
 }

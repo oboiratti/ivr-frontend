@@ -15,13 +15,13 @@ export class RoleService {
   constructor(private httpClient: HttpClient) { }
 
   fetch() {
-    return this.httpClient.get<ResponseObject<Role[]>>(`${this.baseApi}/role`).pipe(map(res => {
+    return this.httpClient.get<ResponseObject<Role[]>>(`${this.baseApi}/account/getroles`).pipe(map(res => {
       if (res.success) return res.data
     }));
   }
 
   permissions() {
-    return this.httpClient.get<ResponseObject<any[]>>(`${this.baseApi}/role/permissions`);
+    return this.httpClient.get<ResponseObject<any[]>>(`${this.baseApi}/account/getroles`);
   }
 
   save(role: Role) {

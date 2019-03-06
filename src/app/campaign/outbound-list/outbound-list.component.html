@@ -13,21 +13,21 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Content</th>
-              <th>Date Sent</th>
-              <th>Status</th>
+              <th>Name</th>
+              <th>Recipient Type</th>
+              <th>Schedule Type</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let outbound of outboundCampaign$ | async; let i = index">
-              <td>{{i + 1}}</td>
-              <td>{{outbound.content}}</td>
-              <td>{{outbound.dateSent | date:'medium'}}</td>
-              <td>{{outbound.status}}</td>
+            <tr *ngFor="let outbound of campaigns$ | async; let i = index">
+              <td>{{i + 1}}.</td>
+              <td>{{outbound.name}}</td>
+              <td>{{outbound.campaignRecipientType.name}}</td>
+              <td>{{outbound.scheduleType.name}}</td>
               <td>
-                <a class="pointer" (click)="editForm(outbound.id)"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="delete(outbound.id)"><i class="fa fa-trash"></i></a>
+                <a class="pointer" (click)="editForm(outbound.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="delete(outbound.id)" title="Delete"><i class="fa fa-trash"></i></a>
               </td>
             </tr>
           </tbody>

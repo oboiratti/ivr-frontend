@@ -3,11 +3,11 @@ import { IMenuItem } from '../shared/common-entities.model';
 import { RouteNames } from '../shared/constants';
 
 @Component({
-  selector: 'app-campaign',
-  templateUrl: './campaign.component.html',
-  styleUrls: ['./campaign.component.scss']
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.scss']
 })
-export class CampaignComponent implements OnInit {
+export class AdminComponent implements OnInit {
 
   submenus: IMenuItem[]
 
@@ -15,8 +15,8 @@ export class CampaignComponent implements OnInit {
 
   ngOnInit() {
     this.submenus = [
-      { label: "Outbound Campaigns", route: RouteNames.outbound, icon: "fa fa-folder" },
-      // { label: "Schedules Campaigns", route: RouteNames.subscriberGroupList, icon: "" },
+      { label: "Users", route: RouteNames.users, icon: "fa fa-folder" },
+      { label: "Roles", route: RouteNames.roles, icon: "fa fa-folder" },
       // { label: "Active Campaigns", route: RouteNames.subscriberImport, icon: "" },
       // { label: "Inbound Campaigns", route: RouteNames.subscriberExport, icon: "fa fa-folder" }
     ]

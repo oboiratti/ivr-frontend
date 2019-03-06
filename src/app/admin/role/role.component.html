@@ -1,90 +1,95 @@
-<page-header title="Roles"></page-header>
-
-<div class="page-content">
-    <div class="row mb-4" *ngIf="!showForm">
-        <div class="col-sm-12">
-            <button type="button" class="btn btn-primary-custom" (click)="openForm()">
-                <i class="fa fa-plus left"></i> Add Role</button>
-        </div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="p-2 text-uppercase form-header-text" *ngIf="showForm">Role Form</div>
+        <button type="button" class="btn btn-primary-custom border border-dark float-right" *ngIf="!showForm" (click)="openForm()"> Add
+            Role</button>
     </div>
+</div>
+<hr>
 
-    <div *ngIf="showForm">
-        <form (ngSubmit)="save()">
-            <div class="row">
-                <div class="col-sm-12 col-lg-6 mb-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <strong>{{title}}</strong>
+<!-- <div class="row"> -->
+<div *ngIf="showForm">
+    <form (ngSubmit)="save()">
+        <div class="row">
+            <div class="col-sm-12 col-md-10 offset-md-1">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name" [(ngModel)]="role.name" required>
                         </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" name="name" [(ngModel)]="role.name" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea rows="3" class="form-control" name="notes" [(ngModel)]="role.notes"></textarea>
-                            </div>
+                        <div class="form-group">
+                            <label>Permissions</label>
+                            <ng-select name="permissions" multiple="true" [items]="permissions"
+                                placeholder="Select Permissions" [clearable]="false" [(ngModel)]="role.permissions">
+                            </ng-select>
                         </div>
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-success">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea rows="3" class="form-control" name="notes" [(ngModel)]="role.notes"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary-custom border border-dark float-right">
                                 <i class="fa fa-save"></i> Save</button>
-                            <button type="button" class="btn btn-secondary" (click)="closeForm()">
+                            <button type="button" class="btn float-right" (click)="closeForm()">
                                 <i class="fa fa-close"></i> Cancel</button>
-                            <button type="button" class="btn btn-danger float-right" (click)="remove(role.id)" *ngIf="role.id">
-                                <i class="fa fa-trash"></i> Delete</button>
+                            <!-- <button type="button" class="btn btn-danger float-right" (click)="remove(role.id)"
+                                    *ngIf="role.id">
+                                    <i class="fa fa-trash"></i> Delete</button> -->
                         </div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-lg-6">
-                    <div class="card fixed-height">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item bg-light">
-                                <strong>Permissions</strong>
-                                <div class="form-check float-right">
-                                    <input class="form-check-input" type="checkbox" id="all" name="checkAll" [checked]="checkAll"
-                                        (change)="selectAll($event)">
-                                    <label class="form-check-label" for="all"></label>
-                                </div>
-                            </li>
-                            <li class="list-group-item" *ngFor="let perm of permissions">
-                                <div class="float-left">{{perm.name}}</div>
-                                <div class="form-check float-right">
-                                    <input type="checkbox" id="{{perm.name}}" class="form-check-input" name="checked"
-                                        [checked]="perm.checked" (change)="selectOne(perm, $event)">
-                                    <label class="form-check-label" for="all"></label>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
-
-    <div class="row" *ngIf="!showForm">
-        <div class="col-sm-12">
-            <div class="card">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="table-index">#</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Permissions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let role of roles$ | async; let i = index" class="pointer" (click)="selectRow(role)">
-                                <td class="table-index">{{i + 1}}.</td>
-                                <td>{{role.name}}</td>
-                                <td>{{role.notes}}</td>
-                                <td>{{role.permissions.split(", ").length}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- <div class="col-sm-12 col-md-6">
+                <div class="card fixed-height">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-light">
+                            <strong>Permissions</strong>
+                            <div class="form-check float-right">
+                                <input class="form-check-input" type="checkbox" id="all" name="checkAll"
+                                    [checked]="checkAll" (change)="selectAll($event)">
+                                <label class="form-check-label" for="all"></label>
+                            </div>
+                        </li>
+                        <li class="list-group-item" *ngFor="let perm of permissions">
+                            <div class="float-left">{{perm.name}}</div>
+                            <div class="form-check float-right">
+                                <input type="checkbox" id="{{perm.name}}" class="form-check-input" name="checked"
+                                    [checked]="perm.checked" (change)="selectOne(perm, $event)">
+                                <label class="form-check-label" for="all"></label>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
+            </div> -->
+        </div>
+    </form>
+</div>
+<!-- </div> -->
+
+<div class="row" *ngIf="!showForm">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="table-index">#</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Permissions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let role of roles$ | async; let i = index" class="pointer"
+                            (click)="selectRow(role)">
+                            <td class="table-index">{{i + 1}}.</td>
+                            <td>{{role}}</td>
+                            <td>{{role.notes}}</td>
+                            <td>{{role.permissions}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

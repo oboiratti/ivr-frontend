@@ -43,11 +43,16 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     if (this.findSubscription) this.findSubscription.unsubscribe()
   }
 
-  save(formData: Subscriber) {
+  save(formData: any) {
+    let params = formData
+    params.subscriberGroups = params.subscriberGroups.map(elm => {
+      return {groupId: elm}
+    })
+
     this.blockUi.start("Saving...")
     this.saveSubscription = this.subscriberService.saveSubscriber(formData).subscribe(res => {
       this.blockUi.stop()
-      this.closeForm()
+      if (res.success) this.closeForm()
     }, () => this.blockUi.stop())
   }
 
@@ -58,10 +63,10 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   get id() { return this.form.get('id') }
   get phoneNumber() { return this.form.get('phoneNumber') }
   get name() { return this.form.get('name') }
-  get language() { return this.form.get('language') }
+  get languageId() { return this.form.get('languageId') }
   get gender() { return this.form.get('gender') }
   get startDate() { return this.form.get('startDate') }
-  get district() { return this.form.get('district') }
+  get districtId() { return this.form.get('districtId') }
   get location() { return this.form.get('location') }
   get voice() { return this.form.get('voice') }
   get sms() { return this.form.get('sms') }
@@ -78,15 +83,19 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
         Validators.pattern('^[0]+[0-9]{9}$')
       ])),
       name: new FormControl('', Validators.required),
-      language: new FormControl('', Validators.required),
+      languageId: new FormControl('', Validators.required),
       gender: new FormControl('Male', Validators.required),
       startDate: new FormControl('', Validators.required),
-      district: new FormControl('', Validators.required),
+      districtId: new FormControl('', Validators.required),
       location: new FormControl('', Validators.required),
-      voice: new FormControl(''),
+      voice: new FormControl(true),
       sms: new FormControl(''),
       comments: new FormControl(''),
-      subscriberGroups: new FormControl('')
+      subscriberGroups: new FormControl(''),
+      createdAt: new FormControl(null),
+      createdBy: new FormControl(null),
+      modifiedAt: new FormControl(null),
+      modifiedBy: new FormControl(null)
     })
   }
 
@@ -111,9 +120,9 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
         this.form.patchValue(data)
         this.form.patchValue({
           startDate: new Date(data.startDate).toISOString().substring(0, 10),
-          //language: data.language.id,
-          //district: data.district.id,
-          subscriberGroups: data.subscriberGroups.map(grp => { return grp.id })
+          languageId: data.language.id,
+          districtId: data.district.id,
+          //subscriberGroups: data.subscriberGroups.map(grp => { return grp.id })
         })
       }
     }, () => this.blockUi.stop())

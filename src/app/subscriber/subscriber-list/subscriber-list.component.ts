@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
 import { SubscriberService } from '../shared/subscriber.service';
 import { Observable, Subscription } from 'rxjs';
-import { Subscriber } from '../shared/subscriber.model';
+import { Subscriber, SubscriberQuery } from '../shared/subscriber.model';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { finalize } from 'rxjs/operators';
 import { MessageDialog } from 'src/app/shared/message_helper';
@@ -18,12 +18,18 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   subscribers$: Observable<Subscriber[]>
   @BlockUI() blockUi: NgBlockUI
   deleteSubscription: Subscription
+  lastFilter: SubscriberQuery
+  totalRecords = 0
+	currentPage = 1
+	recordSize = 20
+	totalPages = 1
+	pageNumber = 1
 
   constructor(private router: Router,
     private subscriberService: SubscriberService) { }
 
   ngOnInit() {
-    this.getSubscribers()
+    this.getSubscribers(<SubscriberQuery>{})
   }
 
   ngOnDestroy() {
@@ -44,15 +50,26 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
         this.blockUi.start("Deleting...")
         this.deleteSubscription = this.subscriberService.deleteSubscriber(id).subscribe(res => {
           this.blockUi.stop()
-          this.getSubscribers()
+          this.getSubscribers(<SubscriberQuery>{})
         }, () => this.blockUi.stop())
       }
     })
   }
 
-  private getSubscribers() {
+  pageChanged(page: number) {
+		this.currentPage = page;
+		this.lastFilter.pager.page = page;
+		this.blockUi.start("Loading...")
+		this.subscribers$ = this.subscriberService.fetchSubscribers().pipe(
+      finalize(() => this.blockUi.stop())
+    )
+	}
+
+  private getSubscribers(filter: SubscriberQuery) {
     this.blockUi.start("Loading...")
-    this.subscribers$ = this.subscriberService.fetchSubscribers().pipe(
+    filter.pager = filter.pager || { page: 1, size: this.recordSize };
+		this.lastFilter = Object.assign({}, filter);
+    this.subscribers$ = this.subscriberService.querySubscribers(filter).pipe(
       finalize(() => this.blockUi.stop())
     )
   }
