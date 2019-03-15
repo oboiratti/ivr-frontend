@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-sm-12">
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Outbound Campaign</button>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="table-responsive-sm">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Recipient Type</th>
+              <th>Schedule Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let outbound of campaigns$ | async; let i = index">
+              <td>{{i + 1}}.</td>
+              <td>{{outbound.name}}</td>
+              <td>{{outbound.campaignRecipientType.name}}</td>
+              <td>{{outbound.scheduleType.name}}</td>
+              <td>
+                <a class="pointer" (click)="editForm(outbound.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="delete(outbound.id)" title="Delete"><i class="fa fa-trash"></i></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

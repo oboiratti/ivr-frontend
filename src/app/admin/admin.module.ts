@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RoleComponent } from './role/role.component';
 import { UserComponent } from './user/user.component';
 import { SharedModule } from '../shared/shared.module';
+import { AdminComponent } from './admin.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   imports: [
@@ -13,8 +15,9 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
+    NgSelectModule,
     AdminRoutingModule
   ],
-  declarations: [RoleComponent, UserComponent]
+  declarations: [RoleComponent, UserComponent, AdminComponent]
 })
 export class AdminModule { }

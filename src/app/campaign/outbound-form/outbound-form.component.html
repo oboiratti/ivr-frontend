@@ -1,0 +1,277 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase form-header-text">Outbound Campaign Form</div>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col-sm-12 col-md-10 offset-md-1">
+    <form [formGroup]="form">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group col-12">
+              <label>Campaign Name</label>
+              <input type="text" class="form-control" formControlName="name" [class.is-invalid]="name.dirty && name.invalid">
+              <div class="invalid-feedback" *ngIf="name.dirty && name.invalid">
+                <div *ngIf="name.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Subscriber Type</label>
+              <ng-select [items]="subscriberTypes" bindLabel="label" bindValue="value"
+                placeholder="Send this campaign to..." [clearable]="false" formControlName="campaignRecipientType"
+                [class.invalid-input]="campaignRecipientType.dirty && campaignRecipientType.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="campaignRecipientType.dirty && campaignRecipientType.invalid">
+                <div *ngIf="campaignRecipientType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="campaignRecipientType.value === 2">
+              <label>Subscriber Group</label>
+              <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
+                [clearable]="false" [multiple]="true" formControlName="subscriberGroups"
+                [class.invalid-input]="subscriberGroups.dirty && subscriberGroups.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="subscriberGroups.dirty && subscriberGroups.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="campaignRecipientType.value === 1">
+              <label>Subscribers</label>
+              <ng-select [items]="subscribers$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscribers"
+                [clearable]="false" [multiple]="true" formControlName="selectedSubscribers"
+                [class.invalid-input]="selectedSubscribers.dirty && selectedSubscribers.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="selectedSubscribers.dirty && selectedSubscribers.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Schedule Type</label>
+              <ng-select [items]="scheduleTypes" bindLabel="label" bindValue="value" placeholder="Schedule Type"
+                [clearable]="false" formControlName="scheduleType"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="scheduleType.dirty && scheduleType.invalid">
+                <div *ngIf="scheduleType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 2">
+              <label>Send Date</label>
+              <input type="date" class="form-control" formControlName="sendDate">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 2">
+              <label>Send Time</label>
+              <input type="time" class="form-control" formControlName="sendTime">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 3">
+              <label>Days after start date</label>
+              <input type="number" class="form-control" min="0" formControlName="routineDays">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 3">
+              <label>Time</label>
+              <input type="time" class="form-control" formControlName="routineTime">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="scheduleType.value === 4">
+              <label>Period</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Repeat Every</span>
+                </div>
+                <input type="number" class="form-control" min="1" formControlName="repeatNumber">
+                <div class="input-group-append">
+                  <select class="form-control" formControlName="repeatPeriod">
+                    <option *ngFor="let period of periods" [ngValue]="period.label">{{period.label}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="scheduleType.value === 4">
+              <label>Start Date</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Starts On</span>
+                </div>
+                <input type="date" class="form-control" formControlName="repeatStartDate">
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="scheduleType.value === 4">
+              <label>Ends</label><br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" class="custom-control-input" value="Never"
+                  formControlName="repeatEnds">
+                <label class="custom-control-label" for="customRadioInline1">Never</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" class="custom-control-input" value="AfterOccurances"
+                  formControlName="repeatEnds">
+                <label class="custom-control-label" for="customRadioInline2">After Occurances</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline3" class="custom-control-input" value="On"
+                  formControlName="repeatEnds">
+                <label class="custom-control-label" for="customRadioInline3">On</label>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 4 && repeatEnds.value === 'AfterOccurances'">
+              <label>No. of Occurances</label>
+              <input type="number" class="form-control" min="1" formControlName="repeatEndsAfterOccurances">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3" *ngIf="scheduleType.value === 4 && repeatEnds.value === 'On'">
+              <label>Date</label>
+              <input type="date" class="form-control" formControlName="repeatEndsDate">
+            </div>
+
+            <div class="form-group col-sm-12 col-md-3"
+              *ngIf="scheduleType.value === 4 && (repeatEnds.value === 'AfterOccurances' || repeatEnds.value === 'On')">
+              <label>Time</label>
+              <input type="time" class="form-control" formControlName="repeatEndsTime">
+            </div>
+          </div><hr>
+
+          <!-- <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Content</label><br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline1" class="custom-control-input" value="0"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline1">Message</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="customRadioInline2" class="custom-control-input" value="1"
+                  formControlName="ends">
+                <label class="custom-control-label" for="customRadioInline2">Tree</label>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Tree Details</label>
+              <ng-select [items]="" bindLabel="label" bindValue="value" placeholder="Select Tree"
+                [clearable]="false" formControlName="tree"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Version</label>
+              <ng-select [items]="" bindLabel="label" bindValue="value" placeholder="Select Tree Version"
+                [clearable]="false" formControlName="treeVersion"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="form-row" *ngIf="treeVersion.value">
+            <div class="col-12">
+              <div><b>Title:</b> PRODUCTION: Harvesting of Cocoa: Jan - Feb</div>
+              <div><b>Last Updated:</b> 10 Nov 2017 10:25:27</div>
+              <div><b>Blocks:</b> 12</div>
+              <div><b>Type:</b> Voice</div>
+            </div>
+          </div><br>
+
+          <div class="ml-n3">
+            <button type="button" class="btn btn-link" (click)="doToggle()">
+              <i [ngClass]="toggleIcon" class="text-dark"></i> Advanced Options
+            </button>
+          </div>
+
+          <div class="ml-3" *ngIf="toggle">
+            <h6 class="text-uppercase">Voice Options</h6>
+            <div class="ml-3 mb-1">Call Time Window</div>
+            <div class="form-row ml-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="form-inline">
+                  <label for="inlineFormInputName2">Do not send call before: </label> &nbsp;
+                  <input type="time" class="form-control mb-2 mr-sm-2" formControlName="dontCallBefore">
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="form-inline">
+                  <label for="inlineFormInputName2">Do not send call after: </label> &nbsp;
+                  <input type="time" class="form-control mb-2 mr-sm-2" formControlName="dontCallAfter">
+                </div>
+              </div>
+            </div>
+            <hr>
+
+            <h6 class="text-uppercase">Call Retry Options</h6>
+            <div class="ml-3 mb-2">If not answered</div>
+            <div class="form-group row">
+              <div class="input-group mb-3 ml-3 col-sm-12 col-md-4">
+                <label class="mt-1">Try </label>
+                <input type="number" class="form-control ml-1" min="0" formControlName="retryTime">
+                <div class="input-group-append">
+                  <span class="input-group-text">times</span>
+                </div>
+              </div>
+
+              <div class="input-group mb-3 col-sm-12 col-md-6">
+                <!-- <label>in quick succession</label> -->
+                <input type="number" class="form-control ml-sm-3 ml-1" min="0"  formControlName="minutesApart">
+                <div class="input-group-append">
+                  <span class="input-group-text">minutes</span>
+                </div>
+                <div class="input-group-append">
+                  <span class="input-group-text">apart</span>
+                </div>
+              </div>
+            </div>
+            <hr>
+
+            <h6 class="text-uppercase">Voice Mail Detection</h6>
+            <div class="custom-control custom-checkbox custom-control-inline ml-3">
+              <input type="checkbox" id="customcheckboxInline1" name="customcheckboxInline1"
+                class="custom-control-input" formControlName="detectVoicemail">
+              <label class="custom-control-label" for="customcheckboxInline1">Detect Voicemail</label>
+            </div>
+            <hr>
+
+            <h6 class="text-uppercase">Voice Sender ID</h6>
+            <ng-select class="col-sm-12 col-md-6" [items]="" bindLabel="label" bindValue="value"
+              placeholder="Select Voice ID" [clearable]="false" formControlName="voiceSenderId"
+              [class.invalid-input]="voiceSenderId.dirty && voiceSenderId.invalid">
+            </ng-select>
+            <hr>
+          </div>
+
+          <div>
+            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
+              <i class="fa fa-trash"></i> Delete
+            </button> -->
+            <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
+              (valid)="save(form.value)">
+              <i class="fa fa-save"></i> Save
+            </button>
+            <button type="button" class="btn float-right" (click)="closeForm()">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

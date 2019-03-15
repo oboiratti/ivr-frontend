@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom float-right" routerLink="form">New Subscriber</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Subscriber</button>
   </div>
 </div>
 <hr>
@@ -18,7 +18,7 @@
               <th>Start Date</th>
               <th>Language</th>
               <th>Content</th>
-              <th>Receive Outgoing Calls</th>
+              <!-- <th>Receive Outgoing Calls</th> -->
               <th>Actions</th>
             </tr>
           </thead>
@@ -26,14 +26,14 @@
             <tr *ngFor="let subscriber of subscribers$ | async; let i = index">
               <td>{{i + 1}}</td>
               <td>{{subscriber.name}}</td>
-              <td>{{subscriber.phonenumber}}</td>
-              <td>{{subscriber.startdate | date:'mediumDate'}}</td>
+              <td>{{subscriber.phoneNumber}}</td>
+              <td>{{subscriber.startDate | date:'mediumDate'}}</td>
               <td>{{subscriber.language.name}}</td>
               <td>
-                <i class="fa fa-volume-up"></i> &nbsp;
-                <i class="fa fa-envelope"></i>
+                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
+                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
               </td>
-              <td>Yes</td>
+              <!-- <td>Yes</td> -->
               <td>
                 <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(subscriber.id)"><i class="fa fa-trash"></i></a>

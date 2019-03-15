@@ -15,7 +15,7 @@ import { Subscriber, SubscriberGroup } from '../shared/subscriber.model';
   styleUrls: ['./subscriber-form.component.scss']
 })
 export class SubscriberFormComponent implements OnInit, OnDestroy {
-  
+
   form: FormGroup
   languages$: Observable<Lookup[]>
   districts$: Observable<Lookup[]>
@@ -38,16 +38,21 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     if (id) this.findSubscriber(id)
   }
 
-  ngOnDestroy(){
-    this.saveSubscription.unsubscribe()
-    this.findSubscription.unsubscribe()
+  ngOnDestroy() {
+    if (this.saveSubscription) this.saveSubscription.unsubscribe()
+    if (this.findSubscription) this.findSubscription.unsubscribe()
   }
 
-  save(formData: Subscriber) {
+  save(formData: any) {
+    let params = formData
+    params.subscriberGroups = params.subscriberGroups.map(elm => {
+      return {groupId: elm}
+    })
+
     this.blockUi.start("Saving...")
     this.saveSubscription = this.subscriberService.saveSubscriber(formData).subscribe(res => {
       this.blockUi.stop()
-      this.closeForm()
+      if (res.success) this.closeForm()
     }, () => this.blockUi.stop())
   }
 
@@ -56,35 +61,41 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   get id() { return this.form.get('id') }
-  get phonenumber() { return this.form.get('phonenumber') }
+  get phoneNumber() { return this.form.get('phoneNumber') }
   get name() { return this.form.get('name') }
-  get language() { return this.form.get('language') }
+  get languageId() { return this.form.get('languageId') }
   get gender() { return this.form.get('gender') }
-  get startdate() { return this.form.get('startdate') }
-  get district() { return this.form.get('district') }
+  get startDate() { return this.form.get('startDate') }
+  get districtId() { return this.form.get('districtId') }
   get location() { return this.form.get('location') }
-  get communicationmodes() { return this.form.get('communicationmodes') }
+  get voice() { return this.form.get('voice') }
+  get sms() { return this.form.get('sms') }
   get comments() { return this.form.get('comments') }
-  get subscribergroups() { return this.form.get('subscribergroups') }
+  get subscriberGroups() { return this.form.get('subscriberGroups') }
 
   private setupForm() {
     this.form = this.fb.group({
       id: new FormControl(''),
-      phonenumber: new FormControl('', Validators.compose([
+      phoneNumber: new FormControl('', Validators.compose([
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.pattern('^[0]+[0-9]{9}$')
       ])),
       name: new FormControl('', Validators.required),
-      language: new FormControl('', Validators.required),
+      languageId: new FormControl('', Validators.required),
       gender: new FormControl('Male', Validators.required),
-      startdate: new FormControl('', Validators.required),
-      district: new FormControl('', Validators.required),
+      startDate: new FormControl('', Validators.required),
+      districtId: new FormControl('', Validators.required),
       location: new FormControl('', Validators.required),
-      communicationmodes: new FormControl(''),
+      voice: new FormControl(true),
+      sms: new FormControl(''),
       comments: new FormControl(''),
-      subscribergroups: new FormControl('')
+      subscriberGroups: new FormControl(''),
+      createdAt: new FormControl(null),
+      createdBy: new FormControl(null),
+      modifiedAt: new FormControl(null),
+      modifiedBy: new FormControl(null)
     })
   }
 
@@ -102,15 +113,18 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   private findSubscriber(id: number) {
     this.blockUi.start("Loading...")
-    this.findSubscription = this.subscriberService.findSubscriber(id).subscribe(data => {
+    this.findSubscription = this.subscriberService.findSubscriber(id).subscribe(res => {
       this.blockUi.stop()
-      this.form.patchValue(data)
-      this.form.patchValue({ 
-        startdate: new Date(data.startdate).toISOString().substring(0, 10),
-        language: data.language.id,
-        district: data.district.id,
-        subscribergroups: data.subscribergroups.map(grp => {return grp.id})
-      })
+      if (res.success) {
+        const data = res.data
+        this.form.patchValue(data)
+        this.form.patchValue({
+          startDate: new Date(data.startDate).toISOString().substring(0, 10),
+          languageId: data.language.id,
+          districtId: data.district.id,
+          subscriberGroups: data.subscriberGroups.map(grp => { return grp.groupId })
+        })
+      }
     }, () => this.blockUi.stop())
   }
 }

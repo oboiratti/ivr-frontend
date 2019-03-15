@@ -37,10 +37,10 @@ export class RoleComponent implements OnInit {
     this.title = "Add New Role";
     this.showForm = false;
     this.role = <Role>{};
-    this.permissions.forEach((perm) => {
-      perm.checked = false;
-    });
-    this.checkAll = false
+    // this.permissions.forEach((perm) => {
+    //   perm.checked = false;
+    // });
+    // this.checkAll = false
   }
 
   selectRow(role: Role) {

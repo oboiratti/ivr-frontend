@@ -26,32 +26,26 @@
           <div class="form-row">
             <div class="form-group col-sm-12">
               <label>Description</label>
-              <textarea class="form-control" rows="3" formControlName="description"></textarea>
-              <div class="invalid-feedback" *ngIf="description.dirty && description.invalid">
-                <div *ngIf="description.errors.required">
+              <textarea class="form-control" rows="3" formControlName="notes"></textarea>
+              <div class="invalid-feedback" *ngIf="notes.dirty && notes.invalid">
+                <div *ngIf="notes.errors.required">
                   This field is required
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="form-row">
+          <!-- <div class="form-row">
             <div class="form-group col-sm-12">
               <label>Subscribers</label>
               <ng-select [items]="subscribers$ | async" bindLabel="phonenumber" bindValue="id" placeholder="Select Subscribers"
                 [clearable]="false" [multiple]="true" formControlName="subscribers"
                 [class.is-invalid]="subscribers.dirty && subscribers.invalid"></ng-select>
-              <!-- <div class="invalid-feedback" *ngIf="subscribers.dirty && subscribers.errors">
-                    This field is required
-                  </div> -->
             </div>
-          </div>
+          </div> -->
 
           <div>
-            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
-                <i class="fa fa-trash"></i> Delete
-              </button> -->
-            <button type="submit" class="btn btn-primary-custom float-right" [validate-form]="form"
+            <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
               (valid)="save(form.value)">
               <i class="fa fa-save"></i> Save
             </button>

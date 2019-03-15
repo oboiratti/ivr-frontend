@@ -13,11 +13,11 @@ export class Interceptor implements HttpInterceptor {
     constructor() { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
-        // const currentUser: User = JSON.parse(localStorage.getItem("currentUser"));
-        const token = localStorage.getItem("token");
+         const currentUser: User = JSON.parse(localStorage.getItem("currentUser"));
+        //const token = localStorage.getItem("token");
         let authReq = req.clone();
-        if (token) {
-            authReq = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+        if (currentUser) {
+            authReq = req.clone({ setHeaders: { Authorization: `Bearer ${currentUser.token}` } });
         }
 
         return next
@@ -25,7 +25,7 @@ export class Interceptor implements HttpInterceptor {
             .pipe(
                 tap((response: HttpResponse<any>) => {
                     if (response.status === 200 && req.method !== 'GET') {
-                        Toast.show(response.body.message, true);
+                        Toast.show(response.body.message, response.body.success);
                     }
                 }, err => {
                     console.log(err);
