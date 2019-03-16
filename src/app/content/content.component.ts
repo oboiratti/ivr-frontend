@@ -9,20 +9,20 @@ import { IMenuItem } from '../shared/common-entities.model';
 })
 export class ContentComponent implements OnInit {
 
-  submenus: IMenuItem[]
+  submenus: IMenuItem[];
 
   constructor() { }
 
   ngOnInit() {
     this.submenus = [
-      { label: "Trees", route: RouteNames.treeList, icon: "fa fa-folder" },
-      { label: "Messages", route: RouteNames.subscriberGroupList, icon: "fa fa-folder" },
-      { label: "Audio Library", route: RouteNames.subscriberImport, icon: "" },
-      { label: "Language Selector", route: RouteNames.subscriberExport, icon: "" },
-      { label: "Response Prompts", route: RouteNames.subscriberList, icon: "fa fa-folder" },
-      { label: "Content Recorders", route: RouteNames.subscriberList, icon: "fa fa-folder" },
-      { label: "Languages", route: RouteNames.subscriberList, icon: "fa fa-folder" },
-      { label: "Exports Library", route: RouteNames.subscriberList, icon: "fa fa-folder" }
+      { label: 'Trees', route: RouteNames.treeList, icon: 'fa fa-folder' },
+      { label: 'Audio Library', route: RouteNames.audioLibrary, icon: 'fa fa-folder' }
+      /* { label: 'Messages', route: RouteNames.subscriberGroupList, icon: 'fa fa-folder' },
+      { label: 'Language Selector', route: RouteNames.subscriberExport, icon: '' },
+      { label: 'Response Prompts', route: RouteNames.subscriberList, icon: 'fa fa-folder' },
+      { label: 'Content Recorders', route: RouteNames.subscriberList, icon: 'fa fa-folder' },
+      { label: 'Languages', route: RouteNames.subscriberList, icon: 'fa fa-folder' },
+      { label: 'Exports Library', route: RouteNames.subscriberList, icon: 'fa fa-folder' }*/
     ];
   }
 

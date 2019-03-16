@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'loading',
@@ -9,5 +9,5 @@ import { Component, Input } from "@angular/core";
     `
 })
 export class LoadingComponent {
-    @Input() text: string
+    @Input() text: string;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { startWith, delay, filter } from "rxjs/operators";
+import { startWith, delay, filter } from 'rxjs/operators';
 import { AuthService } from './auth/auth.service';
 import { RouteNames } from './shared/constants';
 import { IMenuItem } from './shared/common-entities.model';
@@ -14,16 +14,16 @@ export class AppComponent implements OnInit {
   menus: IMenuItem[];
   submenus: IMenuItem[];
   loading: boolean;
-  isLoggedIn: boolean
-  name: string
+  isLoggedIn: boolean;
+  name: string;
 
-  constructor(private router: Router, 
+  constructor(private router: Router,
     private authService: AuthService) { }
 
   ngOnInit(): void {
     this.checkLogin();
     this.setMenuItems();
-    //this.setName()
+    // this.setName()
   }
 
   checkLogin() {
@@ -31,8 +31,8 @@ export class AppComponent implements OnInit {
       startWith(this.authService.isLoggedIn()),
       delay(0)
     ).subscribe(value => {
-      this.isLoggedIn = value
-    })
+      this.isLoggedIn = value;
+    });
   }
 
   logout() {
@@ -48,16 +48,16 @@ export class AppComponent implements OnInit {
   }
 
   setName() {
-    this.name = this.authService.currentUser.name
+    this.name = this.authService.currentUser.name;
   }
 
   private setMenuItems() {
     this.menus = [
-      { label: "Dashboard", route: RouteNames.dashboard, icon: "fa fa-home fa-lg" },
-      { label: "Subscribers", route: RouteNames.subscriber, icon: "fa fa-users fa-lg" },
-      // { label: "Content", route: RouteNames.content, icon: "fa fa-object-group fa-lg" },
-      { label: "Campaigns", route: RouteNames.campaign, icon: "fa fa-bullhorn fa-lg" },
-      { label: "Account", route: RouteNames.admin, icon: "fa fa-user fa-lg" },
+      { label: 'Dashboard', route: RouteNames.dashboard, icon: 'fa fa-home fa-lg' },
+      { label: 'Subscribers', route: RouteNames.subscriber, icon: 'fa fa-users fa-lg' },
+      { label: 'Content', route: RouteNames.content, icon: 'fa fa-object-group fa-lg' },
+      { label: 'Campaigns', route: RouteNames.campaign, icon: 'fa fa-bullhorn fa-lg' },
+      { label: 'Account', route: RouteNames.admin, icon: 'fa fa-user fa-lg' },
       // { label: "Help", route: RouteNames.users, icon: "fa fa-question-circle-o fa-lg" }
     ];
   }

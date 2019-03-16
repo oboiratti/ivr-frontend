@@ -1,12 +1,12 @@
-import * as toast from "toastr/toastr"
-import swal from "sweetalert2"
-import { SweetAlertType } from "sweetalert2";
+import * as toast from 'toastr/toastr';
+import swal from 'sweetalert2';
+import { SweetAlertType } from 'sweetalert2';
 
 toast.options = {
-    "positionClass": "toast-top-center"
-}
+    'positionClass': 'toast-top-center'
+};
 export class Toast {
-    
+
     static success(message: string) {
         this.clear();
         toast.success(message);
@@ -32,29 +32,29 @@ export class Toast {
     }
 
     static clear() {
-        toast.clear()
+        toast.clear();
     }
 }
 
 export class MessageDialog {
     static success(message: string) {
-        swal.fire("Success", message, "success");
+        swal.fire('Success', message, 'success');
     }
 
     static error(message: string) {
-        swal.fire("Error", message, "error");
+        swal.fire('Error', message, 'error');
     }
 
     static info(message: string) {
-        swal.fire("Info", message, "info");
+        swal.fire('Info', message, 'info');
     }
 
     static warning(message: string) {
-        swal.fire("Warning", message, "warning");
+        swal.fire('Warning', message, 'warning');
     }
 
     static show(message: string, success: boolean) {
-        let type: SweetAlertType = success ? "success" : "error";
+        const type: SweetAlertType = success ? 'success' : 'error';
         swal.fire(type.toUpperCase(), message, type);
     }
 
@@ -62,12 +62,12 @@ export class MessageDialog {
         return swal.fire({
             title: title,
             text: message,
-            type: "warning",
+            type: 'warning',
             showCancelButton: true,
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
-            confirmButtonColor: "#5cb85c",
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            confirmButtonColor: '#5cb85c',
             cancelButtonColor: '#d33'
-        })
+        });
     }
 }
