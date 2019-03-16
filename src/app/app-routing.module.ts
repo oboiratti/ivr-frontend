@@ -6,7 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SettingsComponent } from './settings/settings.component';
 import { GeneralLookupComponent } from './settings/general-lookup/general-lookup.component';
 import { PageNotFoundComponent } from './page-not-found.component';
-import { RouteNames } from "./shared/constants";
+import { RouteNames } from './shared/constants';
 import { SubscriberListComponent } from './subscriber/subscriber-list/subscriber-list.component';
 import { SubscriberComponent } from './subscriber/subscriber.component';
 
