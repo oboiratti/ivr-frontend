@@ -4,7 +4,7 @@ import { RouteNames } from '../shared/constants';
 import { ContentComponent } from './content.component';
 import { AuthGuard } from '../auth-guard.service';
 import { TreeListComponent } from './tree-list/tree-list.component';
-import { AudioLibraryComponent } from './audio-library/audio-library.component';
+import { MediaLibraryComponent } from './media-library/media-library.component';
 
 const routes: Routes = [
   {
@@ -23,23 +23,23 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.audioLibrary,
-        component: AudioLibraryComponent,
+        path: RouteNames.mediaLibrary,
+        component: MediaLibraryComponent,
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.audio,
-        component: AudioLibraryComponent,
+        path: RouteNames.media,
+        component: MediaLibraryComponent,
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.audioLibraryForm,
-        component: AudioLibraryComponent,
+        path: RouteNames.mediaLibraryForm,
+        component: MediaLibraryComponent,
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.audioLibraryFormEdit,
-        component: AudioLibraryComponent,
+        path: RouteNames.mediaLibraryFormEdit,
+        component: MediaLibraryComponent,
         canActivate: [AuthGuard]
       },
     ]

@@ -36,3 +36,4 @@ export interface Region extends Lookup {}
 export interface District extends Lookup {
     region: Region;
 }
+

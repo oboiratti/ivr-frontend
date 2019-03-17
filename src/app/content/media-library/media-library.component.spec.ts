@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AudioLibraryComponent } from './audio-library.component';
+import { MediaLibraryComponent } from './media-library.component';
 
-describe('TreeListComponent', () => {
-  let component: AudioLibraryComponent;
-  let fixture: ComponentFixture<AudioLibraryComponent>;
+describe('MediaLibraryComponent', () => {
+  let component: MediaLibraryComponent;
+  let fixture: ComponentFixture<MediaLibraryComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AudioLibraryComponent ]
+      declarations: [ MediaLibraryComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AudioLibraryComponent);
+    fixture = TestBed.createComponent(MediaLibraryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

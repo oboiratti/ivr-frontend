@@ -5,10 +5,10 @@ import { ContentRoutingModule } from './content-routing.module';
 import { ContentComponent } from './content.component';
 import { SharedModule } from '../shared/shared.module';
 import { TreeListComponent } from './tree-list/tree-list.component';
-import { AudioLibraryComponent } from './audio-library/audio-library.component';
+import { MediaLibraryComponent } from './media-library/media-library.component';
 
 @NgModule({
-  declarations: [ContentComponent, TreeListComponent, AudioLibraryComponent],
+  declarations: [ContentComponent, TreeListComponent, MediaLibraryComponent],
   imports: [
     CommonModule,
     SharedModule,

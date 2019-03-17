@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form"><i class="fa fa-plus"></i> New Media File</button>
+    </div>
+</div>
+<hr>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active">Media Files</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link">Inactive Media Files</a>
+    </li>
+</ul>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="table-responsive-sm">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Language</th>
+                            <th>Type</th>
+                            <th>Length</th>
+                            <th>Uploaded On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of records$ | async; let i = index">
+                            <td>{{i + 1}}</td>
+                            <td>{{x.code}}</td>
+                            <td>{{x.title}}</td>
+                            <td>{{x.language}}</td>
+                            <td>{{x.type}}</td>
+                            <td>{{x.length}}</td>
+                            <td>{{x.createdAt | date:'mediumDate'}}</td>
+                            <!--<td>
+                                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
+                                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
+                            </td>-->
+                            <td>
+                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye"></i></a> &nbsp;
+                                <a class="pointer" (click)="editForm(x.id)"><i class="fa fa-edit"></i></a> &nbsp;
+                                <a class="pointer" (click)="delete(x.id)"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

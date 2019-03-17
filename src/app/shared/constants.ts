@@ -21,10 +21,10 @@ export class RouteNames {
 
     static content = 'content';
     static treeList = 'trees';
-    static audioLibrary = 'audiolibrary';
-    static audio = 'audio';
-    static audioLibraryForm = 'audiolibrary/form';
-    static audioLibraryFormEdit = 'audiolibrary/form/:id';
+    static mediaLibrary = 'medialibrary';
+    static media = 'media';
+    static mediaLibraryForm = 'medialibrary/form';
+    static mediaLibraryFormEdit = 'medialibrary/form/:id';
 
     static campaign = 'campaign';
     static outbound = 'outbound';
