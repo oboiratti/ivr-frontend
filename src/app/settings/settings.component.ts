@@ -19,8 +19,11 @@ export class SettingsComponent implements OnInit {
   }
 
   gotoSetting(model) {
-    if (model.route) this.router.navigate([model.route])
-    else this.router.navigate([RouteNames.settings, model.name])
+    if (model.route) {
+       this.router.navigate([model.route]);
+      } else {
+        this.router.navigate([RouteNames.settings, model.name]);
+       }
   }
 
   private setModels() {

@@ -13,74 +13,52 @@
             <div class="card-body">
                 <div class="form-row">
                     <div class="form-group col-sm-12 col-md-7">
-                        <audio controls>
-                                    <source src="filePath">
-                                  Your browser does not support the audio element.
+                        <audio controls [attr.id]="data.id" *ngIf="data">
+                                    <source [src]="data.fileUrl">
+                                        Your browser does not support the audio element.
                                   </audio>
-                    </div>
-                    <div class="form-group col-sm-12 col-md-12">
 
-                        <label class="btn btn-secondary btn-file">Select File <i class="fa fa-asterisk color-maroon"></i>
-                                <input type="file" class="form-control" formControlName="file" accept=".mp3, .wav, .aac, .ogg, .wma" (change)="onFileChange($event.target.files)">
-                                <input type="hidden" name="fileHidden" formControlName="filePath" [class.is-invalid]="filePath.dirty && filePath.invalid" fileread="filePath"/>
-                              </label>
-                        <div class="invalid-feedback" *ngIf="filePath.dirty && filePath.invalid">
-                            <div *ngIf="filePath.errors.required">
-                                Please select a valid file
-                            </div>
-                        </div>
                     </div>
+
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12 col-md-8">
-                        <label>Title <i class="fa fa-asterisk color-maroon"></i></label>
-                        <input type="text" class="form-control" formControlName="title" [class.is-invalid]="title.dirty && title.invalid">
-                        <div class="invalid-feedback" *ngIf="title.dirty && title.invalid">
-                            <div *ngIf="title.errors.required">
-                                This field is required
-                            </div>
-                        </div>
+                        <label>Title:</label>
+                        <input type="text" class="form-control" [(ngModel)]="data.title" disabled>
                     </div>
                     <div class="form-group col-sm-12 col-md-4">
-                        <label>Language <i class="fa fa-asterisk color-maroon"></i></label>
-                        <select class="form-control" formControlName="languageId" [class.is-invalid]="languageId.dirty && languageId.invalid">
-                    <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
-                  </select>
-                        <div class="invalid-feedback" *ngIf="languageId.dirty && languageId.invalid">
-                            <div *ngIf="languageId.errors.required">
-                                This field is required
-                            </div>
-                        </div>
+                        <label>Language:</label>
+                        <input type="text" class="form-control" [(ngModel)]="data.language" disabled>
                     </div>
                     <div class="form-group col-sm-12 col-md-12">
                         <label>Description</label>
-                        <textarea class="form-control" formControlName="description" rows="3"></textarea>
+                        <textarea class="form-control" [(ngModel)]="data.description" rows="3" disabled></textarea>
                     </div>
-
                     <div class="form-group col-sm-12 col-md-4">
-                        <label>Type <i class="fa fa-asterisk color-maroon"></i></label><br>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadioInline1" class="custom-control-input" value="Message" formControlName="type">
-                            <label class="custom-control-label" for="customRadioInline1">Message</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" id="customRadioInline2" class="custom-control-input" value="Survey" formControlName="type">
-                            <label class="custom-control-label" for="customRadioInline2">Survey</label>
-                        </div>
+                        <label>Type:</label>
+                        <input type="text" class="form-control" [(ngModel)]="data.type" disabled>
                     </div>
                     <div class="form-group col-sm-12 col-md-8">
-                        <label>Tags</label>
-                        <ng-select [items]="tags$ | async" bindLabel="name" bindValue="name" placeholder="Select Tags" [clearable]="true" [multiple]="true" formControlName="tagsList" [class.is-invalid]="tagsList.dirty && tagsList.invalid"></ng-select>
+                        <label>Tags:</label>
+                        <input type="text" class="form-control" [(ngModel)]="data.tags" disabled>
                     </div>
                 </div>
-                <div>
-                    <button class="btn btn-success border border-dark float-right" (click)="editForm()">
-                  <i class="fa fa-edit"></i> Update
-                </button>
-                    <button type="button" class="btn float-right border border-dark btn-danger" (click)="delete()">
-                  <i class="fa fa-ban"></i> Delete
-                </button>
-                </div>
+            </div>
+            <div class="card-footer clearfix">
+                <button class="btn btn-primary border border-dark" (click)="activate()" *ngIf="data.status == 'InActive'">
+                                <i class="fa fa-edit"></i> Activate
+                              </button>
+                <button type="button" class="btn border border-dark btn-danger" (click)="deactivate()" *ngIf="data.status == 'Active'">
+                                <i class="fa fa-ban"></i> Deactivate
+                              </button>
+                <span>
+                <button class="btn btn-success border border-dark float-right" (click)="editForm()"  *ngIf="data.status == 'Active'">
+                                <i class="fa fa-edit"></i> Update
+                              </button>
+                <button type="button" class="btn float-right border border-dark btn-danger" (click)="delete()">
+                                <i class="fa fa-ban"></i> Delete
+                              </button>
+                            </span>
             </div>
         </div>
     </div>

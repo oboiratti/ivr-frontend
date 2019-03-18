@@ -51,7 +51,7 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   }
 
   open(id: number) {
-    this.router.navigateByUrl(`${RouteNames.media}/${id}`);
+    this.router.navigateByUrl(`${RouteNames.content}/${RouteNames.mediaLibraryDets}/${id}`);
   }
 
 

@@ -53,7 +53,7 @@ export class MediaService {
   }
 
   deleteMedia(id: number) {
-    return this.http.delete<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/${id}`);
+    return this.http.delete<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/delete/${id}`);
   }
 
   saveMedia(params: Media) {
@@ -62,10 +62,10 @@ export class MediaService {
   }
 
   activateMedia(id: number) {
-    return this.http.get<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/activate/${id}`);
+    return this.http.get<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/activate?id=${id}`);
   }
 
   deactivateMedia(id: number) {
-    return this.http.get<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/deactivate/${id}`);
+    return this.http.get<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/deactivate?id=${id}`);
   }
 }

@@ -30,6 +30,7 @@ export class MediaDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
+    this.data = <Media>{};
     if (id) {
       this.mediaId = id;
       this.findMedia(id);
@@ -58,14 +59,14 @@ export class MediaDetailsComponent implements OnInit, OnDestroy {
 
   editForm() {
     const id = this.mediaId;
-    this.router.navigateByUrl(`${RouteNames.mediaLibraryFormEdit}/${id}`);
+    this.router.navigateByUrl(`${RouteNames.content}/${RouteNames.mediaLibraryForm}/${id}`);
   }
 
-  delete(id: number) {
+  delete() {
     MessageDialog.confirm('Delete Media', 'Are you sure you want to delete this media?').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Deleting Media...');
-        this.deleteSubscription = this.mediaService.deleteMedia(id).subscribe(res => {
+        this.deleteSubscription = this.mediaService.deleteMedia(this.mediaId).subscribe(res => {
           this.blockUi.stop();
           this.back();
         }, () => this.blockUi.stop());
@@ -73,11 +74,11 @@ export class MediaDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  activate(id: number) {
+  activate() {
     MessageDialog.confirm('Activate Media', 'Please confirm that you want to activate this media file').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Activating Media...');
-        this.deleteSubscription = this.mediaService.activateMedia(id).subscribe(res => {
+        this.deleteSubscription = this.mediaService.activateMedia(this.mediaId).subscribe(res => {
           this.blockUi.stop();
           this.findMedia(this.mediaId);
         }, () => this.blockUi.stop());
@@ -85,11 +86,11 @@ export class MediaDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  deactivate(id: number) {
+  deactivate() {
     MessageDialog.confirm('Deactivate Media', 'Please confirm that you want to deactivate this media file').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Deactivating Media...');
-        this.deleteSubscription = this.mediaService.deactivateMedia(id).subscribe(res => {
+        this.deleteSubscription = this.mediaService.deactivateMedia(this.mediaId).subscribe(res => {
           this.blockUi.stop();
           this.findMedia(this.mediaId);
         }, () => this.blockUi.stop());

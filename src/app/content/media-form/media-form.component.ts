@@ -104,11 +104,11 @@ export class MediaFormComponent implements OnInit, OnDestroy {
       if (res.success) {
         const data = res.data;
         this.form.patchValue(data);
-        this.form.patchValue({
+        /*this.form.patchValue({
           // patch tags
           // startDate: new Date(data.startDate).toISOString().substring(0, 10),
           languageId: data.language.id,
-        });
+        });*/
       }
     }, () => this.blockUi.stop());
   }

@@ -30,18 +30,18 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.media,
-        component: MediaDetailsComponent,
-        canActivate: [AuthGuard]
-      },
-      {
         path: RouteNames.mediaLibraryForm,
         component: MediaFormComponent,
         canActivate: [AuthGuard]
       },
       {
+        path: RouteNames.mediaLibraryDetails,
+        component: MediaDetailsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
         path: RouteNames.mediaLibraryFormEdit,
-        component: MediaLibraryComponent,
+        component: MediaFormComponent,
         canActivate: [AuthGuard]
       },
     ]
