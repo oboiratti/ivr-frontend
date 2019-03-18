@@ -76,6 +76,17 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     );
   }
 
+  setLabel(type: string) {
+    switch (type) {
+        case 'Message':
+            return 'label-primary';
+        case 'Survey':
+            return 'label-default';
+        default:
+            return 'label-danger';
+    }
+}
+
   play(rec: any) {
     const audioControl: any = document.getElementById('audio_' + rec.id);
     audioControl.loop = true;

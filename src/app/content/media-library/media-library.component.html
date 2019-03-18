@@ -40,7 +40,7 @@
                             <td>{{x.code}}</td>
                             <td>{{x.title}}</td>
                             <td>{{x.language}}</td>
-                            <td>{{x.type}}</td>
+                            <td><span class="badge" [class.badge-primary]="x.type === 'Message'" [class.badge-secondary]="x.type === 'Survey'" style="font-size: inherit">{{x.type}}</span></td>
                             <td>{{x.length}}</td>
                             <td>{{x.createdAt | date:'mediumDate'}}</td>
                             <!--<td>
@@ -48,9 +48,9 @@
                                 <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
                             </td>-->
                             <td>
-                                <a class="pointer" (click)="play(x)" *ngIf="x"><i class="fa fa-play"></i></a> &nbsp;
-                                <a class="pointer" (click)="stop(x)" *ngIf="x"><i class="fa fa-stop"></i></a> &nbsp;
-                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye"></i></a> &nbsp;
+                                <a class="pointer" (click)="play(x)" *ngIf="x"><i class="fa fa-play color-green"></i></a> &nbsp;
+                                <a class="pointer" (click)="stop(x)" *ngIf="x"><i class="fa fa-stop color-red"></i></a> &nbsp;
+                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye color-light-blue"></i></a> &nbsp;
                                 <audio controls [attr.id]="'audio_' + x.id" [hidden]="true">
                                         <source [src]="x.fileUrl">
                                       </audio>
