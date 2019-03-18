@@ -22,8 +22,8 @@ export class RouteNames {
     static content = 'content';
     static treeList = 'trees';
     static mediaLibrary = 'medialibrary';
-    static media = 'media';
     static mediaLibraryForm = 'medialibrary/form';
+    static media = 'medialibrary/details';
     static mediaLibraryFormEdit = 'medialibrary/form/:id';
 
     static campaign = 'campaign';

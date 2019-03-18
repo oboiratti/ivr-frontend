@@ -20,6 +20,7 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   deleteMedia: Subscription;
   lastFilter: MediaQuery;
   status: string;
+  activeTab: string;
   totalRecords = 0;
   currentPage = 1;
   recordSize = 20;
@@ -31,11 +32,18 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.status = 'Active';
+    this.activeTab = 'Active';
     this.getMedia(<MediaQuery>{});
   }
 
   ngOnDestroy() {
-    // this.deleteMedia.unsubscribe()
+    if (this.deleteMedia) { this.deleteMedia.unsubscribe(); }
+  }
+
+  changeTab(tab: string) {
+    this.status = tab;
+    this.activeTab = tab;
+    this.getMedia(<MediaQuery>{});
   }
 
   openForm() {
@@ -46,21 +54,7 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`${RouteNames.media}/${id}`);
   }
 
-  editForm(id: number) {
-    this.router.navigateByUrl(`${RouteNames.mediaLibraryFormEdit}/${id}`);
-  }
 
-  delete(id: number) {
-    MessageDialog.confirm('Delete Media', 'Are you sure you want to delete this media?').then(confirm => {
-      if (confirm.value) {
-        this.blockUi.start('Deleting Media...');
-        this.deleteMedia = this.mediaService.deleteMedia(id).subscribe(res => {
-          this.blockUi.stop();
-          this.getMedia(<MediaQuery>{});
-        }, () => this.blockUi.stop());
-      }
-    });
-  }
 
   pageChanged(page: number) {
     this.currentPage = page;
@@ -80,5 +74,16 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     this.records$ = this.mediaService.queryMedia(this.lastFilter).pipe(
       finalize(() => this.blockUi.stop())
     );
+  }
+
+  play(rec: any) {
+    const audioControl: any = document.getElementById('audio_' + rec.id);
+    audioControl.loop = true;
+    audioControl.play();
+  }
+  stop(rec: any) {
+    const audioControl: any = document.getElementById('audio_' + rec.id);
+    audioControl.pause();
+    audioControl.currentTime = 0;
   }
 }

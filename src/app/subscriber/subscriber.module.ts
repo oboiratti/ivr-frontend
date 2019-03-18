@@ -15,11 +15,11 @@ import { SubscriberExportComponent } from './subscriber-export/subscriber-export
 
 @NgModule({
   declarations: [
-    SubscriberComponent, 
-    SubscriberListComponent, 
-    SubscriberGroupListComponent, 
-    SubscriberFormComponent, 
-    SubscriberGroupFormComponent, 
+    SubscriberComponent,
+    SubscriberListComponent,
+    SubscriberGroupListComponent,
+    SubscriberFormComponent,
+    SubscriberGroupFormComponent,
     SubscriberImportComponent, SubscriberExportComponent
   ],
   imports: [

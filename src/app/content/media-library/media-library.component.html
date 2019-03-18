@@ -4,15 +4,19 @@
     </div>
 </div>
 <hr>
-
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active">Media Files</a>
+        <a class="nav-link active pointer" [class.active]="activeTab ==='Active'" (click)="changeTab('Active')">Media Files</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link">Inactive Media Files</a>
+        <a class="nav-link pointer" [class.active]="activeTab ==='InActive'" (click)="changeTab('InActive')">Inactive Media Files</a>
     </li>
 </ul>
+<div class="row">
+    <div class="col-sm-12">
+
+    </div>
+</div>
 <div class="row">
     <div class="col">
         <div class="card">
@@ -44,9 +48,12 @@
                                 <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
                             </td>-->
                             <td>
+                                <a class="pointer" (click)="play(x)" *ngIf="x"><i class="fa fa-play"></i></a> &nbsp;
+                                <a class="pointer" (click)="stop(x)" *ngIf="x"><i class="fa fa-stop"></i></a> &nbsp;
                                 <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye"></i></a> &nbsp;
-                                <a class="pointer" (click)="editForm(x.id)"><i class="fa fa-edit"></i></a> &nbsp;
-                                <a class="pointer" (click)="delete(x.id)"><i class="fa fa-trash"></i></a>
+                                <audio controls [attr.id]="'audio_' + x.id" [hidden]="true">
+                                        <source [src]="x.fileUrl">
+                                      </audio>
                             </td>
                         </tr>
                     </tbody>

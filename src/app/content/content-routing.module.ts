@@ -5,6 +5,8 @@ import { ContentComponent } from './content.component';
 import { AuthGuard } from '../auth-guard.service';
 import { TreeListComponent } from './tree-list/tree-list.component';
 import { MediaLibraryComponent } from './media-library/media-library.component';
+import { MediaFormComponent } from './media-form/media-form.component';
+import { MediaDetailsComponent } from './media-details/media-details.component';
 
 const routes: Routes = [
   {
@@ -29,12 +31,12 @@ const routes: Routes = [
       },
       {
         path: RouteNames.media,
-        component: MediaLibraryComponent,
+        component: MediaDetailsComponent,
         canActivate: [AuthGuard]
       },
       {
         path: RouteNames.mediaLibraryForm,
-        component: MediaLibraryComponent,
+        component: MediaFormComponent,
         canActivate: [AuthGuard]
       },
       {

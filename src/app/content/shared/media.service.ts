@@ -56,8 +56,16 @@ export class MediaService {
     return this.http.delete<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/${id}`);
   }
 
-  saveSubscriber(params: Media) {
-    if (params.id) { return this.http.put<ResponseObject<Media>>(`${environment.baseUrl}/subscriber`, params); }
+  saveMedia(params: Media) {
+    if (params.id) { return this.http.put<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary`, params); }
     return this.http.post<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary`, params);
+  }
+
+  activateMedia(id: number) {
+    return this.http.get<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/activate/${id}`);
+  }
+
+  deactivateMedia(id: number) {
+    return this.http.get<ResponseObject<Media>>(`${environment.baseUrl}/medialibrary/deactivate/${id}`);
   }
 }
