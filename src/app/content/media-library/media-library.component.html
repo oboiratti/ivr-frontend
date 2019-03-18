@@ -4,6 +4,44 @@
     </div>
 </div>
 <hr>
+<div class="row">
+    <div class="col-sm-8"></div>
+    <div class="col-sm-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getMedia(lastFilter)">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" (click)="getMedia(lastFilter)"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                              </button>
+                <div class="dropdown-menu" style="padding: 10px">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Code" [(ngModel)]="lastFilter.code">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="lastFilter.languageId" placeholder="Language">
+                                            <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
+                                          </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="lastFilter.type" placeholder="Type">
+                                                <option *ngFor="let t of types" [ngValue]="t">{{t}}</option>
+                                              </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Description" [(ngModel)]="lastFilter.description">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm" (click)="getMedia(lastFilter)">
+                                            Search
+                                          </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <a class="nav-link active pointer" [class.active]="activeTab ==='Active'" (click)="changeTab('Active')">Media Files</a>
@@ -12,17 +50,13 @@
         <a class="nav-link pointer" [class.active]="activeTab ==='InActive'" (click)="changeTab('InActive')">Inactive Media Files</a>
     </li>
 </ul>
-<div class="row">
-    <div class="col-sm-12">
 
-    </div>
-</div>
 <div class="row">
     <div class="col">
         <div class="card">
             <div class="table-responsive-sm">
-                <table class="table">
-                    <thead>
+                <table class="table  table-hover">
+                    <thead class="thead-light">
                         <tr>
                             <th>#</th>
                             <th>Code</th>
@@ -35,7 +69,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let x of records$ | async; let i = index">
+                        <tr *ngFor="let x of records$ | async; let i = index" scope="row">
                             <td>{{i + 1}}</td>
                             <td>{{x.code}}</td>
                             <td>{{x.title}}</td>

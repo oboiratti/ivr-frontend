@@ -7,6 +7,7 @@ import { Media, MediaQuery } from '../shared/media.model';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { finalize } from 'rxjs/operators';
 import { MessageDialog } from 'src/app/shared/message_helper';
+import { Lookup } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-media-library',
@@ -26,6 +27,8 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   recordSize = 20;
   totalPages = 1;
   pageNumber = 1;
+  languages$: Observable<Lookup[]>;
+  types = ['Message', 'Survey'];
 
   constructor(private router: Router,
     private mediaService: MediaService) { }
@@ -34,6 +37,7 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     this.status = 'Active';
     this.activeTab = 'Active';
     this.getMedia(<MediaQuery>{});
+    this.loadLanguages();
   }
 
   ngOnDestroy() {
@@ -54,7 +58,9 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`${RouteNames.content}/${RouteNames.mediaLibraryDets}/${id}`);
   }
 
-
+  private loadLanguages() {
+    this.languages$ = this.mediaService.fetchLanguages();
+  }
 
   pageChanged(page: number) {
     this.currentPage = page;
