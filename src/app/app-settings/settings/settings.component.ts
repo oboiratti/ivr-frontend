@@ -22,7 +22,7 @@ export class SettingsComponent implements OnInit {
     if (model.route) {
        this.router.navigate([model.route]);
       } else {
-        this.router.navigate([RouteNames.settings, model.name]);
+        this.router.navigate([RouteNames.appSettings, RouteNames.settings, model.name]);
        }
   }
 
