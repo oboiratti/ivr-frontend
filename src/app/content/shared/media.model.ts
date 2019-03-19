@@ -14,6 +14,8 @@ export interface Media {
     language: Lookup;
     length: string;
     filePath: string;
+    showPlay: boolean;
+    showStop: boolean;
 }
 
 export interface MediaQuery extends ModelQuery {

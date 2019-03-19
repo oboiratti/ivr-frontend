@@ -123,14 +123,13 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   stopCurrent() {
     const id = this.currentRecId;
     if (id) {
-      // this.records$ = this.records$.forEach(x => 
-      //   x.find(r => r.id === id);
-      //   // if (elm[0].id === id) {
-      //   //   console.log(elm[0]);
-      //   // }
-      // );
+      this.records$.forEach(x =>
+        x.map( r => {
+          if (r.id === id) {
+          r.showPlay = true;
+          r.showStop = false;
+          }
+        }));
     }
-
-    // const old = this.records$.
   }
 }
