@@ -6,6 +6,7 @@ import { ValidateFormDirective } from './directives/validate-form.directive';
 import { SearchComponent } from './search/search.component';
 import { SubmenuComponent } from './submenu/submenu.component';
 import { RouterModule } from '@angular/router';
+import { FilterComponent } from './filter/filter.component';
 
 @NgModule({
   imports: [
@@ -18,13 +19,15 @@ import { RouterModule } from '@angular/router';
     PageHeaderComponent,
     ValidateFormDirective,
     SearchComponent,
-    SubmenuComponent
+    SubmenuComponent,
+    FilterComponent
   ],
   exports: [
     PageHeaderComponent,
     ValidateFormDirective,
     SearchComponent,
-    SubmenuComponent
+    SubmenuComponent,
+    FilterComponent
   ]
 })
 export class SharedModule { }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LookUps } from './settings.service';
-import { RouteNames } from '../shared/constants';
+import { RouteNames } from '../../shared/constants';
 
 @Component({
   selector: 'app-settings',

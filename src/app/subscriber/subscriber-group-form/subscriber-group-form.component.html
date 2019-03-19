@@ -35,14 +35,14 @@
             </div>
           </div>
 
-          <!-- <div class="form-row">
+          <div class="form-row">
             <div class="form-group col-sm-12">
               <label>Subscribers</label>
-              <ng-select [items]="subscribers$ | async" bindLabel="phonenumber" bindValue="id" placeholder="Select Subscribers"
+              <ng-select [items]="subscribers$ | async" bindLabel="phoneNumber" bindValue="id" placeholder="Select Subscribers"
                 [clearable]="false" [multiple]="true" formControlName="subscribers"
                 [class.is-invalid]="subscribers.dirty && subscribers.invalid"></ng-select>
             </div>
-          </div> -->
+          </div>
 
           <div>
             <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"

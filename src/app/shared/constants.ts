@@ -1,11 +1,12 @@
 export class RouteNames {
-    static login = 'login';
-    static dashboard = 'dashboard';
-    static settings = 'settings';
-    static genericSettings = 'settings/:model';
-    static admin = 'admin';
-    static users = 'users';
-    static roles = 'roles';
+    static login = "login";
+    static dashboard = "dashboard";
+    static appSettings = "app-settings";
+    static settings = "settings";
+    static genericSettings = "settings/:model";
+    static admin = "admin";
+    static users = "users";
+    static roles = "roles";
 
     static subscriber = 'subscriber';
     static subscriberList = 'subscribers';

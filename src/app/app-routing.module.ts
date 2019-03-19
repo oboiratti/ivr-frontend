@@ -3,8 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './auth/login.component';
 import { AuthGuard } from './auth-guard.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { SettingsComponent } from './settings/settings.component';
-import { GeneralLookupComponent } from './settings/general-lookup/general-lookup.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { RouteNames } from './shared/constants';
 import { SubscriberListComponent } from './subscriber/subscriber-list/subscriber-list.component';
@@ -21,6 +19,16 @@ const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard]
   },
+  // {
+  //   path: RouteNames.settings,
+  //   component: SettingsComponent,
+  //   canActivate: [AuthGuard]
+  // },
+  // {
+  //   path: RouteNames.genericSettings,
+  //   component: GeneralLookupComponent,
+  //   canActivate: [AuthGuard]
+  // },
   {
     path: '',
     redirectTo: `/${RouteNames.dashboard}`,

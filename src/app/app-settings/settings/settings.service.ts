@@ -1,20 +1,22 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ResponseObject } from '../shared/common-entities.model';
-import { environment } from '../../environments/environment';
+import { ResponseObject } from '../../shared/common-entities.model';
+import { environment } from '../../../environments/environment';
 
 export class LookUps {
   static get models() {
     return [
-      {label: "Product Category", description: "Add, Edit and Delete Product Category", name: "product_category", icon: "fa fa-sort-amount-desc text-warning"},
-      {label: "Package", description: "Add, Edit and Delete Package", name: "package", icon: "fa fa-th-large text-primary"},
-      {label: "Tax Scheme", description: "Add, Edit and Delete Tax Scheme", name: "tax_scheme", icon: "fa fa-percent text-danger"},
-      // {label: "Type", description: "Add, Edit and Delete Type", name: "type", icon: "fa fa-bandcamp text-success"}
+      {label: "Region", description: "Add, Edit and Delete Regions", name: "region", icon: "fa fa-globe"},
+      {label: "District", description: "Add, Edit and Delete Districts", name: "district", icon: "fa fa-globe"},
+      {label: "Language", description: "Add, Edit and Delete Language", name: "language", icon: "fa fa-language"},
+      {label: "Tag", description: "Add, Edit and Delete Tag", name: "tag", icon: "fa fa-tag"}
     ];
   }
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SettingsService {
 
   model: any;

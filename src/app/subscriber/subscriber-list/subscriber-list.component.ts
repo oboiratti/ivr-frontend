@@ -14,16 +14,17 @@ import { MessageDialog } from 'src/app/shared/message_helper';
   styleUrls: ['./subscriber-list.component.scss']
 })
 export class SubscriberListComponent implements OnInit, OnDestroy {
-
+  
   subscribers$: Observable<Subscriber[]>;
   @BlockUI() blockUi: NgBlockUI;
   deleteSubscription: Subscription;
+  filter = {};
   lastFilter: SubscriberQuery;
   totalRecords = 0;
-  currentPage = 1;
-  recordSize = 20;
-  totalPages = 1;
-  pageNumber = 1;
+	currentPage = 1;
+	recordSize = 20;
+	totalPages = 1;
+	pageNumber = 1;
 
   constructor(private router: Router,
     private subscriberService: SubscriberService) { }
@@ -66,6 +67,8 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   }
 
   private getSubscribers(filter: SubscriberQuery) {
+    console.log(filter);
+    
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...');
