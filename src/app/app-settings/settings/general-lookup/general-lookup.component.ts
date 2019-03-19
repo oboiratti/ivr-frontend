@@ -28,7 +28,7 @@ export class GeneralLookupComponent implements OnInit {
     this.formGroup = this.formBuilder.group({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
-      description: new FormControl(''),
+      notes: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
       modifiedAt: new FormControl(null),

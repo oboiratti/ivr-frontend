@@ -6,10 +6,10 @@ import { environment } from '../../../environments/environment';
 export class LookUps {
   static get models() {
     return [
-      {label: "Region", description: "Add, Edit and Delete Regions", name: "region", icon: "fa fa-globe"},
-      {label: "District", description: "Add, Edit and Delete Districts", name: "district", icon: "fa fa-globe"},
-      {label: "Language", description: "Add, Edit and Delete Language", name: "language", icon: "fa fa-language"},
-      {label: "Tag", description: "Add, Edit and Delete Tag", name: "tag", icon: "fa fa-tag"}
+      {label: 'Regions', description: 'Add, Edit and Delete Regions', name: 'region', icon: 'fa fa-globe'},
+      {label: 'Districts', description: 'Add, Edit and Delete Districts', name: 'district', icon: 'fa fa-globe'},
+      {label: 'Languages', description: 'Add, Edit and Delete Languages', name: 'language', icon: 'fa fa-language'},
+      {label: 'Tags', description: 'Add, Edit and Delete Tags', name: 'tags', icon: 'fa fa-tag'}
     ];
   }
 }
@@ -20,7 +20,7 @@ export class LookUps {
 export class SettingsService {
 
   model: any;
-  baseApi = environment.apiUrl
+  baseApi = environment.apiUrl;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -29,7 +29,7 @@ export class SettingsService {
   }
 
   save(name: string, params: any) {
-    if (params.id) return this.httpClient.put<ResponseObject<any>>(`${this.baseApi}/${name}`, params);
+    if (params.id) { return this.httpClient.put<ResponseObject<any>>(`${this.baseApi}/${name}`, params); }
     return this.httpClient.post<ResponseObject<any>>(`${this.baseApi}/${name}`, params);
   }
 
