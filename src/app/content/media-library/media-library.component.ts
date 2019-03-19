@@ -108,9 +108,10 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     this.audioEl.load();
     // this.audioEl.loop = true;
     this.audioEl.play();
-    // this.stop(rec);
-    rec.showPlay = true;
-    rec.showStop = false;
+    this.audioEl.onended = function () {
+      rec.showPlay = true;
+      rec.showStop = false;
+    };
   }
   stop(rec: any) {
     rec.showPlay = true;
