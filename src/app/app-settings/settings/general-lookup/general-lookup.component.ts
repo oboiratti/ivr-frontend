@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LookUps, SettingsService } from '../settings.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MessageDialog } from '../../shared/message_helper';
+import { MessageDialog } from '../../../shared/message_helper';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
@@ -19,7 +19,6 @@ export class GeneralLookupComponent implements OnInit {
   formGroup: FormGroup
   records: any;
   record: any;
-  loading: boolean;
   saving: boolean;
   deleting: boolean;
   selectedRecord: any;
@@ -29,8 +28,11 @@ export class GeneralLookupComponent implements OnInit {
     this.formGroup = this.formBuilder.group({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
-      value: new FormControl(0),
-      description: new FormControl('')
+      description: new FormControl(''),
+      createdAt: new FormControl(null),
+      createdBy: new FormControl(null),
+      modifiedAt: new FormControl(null),
+      modifiedBy: new FormControl(null)
     });
   }
 
@@ -91,12 +93,12 @@ export class GeneralLookupComponent implements OnInit {
   }
 
   private fetchRecords() {
-    this.loading = true;
+    this.blockForm.start("Loading")
     this.settingsService.fetch(this.model.name).subscribe((res) => {
-      this.loading = false;
+      this.blockForm.stop()
       if (res.success) {
         this.records = res.data;
       }
-    });
+    }, () => this.blockForm.stop());
   }
 }

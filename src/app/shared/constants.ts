@@ -1,6 +1,7 @@
 export class RouteNames {
     static login = "login" 
     static dashboard = "dashboard"
+    static appSettings = "app-settings"
     static settings = "settings"
     static genericSettings = "settings/:model"
     static admin = "admin"

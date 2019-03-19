@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
       { label: "Content", route: RouteNames.content, icon: "fa fa-object-group fa-lg" },
       { label: "Campaigns", route: RouteNames.campaign, icon: "fa fa-bullhorn fa-lg" },
       { label: "Account", route: RouteNames.admin, icon: "fa fa-user fa-lg" },
-      { label: "Settings", route: RouteNames.settings, icon: "fa fa-gear fa-lg" }
+      { label: "Settings", route: RouteNames.appSettings, icon: "fa fa-gear fa-lg" }
     ];
   }
 }
