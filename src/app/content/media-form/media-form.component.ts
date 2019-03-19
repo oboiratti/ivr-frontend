@@ -68,7 +68,6 @@ export class MediaFormComponent implements OnInit, OnDestroy {
   get tagsList() { return this.form.get('tagsList'); }
   get type() { return this.form.get('type'); }
   get filePath() { return this.form.get('filePath'); }
-  get file() { return this.form.get('file'); }
   get fileName() { return this.form.get('fileName'); }
 
   private setupForm() {
@@ -78,7 +77,6 @@ export class MediaFormComponent implements OnInit, OnDestroy {
       languageId: new FormControl('', Validators.required),
       type: new FormControl('Message', Validators.required),
       filePath: new FormControl(null, Validators.required),
-      file: new FormControl(null),
       description: new FormControl(''),
       tagsList: new FormControl(''),
       createdAt: new FormControl(null),
