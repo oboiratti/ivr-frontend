@@ -18,6 +18,7 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   subscribers$: Observable<Subscriber[]>
   @BlockUI() blockUi: NgBlockUI
   deleteSubscription: Subscription
+  filter = {}
   lastFilter: SubscriberQuery
   totalRecords = 0
 	currentPage = 1
@@ -66,6 +67,8 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
 	}
 
   private getSubscribers(filter: SubscriberQuery) {
+    console.log(filter);
+    
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
 		this.lastFilter = Object.assign({}, filter);
     this.blockUi.start("Loading...")

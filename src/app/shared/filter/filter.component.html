@@ -1,0 +1,17 @@
+<div class="input-group">
+  <input type="text" class="form-control" placeholder="{{placeholder}}" name="{{name}}" [(ngModel)]="model" (keyup.enter)="btnSearch.click()">
+  <div class="input-group-append">
+    <button #btnSearch type="button" class="btn btn-outline-secondary" (click)="doSearch()"><i class="fa fa-search"></i></button>
+    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <div class="dropdown-menu">
+      <h6 class="dropdown-header">Advanced Filter</h6>
+      <form class="px-4 py-3" (submit)="doSearch()">
+        <ng-content></ng-content>
+        <button type="submit" class="btn btn-primary btn-block">Search</button>
+      </form>
+    </div>
+  </div>
+</div>

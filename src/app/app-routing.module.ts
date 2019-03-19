@@ -22,6 +22,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: RouteNames.settings,
+    component: SettingsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: '',
     redirectTo: `/${RouteNames.dashboard}`,
     pathMatch: 'full'
