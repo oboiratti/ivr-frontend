@@ -6,9 +6,9 @@
       aria-haspopup="true" aria-expanded="false">
       <span class="sr-only">Toggle Dropdown</span>
     </button>
-    <div class="dropdown-menu">
+    <div class="dropdown-menu" (click)="$event.stopPropagation()">
       <h6 class="dropdown-header">Advanced Filter</h6>
-      <form class="px-4 py-3" (submit)="doSearch()">
+      <form class="px-3 py-2" (submit)="doSearch()">
         <ng-content></ng-content>
         <button type="submit" class="btn btn-primary btn-block">Search</button>
       </form>
