@@ -1,6 +1,7 @@
 {
     "/api": {
-        "target": "http://ivr.axonapplabs.com",
+        "targetxx": "http://ivr.axonapplabs.com",
+        "target": "http://localhost:1305",
         "secure": false,
         "changeOrigin": true
     }

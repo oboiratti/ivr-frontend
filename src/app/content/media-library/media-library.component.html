@@ -1,0 +1,98 @@
+<div class="row">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form"><i class="fa fa-plus"></i> New Media File</button>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-8"></div>
+    <div class="col-sm-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getMedia(lastFilter)">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" (click)="getMedia(lastFilter)"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="sr-only">Toggle Dropdown</span>
+                              </button>
+                <div class="dropdown-menu" style="padding: 10px">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Code" [(ngModel)]="lastFilter.code">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="lastFilter.languageId" placeholder="Language">
+                                            <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
+                                          </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="lastFilter.type" placeholder="Type">
+                                                <option *ngFor="let t of types" [ngValue]="t">{{t}}</option>
+                                              </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Description" [(ngModel)]="lastFilter.description">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm" (click)="getMedia(lastFilter)">
+                                            Search
+                                          </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active pointer" [class.active]="activeTab ==='Active'" (click)="changeTab('Active')">Media Files</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link pointer" [class.active]="activeTab ==='InActive'" (click)="changeTab('InActive')">Inactive Media Files</a>
+    </li>
+</ul>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="table-responsive-sm">
+                <table class="table  table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Language</th>
+                            <th>Type</th>
+                            <th>Length</th>
+                            <th>Uploaded On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of records$ | async; let i = index" scope="row">
+                            <td>{{i + 1}}</td>
+                            <td>{{x.code}}</td>
+                            <td>{{x.title}}</td>
+                            <td>{{x.language}}</td>
+                            <td><span class="badge" [class.badge-primary]="x.type === 'Message'" [class.badge-secondary]="x.type === 'Survey'" style="font-size: inherit">{{x.type}}</span></td>
+                            <td>{{x.length}}</td>
+                            <td>{{x.createdAt | date:'mediumDate'}}</td>
+                            <!--<td>
+                                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
+                                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
+                            </td>-->
+                            <td>
+                                <a class="pointer" (click)="play(x)" *ngIf="x"><i class="fa fa-play color-green"></i></a> &nbsp;
+                                <a class="pointer" (click)="stop(x)" *ngIf="x"><i class="fa fa-stop color-red"></i></a> &nbsp;
+                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye color-light-blue"></i></a> &nbsp;
+                                <audio controls [attr.id]="'audio_' + x.id" [hidden]="true">
+                                        <source [src]="x.fileUrl">
+                                      </audio>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

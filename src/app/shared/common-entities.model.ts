@@ -6,9 +6,9 @@ export interface ResponseObject<T> {
 }
 
 export interface SearchCriteria {
-    key: string
-    value: object
-    operation: string
+    key: string;
+    value: object;
+    operation: string;
 }
 
 export interface QueryPager {
@@ -21,18 +21,19 @@ export interface ModelQuery {
 }
 
 export interface IMenuItem {
-    label: string
-    route: string
-    icon: string
+    label: string;
+    route: string;
+    icon: string;
 }
 
 export interface Lookup {
-    id: number
-    name: string
+    id: number;
+    name: string;
 }
 
 export interface Region extends Lookup {}
 
 export interface District extends Lookup {
-    region: Region
+    region: Region;
 }
+

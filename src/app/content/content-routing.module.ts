@@ -4,6 +4,9 @@ import { RouteNames } from '../shared/constants';
 import { ContentComponent } from './content.component';
 import { AuthGuard } from '../auth-guard.service';
 import { TreeListComponent } from './tree-list/tree-list.component';
+import { MediaLibraryComponent } from './media-library/media-library.component';
+import { MediaFormComponent } from './media-form/media-form.component';
+import { MediaDetailsComponent } from './media-details/media-details.component';
 
 const routes: Routes = [
   {
@@ -20,7 +23,27 @@ const routes: Routes = [
         path: RouteNames.treeList,
         component: TreeListComponent,
         canActivate: [AuthGuard]
-      }
+      },
+      {
+        path: RouteNames.mediaLibrary,
+        component: MediaLibraryComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.mediaLibraryForm,
+        component: MediaFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.mediaLibraryDetails,
+        component: MediaDetailsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.mediaLibraryFormEdit,
+        component: MediaFormComponent,
+        canActivate: [AuthGuard]
+      },
     ]
   }
 ];
