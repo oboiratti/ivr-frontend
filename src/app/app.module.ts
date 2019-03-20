@@ -22,6 +22,8 @@ import { CampaignModule } from './campaign/campaign.module';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { AppSettingsModule } from './app-settings/app-settings.module';
 import { SettingsService } from './app-settings/settings/settings.service';
+import { TreeListComponent } from './treeBuilder/tree-list/tree-list.component';
+import { TreeStudioComponent } from './treeBuilder/tree-studio/tree-studio.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { SettingsService } from './app-settings/settings/settings.service';
     PageNotFoundComponent,
     LoginComponent,
     // GeneralLookupComponent,
-    AppSettingsComponent
+    AppSettingsComponent,
+    TreeListComponent,
+    TreeStudioComponent
   ],
   imports: [
     BrowserModule,
