@@ -161,8 +161,8 @@ export class TreeStudioComponent implements OnInit {
                 stretch: go.GraphObject.Fill, stroke: "#aaa", strokeWidth: 1, width:150
              }, new go.Binding("portId", "mPortId")),
             $(go.TextBlock, 
-              { text: "1", height:20, textAlign: "center", width:150, 
-                font: "11px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif" 
+              { text: "1", height:13, textAlign: "center", width:150, margin:5, 
+                font: "12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif" 
               }),
           )
         )
