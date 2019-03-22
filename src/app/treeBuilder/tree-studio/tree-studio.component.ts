@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import * as go from 'gojs';
-import { numeric, openended, multichoice, message, blockNode ,connection, tree,multi_options  } from '../tree-schema';
+import { numeric, openended, multichoice, message, blockNode ,connection, tree,multi_options,language  } from '../tree-schema';
 import { Observable, Subscriber } from 'rxjs';
+import { TreeConfig} from '../tree-config';
+
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -20,6 +22,11 @@ export class TreeStudioComponent implements OnInit {
   private palette: go.Palette = new go.Palette();
   private $: any;
   private tree: tree;
+
+  private phoneKeys : Array<string>;
+  private repeatDelay : Array<string>;
+  private repeatNumber : Array<string>;
+  private languages : Array<language>;
 
   private currentNode: blockNode;
   private multiNode: multichoice;
@@ -59,6 +66,12 @@ export class TreeStudioComponent implements OnInit {
 
   constructor() {
     this.loadTree();
+    this.loadLanguages();
+    //Form init
+    this.phoneKeys = TreeConfig.phoneKeys;
+    this.repeatDelay = TreeConfig.repeatDelaySeconds;
+    this.repeatNumber = TreeConfig.maxRepeatNumber;
+
     console.log(this.tree);
     this.showForm("Treeform");
     this.$ = go.GraphObject.make;
@@ -323,7 +336,7 @@ export class TreeStudioComponent implements OnInit {
       versionId:"",
       title:"This is a test tree",
       description:"This is a sample test description",
-      languageId: 2342,
+      languageId: "1342",
       hasVoice:true,
       hasSms:false,
       startingNodeKey:"",
@@ -332,6 +345,15 @@ export class TreeStudioComponent implements OnInit {
     }
     this.tree = test_tree;
     //this.diagram.model = go.Model.fromJson(this.file)
+  }
+
+  loadLanguages(){
+    this.languages = [
+      {id:"1342",name:"Twi",description:""},
+      {id:"2342",name:"English",description:""},
+      {id:"3342",name:"French",description:""},
+      {id:"4342",name:"Ga",description:""}
+    ]
   }
 
   //UTILITY FUNCTIONS
@@ -374,6 +396,18 @@ export class TreeStudioComponent implements OnInit {
     this.multiForm = false;
     this.treeForm = false;
     this.numericForm = true;
+  }
+
+  setRepeatValue(key:string){
+    this.currentNode.custom.repeatKey = key;
+  }
+
+  setDelayValue(key:number){
+    this.currentNode.custom.repeatDelay = key;
+  }
+
+  setMaxRepeatValue(key:number){
+    this.currentNode.custom.repeatMax = key;
   }
 
   ngOnInit() {

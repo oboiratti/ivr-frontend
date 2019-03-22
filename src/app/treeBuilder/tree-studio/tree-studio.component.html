@@ -34,7 +34,7 @@
 					<div #diagramDiv class="col-9 diagramDiv border"></div>
 					<div #sidebar class="col-3 tree-sidebar border">
 						<!--Main Form-->
-						<div class="card" style="padding: 20px;">
+						<div class="card" style="padding: 20px; margin-bottom: 20px; margin-top: -30px">
 							<form>
 								<div class="d-block">
 									<!-- NODE SPECIFIC PROPERTIES -->
@@ -49,6 +49,33 @@
 									    <label><strong>Description</strong></label>
 									    <textarea class="border rounded form-control" [(ngModel)]="tree.description" name="tree.description" ></textarea>
 									  </div>
+									  <div class="form-group" >
+									  	<label class="d-block"><strong>Default Language</strong></label>
+									  	<select class="form-control" 
+									    	[(ngModel)] = "tree.languageId" name="tree.languageId">
+								        <option *ngFor="let language of languages" value={{language.id}}>
+								            {{language.name}}
+								        </option>
+								    	</select>
+									  </div>
+									  <div class="form-group">
+									  	<div class="custom-control custom-checkbox custom-control-inline">
+									  		<input class="custom-control-input" 
+									  			[(ngModel)]="tree.hasVoice" 
+									  			formcontrolname="tree.hasVoice" id="tree.hasVoice" name="tree.hasVoice"
+									  			type="checkbox" >
+									  		<label class="custom-control-label" for="tree.hasVoice"><strong>Has Voice</strong></label>
+									  	</div>
+									  </div>
+									  <div class="form-group">
+									  	<div class="custom-control custom-checkbox custom-control-inline">
+									  		<input class="custom-control-input" 
+									  			[(ngModel)]="tree.hasSms" 
+									  			formcontrolname="tree.hasSms" id="tree.hasSms" name="tree.hasSms"
+									  			type="checkbox">
+									  		<label class="custom-control-label" for="tree.hasSms"><strong>Has SMS</strong></label>
+									  	</div>
+									  </div>
 									</div>
 
 									<!-- Message -->
@@ -61,42 +88,48 @@
 									    	(ngModelChange)="updateMessageTitle()"></textarea>
 									  </div>
 									  <div class="form-group">
-									    <label class="d-block"><strong>Let users repeat this message</strong></label>
-									    <div class="btn-group btn-group-sm" role="group">
-									      <button class="btn btn-success" type="button">Enable</button>
-									      <button class="btn btn-danger" type="button">Disable</button>
-									    </div>
+									  	<div class="custom-control custom-checkbox custom-control-inline">
+									  		<input class="custom-control-input" 
+									  			[(ngModel)]="currentNode.custom.repeat" 
+									  			formcontrolname="currentNode.custom.repeat" id="currentNode.custom.repeat" name="currentNode.custom.repeat" type="checkbox">
+									  		<label class="custom-control-label" for="currentNode.custom.repeat"><strong>Let users repeat this message</strong></label>
+									  	</div>
 									  </div>
-									  <a class="text-muted" href="#">
-									    <br>For the best user experience, please provide an audio prompt that says,&nbsp;
-									    <em>"If you'd like to repeat this message, please press 2 now."</em>
-									  </a>
-									  <div class="form-group"><label class="d-block"><strong>Default Repeat Key</strong></label>
-									    <div class="dropdown d-inline">
-									      <button class="btn btn-outline-secondary btn-sm dropdown-toggle text-dark bg-white border-secondary" data-toggle="dropdown" aria-expanded="false" type="button" style="max-width: 70px;">2 &nbsp; &nbsp;&nbsp;</button>
-									      <div class="dropdown-menu" role="menu">
-									        <a class="dropdown-item" role="presentation">1</a>
-									        <a class="dropdown-item" role="presentation">2</a>
-									        <a class="dropdown-item" role="presentation">3</a>
-									      </div>
-									    </div>
-									  </div>
-									  <div class="form-group">
-									    <label class="d-block"><strong>Delay To Enter Repeat Key</strong></label>
-									    <div class="dropdown d-inline">
-									      <button class="btn btn-outline-secondary btn-sm dropdown-toggle text-dark bg-white border-secondary" data-toggle="dropdown" aria-expanded="false" type="button">2 &nbsp; &nbsp;&nbsp;</button>
-									      <div class="dropdown-menu" role="menu">
-									        <a class="dropdown-item" role="presentation" href="#">First Item</a>
-									        <a class="dropdown-item" role="presentation" href="#">Second Item</a>
-									        <a class="dropdown-item" role="presentation" href="#">Third Item</a>
-									      </div>
-									    </div>
-									    <label style="margin-left: 5px;">seconds</label>
-									  </div>
-									  <div class="form-group"><label class="d-block"><strong>Maximum Number of Repeats</strong></label>
-									    <div class="dropdown d-inline"><button class="btn btn-outline-secondary btn-sm dropdown-toggle text-dark bg-white border-secondary" data-toggle="dropdown" aria-expanded="false" type="button">2 &nbsp; &nbsp;&nbsp;</button>
-									      <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
-									    </div>
+									  <div *ngIf="currentNode.custom.repeat">
+									  	<a class="text-muted" href="">
+										    <br>For the best user experience, please provide an audio prompt that says,&nbsp;
+										    <em>"If you'd like to repeat this message, please press 2 now."</em>
+										  </a>
+										  <div class="form-group" ><label class="d-block"><strong>Default Repeat Key</strong></label>
+										  	<select style="width: 50px;" class="form-control" 
+										    	[(ngModel)] = "currentNode.custom.repeatKey"
+										    	name="currentNode.custom.repeatKey">
+									        <option *ngFor="let key of phoneKeys" value={{key}}>
+									            {{key}}
+									        </option>
+									    	</select>
+										  </div>
+										  <div class="form-group">
+										    <label class="d-block"><strong>Delay To Enter Repeat Key</strong></label>
+										    <select style="width: 50px;" class="form-control" 
+										    	[(ngModel)] = "currentNode.custom.repeatDelay"
+										    	name="currentNode.custom.repeatDelay">
+									        <option *ngFor="let key of repeatDelay" value={{key}}>
+									            {{key}}
+									        </option>
+									    	</select>
+										    <label style="margin-left: 5px;">seconds</label>
+										  </div>
+										  <div class="form-group">
+										  	<label class="d-block"><strong>Maximum Number of Repeats</strong></label>
+										    <select style="width: 50px;" class="form-control" 
+										    	[(ngModel)] = "currentNode.custom.repeatMax"
+										    	name="currentNode.custom.repeatMax">
+									        <option *ngFor="let key of repeatNumber" value={{key}}>
+									            {{key}}
+									        </option>
+									    	</select>
+									  	</div>
 									  </div>
 									</div>
 
@@ -147,7 +180,7 @@
 									</div>
 
 									<!-- STANDAR BLOCK PROPERTIES -->
-									<div id="STANDARD">
+									<div id="STANDARD" *ngIf="!treeForm">
 										<div class="card inner-card">
 											<div class="card-header inner-card">
 												<h5>Twi</h5>
@@ -228,6 +261,16 @@
 												<label class="custom-control-label" for="formCheck-1">Set as a subscriber property with the subscriber's<br>response<br></label>
 											</div>
 										</div>
+										<div class="form-group">
+											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Summary</strong></p>
+									  	<div class="custom-control custom-checkbox custom-control-inline">
+									  		<input class="custom-control-input" 
+									  			[(ngModel)]="tree.hasVoice" 
+									  			formcontrolname="tree.hasVoice" id="tree.hasVoice" name="tree.hasVoice"
+									  			type="checkbox" >
+									  		<label class="custom-control-label" for="formCheck-1">Include in summary<br></label>
+									  	</div>
+									  </div>
 										<div class="form-group">
 											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Summary</strong></p>
 											<div class="custom-control custom-checkbox">

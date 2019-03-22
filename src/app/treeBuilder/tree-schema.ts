@@ -3,7 +3,7 @@ interface tree {
 	versionId:string;
 	title:string;
   description:string;
-  languageId: number;
+  languageId: string;
   hasVoice:boolean;
   hasSms:boolean;
   startingNodeKey:string;
@@ -31,9 +31,9 @@ interface blockNode{
 interface message{
 	title: string;
 	repeat: boolean; // Number of times to repeat 
-	repeatKey: number; //Key to press to repeat
-	repeatDelay: number; //Seconds before repeat
-	repeatMax: number; //Maximum number of times to repeat message
+	repeatKey: string; //Key to press to repeat
+	repeatDelay: string; //Seconds before repeat
+	repeatMax: string; //Maximum number of times to repeat message
 }
 
 interface multichoice{
@@ -71,7 +71,13 @@ interface multi_options{
   value:string;
 }
 
-export{ numeric, openended, multichoice, message, blockNode, connection, tree,multi_options }
+interface language{
+	id:string;
+	name:string;
+	description:string;
+}
+
+export{ numeric, openended, multichoice, message, blockNode, connection, tree,multi_options,language }
 
 
 
