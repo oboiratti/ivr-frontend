@@ -5,10 +5,6 @@ import { AuthGuard } from './auth-guard.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { RouteNames } from './shared/constants';
-import { SubscriberListComponent } from './subscriber/subscriber-list/subscriber-list.component';
-import { SubscriberComponent } from './subscriber/subscriber.component';
-import { TreeListComponent } from './treeBuilder/tree-list/tree-list.component'
-import { TreeStudioComponent } from './treeBuilder/tree-studio/tree-studio.component';
 
 const routes: Routes = [
   {
@@ -19,16 +15,6 @@ const routes: Routes = [
   {
     path: RouteNames.dashboard,
     component: DashboardComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: RouteNames.treeBuilder,
-    component: TreeListComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: RouteNames.treeStudio,
-    component: TreeStudioComponent,
     canActivate: [AuthGuard]
   },
   // {
