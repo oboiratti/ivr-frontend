@@ -150,9 +150,15 @@ export class TreeStudioComponent implements OnInit {
           }),
         $(go.Panel,"Vertical",{ alignmentFocus: go.Spot.TopLeft, padding: 5 },
           $(go.TextBlock, 
-            { margin: 5, font: "bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif", textAlign: "left", height:40, 
+            { margin: 2, font: "bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif", textAlign: "left", height:40, 
               maxSize: new go.Size(150, 60),wrap: go.TextBlock.WrapFit
-            }, new go.Binding("text","mTitle"))
+            }, new go.Binding("text","mTitle",(e:string)=>{
+                var text = e;
+                if(text.length > 75){
+                  text = text.substring(0,75).concat("...");
+                }
+                return text;
+            }))
         ),
         $(go.Panel, "Horizontal",{ alignment: go.Spot.BottomLeft,stretch: go.GraphObject.Fill },
           $(go.Panel,"Auto",{},
