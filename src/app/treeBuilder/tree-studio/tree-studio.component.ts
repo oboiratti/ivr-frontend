@@ -287,6 +287,13 @@ export class TreeStudioComponent implements OnInit {
     console.log("Current Node",this.currentNode);
   }
 
+  updateMessageTitle(){
+     let nodedata = this.diagram.model.findNodeDataForKey(this.currentNode.key);
+     if(nodedata){
+       this.diagram.model.setDataProperty(nodedata,"mTitle",this.currentNode.custom.title);
+     }
+  }
+
   addMultichoice(){
 
   }

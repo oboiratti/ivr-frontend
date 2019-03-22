@@ -56,7 +56,9 @@
 									  <h3 class="d-flex">Edit Message</h3>
 									  <div class="form-group" style="margin-top: 25px;">
 									    <label><strong>Message Title</strong></label>
-									    <textarea class="border rounded form-control"  [(ngModel)]="currentNode.custom.title" name="currentNode.custom.title" ></textarea>
+									    <textarea class="border rounded form-control"  
+									    	[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
+									    	(ngModelChange)="updateMessageTitle()"></textarea>
 									  </div>
 									  <div class="form-group">
 									    <label class="d-block"><strong>Let users repeat this message</strong></label>
