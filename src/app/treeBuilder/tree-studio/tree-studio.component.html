@@ -252,32 +252,18 @@
 										</div>
 										<div class="form-group">
 											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Options</strong></p>
-											<button class="btn btn-secondary btn-sm" type="button">Set as starting block</button>
-										</div>
-										<div class="form-group">
-											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Subscriber Properties</strong></p>
-											<div class="custom-control custom-checkbox">
-												<input class="custom-control-input" type="checkbox" id="formCheck-1">
-												<label class="custom-control-label" for="formCheck-1">Set as a subscriber property with the subscriber's<br>response<br></label>
-											</div>
+											<button class="btn btn-secondary btn-sm" type="button" [disabled]="currentNode.isStartingNode" (click)="makeStartNode()">Set as starting block</button>
 										</div>
 										<div class="form-group">
 											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Summary</strong></p>
 									  	<div class="custom-control custom-checkbox custom-control-inline">
 									  		<input class="custom-control-input" 
-									  			[(ngModel)]="tree.hasVoice" 
-									  			formcontrolname="tree.hasVoice" id="tree.hasVoice" name="tree.hasVoice"
+									  			[(ngModel)]="currentNode.includeInSummary" 
+									  			formcontrolname="currentNode.includeInSummary" id="currentNode.includeInSummary" name="currentNode.includeInSummary"
 									  			type="checkbox" >
-									  		<label class="custom-control-label" for="formCheck-1">Include in summary<br></label>
+									  		<label class="custom-control-label" for="currentNode.includeInSummary">Include in summary</label>
 									  	</div>
 									  </div>
-										<div class="form-group">
-											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Summary</strong></p>
-											<div class="custom-control custom-checkbox">
-												<input class="custom-control-input" type="checkbox" id="formCheck-1">
-												<label class="custom-control-label" for="formCheck-1">Include in summary<br></label>
-											</div>
-										</div>
 									</div>
 								</div>
 							</form>

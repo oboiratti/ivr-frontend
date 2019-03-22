@@ -88,7 +88,6 @@ export class TreeStudioComponent implements OnInit {
     // DIAGRAM PROPERTIES
     this.diagram.initialContentAlignment = go.Spot.Center;
     this.diagram.allowDrop = true;
-    this.diagram.allowCopy = true;
     this.diagram.undoManager.isEnabled = true;
     this.diagram.toolManager.draggingTool = new GuidedDraggingTool();
     this.diagram.toolManager.draggingTool.dragsTree = true;
@@ -267,13 +266,13 @@ export class TreeStudioComponent implements OnInit {
   }
 
   isFirstNode(){ //todo
-    // if the number of node in diagram is 0 return true else false
-    // set startingNodeKey value of tree to current node_id
-    return false;
+    return (this.tree.nodes.length > 0) ? false : true;
   }
 
-  makeStartNode(nodeId:string){
-    //Look 
+  makeStartNode(){
+    this.tree.nodes.filter(x => x.isStartingNode === true)[0].isStartingNode = false;
+    this.tree.startingNodeKey = this.currentNode.key;
+    this.currentNode.isStartingNode = true;
   }
 
   addMessage(){
@@ -283,9 +282,9 @@ export class TreeStudioComponent implements OnInit {
       custom:{
         title: "New Message",
         repeat: false, // Number of times to repeat 
-        repeatKey: 2, //Key to press to repeat
-        repeatDelay: 7,  //Seconds before repeat
-        repeatMax: 3
+        repeatKey: "2", //Key to press to repeat
+        repeatDelay: "7",  //Seconds before repeat
+        repeatMax: "3"
       },
       audioId:"",
       sms:"",
@@ -295,6 +294,7 @@ export class TreeStudioComponent implements OnInit {
     };
 
     let nodeBlock = { key: newMessage.key, mTitle:newMessage.custom.title, category:"Message"};
+    if(this.isFirstNode) this.tree.startingNodeKey = newMessage.key;
     this.tree.nodes.push(newMessage);
     this.diagram.model.addNodeData(nodeBlock);
   }
