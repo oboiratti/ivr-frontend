@@ -44,14 +44,17 @@
 </div>
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active pointer" [class.active]="activeTab ==='Active'" (click)="changeTab('Active')">Media Files</a>
+        <a class="nav-link active pointer" [class.active]="activeTab ==='Active'" (click)="changeTab('Active')">Active Files</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link pointer" [class.active]="activeTab ==='InActive'" (click)="changeTab('InActive')">Inactive Media Files</a>
+        <a class="nav-link pointer" [class.active]="activeTab ==='InActive'" (click)="changeTab('InActive')">Inactive Files</a>
     </li>
 </ul>
 
-<div class="row">
+<div class="row" style="margin-top:10px;">
+    <audio controls id="audio_el" [hidden]="true">
+                <source id="audio_el_source" src="">
+              </audio>
     <div class="col">
         <div class="card">
             <div class="table-responsive-sm">
@@ -82,12 +85,8 @@
                                 <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
                             </td>-->
                             <td>
-                                <a class="pointer" (click)="play(x)" *ngIf="x"><i class="fa fa-play color-green"></i></a> &nbsp;
-                                <a class="pointer" (click)="stop(x)" *ngIf="x"><i class="fa fa-stop color-red"></i></a> &nbsp;
-                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye color-light-blue"></i></a> &nbsp;
-                                <audio controls [attr.id]="'audio_' + x.id" [hidden]="true">
-                                        <source [src]="x.fileUrl">
-                                      </audio>
+                                <a class="pointer"><i class="fa fa-play fa-lg color-green" (click)="play(x)" *ngIf="x.showPlay"></i><i class="fa fa-stop fa-lg color-red" (click)="stop(x)" *ngIf="x.showStop"></i></a> &nbsp;
+                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye fa-lg  color-light-blue"></i></a> &nbsp;
                             </td>
                         </tr>
                     </tbody>

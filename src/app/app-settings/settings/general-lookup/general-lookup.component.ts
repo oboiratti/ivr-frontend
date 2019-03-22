@@ -32,7 +32,7 @@ export class GeneralLookupComponent implements OnInit {
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
       subscriberTypeId: new FormControl(''),
-      description: new FormControl(''),
+      notes: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
       modifiedAt: new FormControl(null),

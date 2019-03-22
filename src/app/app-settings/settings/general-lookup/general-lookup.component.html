@@ -26,10 +26,8 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label>Name</label>
-                            <input type="text" class="form-control" formControlName="name"
-                                [class.invalid-input]="formGroup.controls.name.dirty && formGroup.controls.name.invalid">
-                            <div class="invalid-msg"
-                                *ngIf="formGroup.controls.name.dirty && formGroup.controls.name.errors">
+                            <input type="text" class="form-control" formControlName="name" [class.invalid-input]="formGroup.controls.name.dirty && formGroup.controls.name.invalid">
+                            <div class="invalid-msg" *ngIf="formGroup.controls.name.dirty && formGroup.controls.name.errors">
                                 This field is required
                             </div>
                         </div>
@@ -48,7 +46,7 @@
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea rows="3" class="form-control" formControlName="description"></textarea>
+                            <textarea rows="3" class="form-control" formControlName="notes"></textarea>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -56,8 +54,7 @@
                             <i class="fa fa-save"></i> Save</button>
                         <button type="button" class="btn btn-secondary" (click)="closeForm()">
                             <i class="fa fa-close"></i> Cancel</button>
-                        <button type="button" class="btn btn-danger float-right"
-                            (click)="remove(formGroup.controls.id.value)" *ngIf="formGroup.controls.id.value">
+                        <button type="button" class="btn btn-danger float-right" (click)="remove(formGroup.controls.id.value)" *ngIf="formGroup.controls.id.value">
                             <i class="fa fa-trash"></i> Delete</button>
                     </div>
                 </div>
@@ -81,7 +78,7 @@
                     <tr *ngFor="let record of records; let i = index" class="pointer" (click)="selectRow(record)">
                         <td class="table-index">{{i + 1}}.</td>
                         <td>{{record.name}}</td>
-                        <td>{{record.description}}</td>
+                        <td>{{record.notes}}</td>
                     </tr>
                 </tbody>
             </table>

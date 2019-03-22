@@ -9,10 +9,10 @@ export class LookUps {
     return [
       {label: 'Region', description: 'Add, Edit and Delete Regions', name: 'region', icon: 'fa fa-globe'},
       {label: 'District', description: 'Add, Edit and Delete Districts', name: 'district', icon: 'fa fa-globe'},
-      {label: 'Language', description: 'Add, Edit and Delete Language', name: 'language', icon: 'fa fa-language'},
-      {label: 'Tag', description: 'Add, Edit and Delete Tag', name: 'tag', icon: 'fa fa-tag'},
-      {label: 'Subscriber Type', description: 'Add, Edit and Delete Subscriber Type', name: 'subscriberType', icon: 'fa fa-address-book'},
-      {label: 'Educational Level', description: 'Add, Edit and Delete Educational Level', name: 'educationalLevel', icon: 'fa fa-graduation-cap'},
+      {label: 'Language', description: 'Add, Edit and Delete Languages', name: 'language', icon: 'fa fa-language'},
+      {label: 'Tag', description: 'Add, Edit and Delete Tags', name: 'tags', icon: 'fa fa-tag'},
+      {label: 'Subscriber Type', description: 'Add, Edit and Delete Subscriber Types', name: 'subscriberType', icon: 'fa fa-address-book'},
+      {label: 'Educational Level', description: 'Add, Edit and Delete Educational Levels', name: 'educationalLevel', icon: 'fa fa-graduation-cap'},
       {label: 'Commodity', description: 'Add, Edit and Delete Commodities', name: 'commodity', icon: 'fa fa-th-list'}
     ];
   }
@@ -24,7 +24,7 @@ export class LookUps {
 export class SettingsService {
 
   model: any;
-  baseApi = environment.apiUrl
+  baseApi = environment.apiUrl;
 
   constructor(private httpClient: HttpClient) { }
 

@@ -22,6 +22,8 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   lastFilter: MediaQuery;
   status: string;
   activeTab: string;
+  audioEl: any;
+  audioElSource: any;
   totalRecords = 0;
   currentPage = 1;
   recordSize = 20;
@@ -29,6 +31,7 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   pageNumber = 1;
   languages$: Observable<Lookup[]>;
   types = ['Message', 'Survey'];
+  currentRecId: number;
 
   constructor(private router: Router,
     private mediaService: MediaService) { }
@@ -36,6 +39,8 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.status = 'Active';
     this.activeTab = 'Active';
+    this.audioEl = document.getElementById('audio_el');
+    this.audioElSource = document.getElementById('audio_el_source');
     this.getMedia(<MediaQuery>{});
     this.loadLanguages();
   }
@@ -84,23 +89,48 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
 
   setLabel(type: string) {
     switch (type) {
-        case 'Message':
-            return 'label-primary';
-        case 'Survey':
-            return 'label-default';
-        default:
-            return 'label-danger';
+      case 'Message':
+        return 'label-primary';
+      case 'Survey':
+        return 'label-default';
+      default:
+        return 'label-danger';
     }
-}
+  }
 
   play(rec: any) {
-    const audioControl: any = document.getElementById('audio_' + rec.id);
-    audioControl.loop = true;
-    audioControl.play();
+    this.stopCurrent();
+    this.currentRecId = rec.id;
+    rec.showPlay = false;
+    rec.showStop = true;
+
+    this.audioElSource.src = rec.fileUrl;
+    this.audioEl.load();
+    // this.audioEl.loop = true;
+    this.audioEl.play();
+    this.audioEl.onended = function () {
+      rec.showPlay = true;
+      rec.showStop = false;
+    };
   }
   stop(rec: any) {
-    const audioControl: any = document.getElementById('audio_' + rec.id);
-    audioControl.pause();
-    audioControl.currentTime = 0;
+    rec.showPlay = true;
+    rec.showStop = false;
+    this.audioEl.pause();
+    this.audioEl.currentTime = 0;
+  }
+
+  stopCurrent() {
+    const id = this.currentRecId;
+    if (id) {
+      // this.records$ = this.records$.forEach(x => 
+      //   x.find(r => r.id === id);
+      //   // if (elm[0].id === id) {
+      //   //   console.log(elm[0]);
+      //   // }
+      // );
+    }
+
+    // const old = this.records$.
   }
 }
