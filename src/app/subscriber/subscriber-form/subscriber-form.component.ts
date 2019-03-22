@@ -8,6 +8,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { Subscriber, SubscriberGroup } from '../shared/subscriber.model';
+import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 
 @Component({
   selector: 'app-subscriber-form',
@@ -19,6 +20,9 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   form: FormGroup
   languages$: Observable<Lookup[]>
   districts$: Observable<Lookup[]>
+  regions$: Observable<Lookup[]>
+  educationalLevels$: Observable<Lookup[]>
+  subscriberTypes$: Observable<Lookup[]>
   groups$: Observable<SubscriberGroup[]>
   @BlockUI() blockUi: NgBlockUI
   saveSubscription: Subscription
@@ -27,32 +31,36 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private subscriberService: SubscriberService) { }
+    private subscriberService: SubscriberService,
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.setupForm()
     this.loadLanguages()
+    this.loadRegions()
     this.loadDistricts()
     this.loadGroups()
+    this.loadEducationalLevel()
+    this.loadSubscriberType()
     const id = +this.activatedRoute.snapshot.paramMap.get('id')
-    if (id) this.findSubscriber(id)
+    if (id) { this.findSubscriber(id) }
   }
 
   ngOnDestroy() {
-    if (this.saveSubscription) this.saveSubscription.unsubscribe()
-    if (this.findSubscription) this.findSubscription.unsubscribe()
+    if (this.saveSubscription) { this.saveSubscription.unsubscribe() }
+    if (this.findSubscription) { this.findSubscription.unsubscribe() }
   }
 
   save(formData: any) {
-    let params = formData
+    const params = formData
     params.subscriberGroups = params.subscriberGroups.map(elm => {
       return {groupId: elm}
     })
 
-    this.blockUi.start("Saving...")
+    this.blockUi.start('Saving...')
     this.saveSubscription = this.subscriberService.saveSubscriber(formData).subscribe(res => {
       this.blockUi.stop()
-      if (res.success) this.closeForm()
+      if (res.success) { this.closeForm() }
     }, () => this.blockUi.stop())
   }
 
@@ -72,6 +80,12 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   get sms() { return this.form.get('sms') }
   get comments() { return this.form.get('comments') }
   get subscriberGroups() { return this.form.get('subscriberGroups') }
+  get regionId() { return this.form.get('regionId') }
+  get educationLevelId() { return this.form.get('educationLevelId') }
+  get dateOfBirth() { return this.form.get('dateOfBirth') }
+  get subscriberTypeId() { return this.form.get('subscriberTypeId') }
+  get primaryCommodity() { return this.form.get('primaryCommodity') }
+  get otherCommodities() { return this.form.get('otherCommodities') }
 
   private setupForm() {
     this.form = this.fb.group({
@@ -86,12 +100,18 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       languageId: new FormControl('', Validators.required),
       gender: new FormControl('Male', Validators.required),
       startDate: new FormControl('', Validators.required),
-      districtId: new FormControl('', Validators.required),
+      regionId: new FormControl(null, Validators.required),
+      districtId: new FormControl(null, Validators.required),
       location: new FormControl('', Validators.required),
       voice: new FormControl(true),
       sms: new FormControl(''),
       comments: new FormControl(''),
       subscriberGroups: new FormControl(''),
+      educationLevelId: new FormControl(null, Validators.required),
+      dateOfBirth: new FormControl(null),
+      subscriberTypeId: new FormControl(null, Validators.required),
+      primaryCommodity: new FormControl(null, Validators.required),
+      otherCommodities: new FormControl(null),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
       modifiedAt: new FormControl(null),
@@ -100,11 +120,23 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   private loadLanguages() {
-    this.languages$ = this.subscriberService.fetchLanguages()
+    this.languages$ = this.settingsService.fetch2('language')
   }
 
   private loadDistricts() {
-    this.districts$ = this.subscriberService.fetchDistricts()
+    this.districts$ = this.settingsService.fetch2('district')
+  }
+
+  private loadRegions() {
+    this.regions$ = this.settingsService.fetch2('region')
+  }
+
+  private loadEducationalLevel() {
+    this.educationalLevels$ = this.settingsService.fetch2('educationallevel')
+  }
+
+  private loadSubscriberType() {
+    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
   }
 
   private loadGroups() {
@@ -112,7 +144,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   private findSubscriber(id: number) {
-    this.blockUi.start("Loading...")
+    this.blockUi.start('Loading...')
     this.findSubscription = this.subscriberService.findSubscriber(id).subscribe(res => {
       this.blockUi.stop()
       if (res.success) {
@@ -122,7 +154,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           startDate: new Date(data.startDate).toISOString().substring(0, 10),
           languageId: data.language.id,
           districtId: data.district.id,
-          subscriberGroups: data.subscriberGroups.map(grp => { return grp.groupId })
+          subscriberGroups: data.subscriberGroups.map(grp => grp.groupId)
         })
       }
     }, () => this.blockUi.stop())

@@ -33,6 +33,19 @@
                                 This field is required
                             </div>
                         </div>
+                        <div class="form-group" *ngIf="modelName === 'commodity'">
+                            <label>Subscriber Type</label>
+                            <select class="form-control" formControlName="subscriberTypeId"
+                                [class.is-invalid]="formGroup.controls.subscriberTypeId.dirty && formGroup.controls.subscriberTypeId.invalid">
+                                <option *ngFor="let subscriberType of subscriberTypes$ | async"
+                                    [ngValue]="subscriberType.id">{{subscriberType.name}}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="formGroup.controls.subscriberTypeId.dirty && formGroup.controls.subscriberTypeId.invalid">
+                                <div *ngIf="formGroup.controls.subscriberTypeId.errors.required">
+                                    This field is required
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Description</label>
                             <textarea rows="3" class="form-control" formControlName="description"></textarea>

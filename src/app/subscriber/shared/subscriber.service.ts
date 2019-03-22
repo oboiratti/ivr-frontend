@@ -12,23 +12,23 @@ export class SubscriberService {
 
   constructor(private http: HttpClient) { }
 
-  fetchLanguages() {
-    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/language`)
-    .pipe(
-      map(res => {
-        if (res.success) return res.data
-      })
-    )
-  }
+  // fetchLanguages() {
+  //   return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/language`)
+  //   .pipe(
+  //     map(res => {
+  //       if (res.success) return res.data
+  //     })
+  //   )
+  // }
 
-  fetchDistricts() {
-    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/district`)
-    .pipe(
-      map(res => {
-        if (res.success) return res.data
-      })
-    )
-  }
+  // fetchDistricts() {
+  //   return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/district`)
+  //   .pipe(
+  //     map(res => {
+  //       if (res.success) return res.data
+  //     })
+  //   )
+  // }
 
   fetchSubscribers() {
     return this.http.get<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber`)
