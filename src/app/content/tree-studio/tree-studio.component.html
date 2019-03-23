@@ -1,8 +1,8 @@
 	<page-header title="Tree Studio">
 	Tree Builder
 	</page-header>
-	<div class="page-content">
-	<div class="container-fluid">
+	<div class="">
+	<div class="container-fluid" style="padding:0px;">
 		<div class="card">
 			<div class="card-header">
 				<div class="btn-group float-left" role="group">
@@ -34,13 +34,13 @@
 					<div #diagramDiv class="col-9 diagramDiv border"></div>
 					<div #sidebar class="col-3 tree-sidebar border">
 						<!--Main Form-->
-						<div class="card" style="padding: 20px; margin-bottom: 20px; margin-top: -30px">
+						<div class="card" style="padding: 10px; margin-bottom: 20px; margin-top: -30px">
 							<form>
 								<div class="d-block">
 									<!-- NODE SPECIFIC PROPERTIES -->
 									<!-- Tree Form -->
 									<div id="tree" *ngIf="treeForm">
-										<h3 class="d-flex">Tree Details</h3>
+										<h5 class="d-flex">Tree Details</h5>
 										<div class="form-group" style="margin-top: 25px;">
 											<label><strong>Title</strong></label>
 											<input class="form-control" type="text" [(ngModel)]="tree.title" name="tree.name" >
@@ -80,7 +80,7 @@
 
 									<!-- Message -->
 									<div id="message" *ngIf="messageForm">
-										<h3 class="d-flex">Edit Message</h3>
+										<h5 class="d-flex">Edit Message</h5>
 										<div class="form-group" style="margin-top: 25px;">
 											<label><strong>Message Title</strong></label>
 											<textarea class="border rounded form-control"  
@@ -135,7 +135,7 @@
 
 									<!-- MultiChoice -->
 									<div id="multichoice" *ngIf="multiForm"> 
-										<h3 class="d-flex">Edit multiple-choice question</h3>
+										<h5 class="d-flex">Edit multiple-choice question</h5>
 										<div class="form-group"><label><strong>Question Title</strong></label>
 											<textarea class="border rounded form-control"  
 												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
@@ -143,41 +143,44 @@
 										</div>
 										<div class="form-group">
 											<label><strong>Choices</strong></label>
-											<div class="input-group">
-												<div class="input-group-prepend"><span class="input-group-text">1</span></div>
-												<input class="form-control" type="text"></div>
+											<div class="input-group" *ngFor="let choice of currentNode.custom.choices; let i = index;"
+												style="margin-bottom: 5px;">
+												<div class="input-group-prepend"><span class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
+												<input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value" name="currentNode.custom.choices[{{i}}]" (ngModelChange)="addChoice(i+1)">
 											</div>
-											<div class="form-group">
+										</div>
+
+											<!-- <div class="form-group">
 												<label class="d-block"><strong>Choices Options</strong></label>
 												<button class="btn btn-info btn-block btn-sm" type="button">Set choice options</button>
-											</div>
-											<div class="form-group">
+											</div> -->
+											<!-- <div class="form-group">
 												<label class="d-block"><strong>Output Branching</strong></label>
 												<div class="btn-group" role="group">
 													<button class="btn btn-secondary" type="button"><i class="fas fa-sitemap"></i></button><button class="btn btn-secondary" type="button" style="min-width: 46px;"><i class="fas fa-code-branch"></i></button>
 												</div>
-											</div>
+											</div> -->
 											<div class="form-group">
 												<label class="d-block"><strong>When no valid response is received</strong></label>
 												<div class="custom-control custom-radio">
-													<input class="custom-control-input" type="radio" id="formCheck1" name="customRadio">
-													<label class="custom-control-label" for="formCheck1">End the call/session</label>
+													<input class="custom-control-input" type="radio" id="addExitForNoResponse1" [(ngModel)]="currentNode.custom.addExitForNoResponse" name="currentNode.custom.addExitForNoResponse" value=true>
+													<label class="custom-control-label"  for="addExitForNoResponse1">End the call/session</label>
 												</div>
 												<div class="custom-control custom-radio">
-													<input class="custom-control-input" type="radio" name="customRadio" id="formCheck2">
-													<label class="custom-control-label" for="formCheck2">Continue through Exit</label>
+													<input class="custom-control-input" type="radio" name="currentNode.custom.addExitForNoResponse" id="addExitForNoResponse2" [(ngModel)]="currentNode.custom.addExitForNoResponse" value=false>
+													<label class="custom-control-label"  for="addExitForNoResponse2">Continue through Exit</label>
 												</div>
 											</div>
 											<div class="form-group">
 												<label class="d-block"><strong>Repeat Questions</strong></label>
-												<input class="form-control form-control-sm d-inline" type="text" style="max-width: 70px;">
-												<label style="margin-left: 5px;">times for incorrect responses</label>
+												<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" 
+													[(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax"> times for incorrect responses
 											</div>
 											<div class="form-group">
 												<label class="d-block"><strong>Repeat Timeout</strong></label>
 												<label style="margin-right: 5px;">Wait</label>
-												<input class="form-control form-control-sm d-inline" type="text" style="max-width: 70px;">
-												<label style="margin-left: 5px;">times for incorrect responses</label>
+												<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
+													[(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
 											</div>
 									</div>
 

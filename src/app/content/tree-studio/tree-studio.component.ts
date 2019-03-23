@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import * as go from 'gojs';
-import { numeric, openended, multichoice, message, blockNode , connection, tree, multi_options, lookup, audio } from '../tree-schema';
+import { numeric, openended, multichoice, message, blockNode , connection, tree, choice , multi_options, lookup, audio } from '../tree-schema';
 import { Observable, Subscriber } from 'rxjs';
 import { TreeConfig} from '../tree-config';
 
@@ -358,7 +358,7 @@ export class TreeStudioComponent implements OnInit {
         repeatKey: '2', // Key to press to repeat
         repeatDelay: '7',  // Seconds before repeat
         repeatMax: '3',
-        choices: [],
+        choices: [{key: 1, value: '' }],
         choiceKeypresses: {},
         branching: true,
         addExitForNoResponse : false
@@ -391,8 +391,9 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  addMultichoice() {
-
+  addChoice(i: number) {
+    let num: number = this.currentNode.custom.choices.length;
+    if (num == i ) { this.currentNode.custom.choices.push({ key: num + 1, value : '' }); }
   }
 
   addNumeric() {

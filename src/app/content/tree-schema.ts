@@ -37,7 +37,7 @@ interface message {
 }
 
 interface multichoice {
-	choices: Array<string>; // Starts from 1
+	choices: Array<choice>; // Starts from 1
 	choiceKeypresses: object; // {'1': '2'} // This represents the keys that should be pressed for which choice
 	title:  string;
   branching:  boolean; // Not sure if this is neccessary 
@@ -48,6 +48,10 @@ interface multichoice {
 	repeatMax:  number; // Maximum number of times to repeat question
 }
 
+interface choice {
+	key: number;
+	value: string;
+}
 interface openended {
 	title: string;
 	isInputRequired:  boolean;
@@ -83,7 +87,7 @@ interface audio {
 	url: string;
 }
 
-export{ numeric, openended, multichoice, message, blockNode, connection, tree, multi_options, lookup, audio }
+export{ numeric, openended, multichoice, message, blockNode, connection, tree, multi_options, lookup, audio , choice }
 
 
 
