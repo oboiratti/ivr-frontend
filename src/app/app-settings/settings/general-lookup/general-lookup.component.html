@@ -71,6 +71,7 @@
                     <tr>
                         <th class="table-index">#</th>
                         <th>Name</th>
+                        <th *ngIf="modelName === 'commodity'">Subscriber Type</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -78,6 +79,7 @@
                     <tr *ngFor="let record of records; let i = index" class="pointer" (click)="selectRow(record)">
                         <td class="table-index">{{i + 1}}.</td>
                         <td>{{record.name}}</td>
+                        <td *ngIf="modelName === 'commodity'">{{record.subscriberType.name}}</td>
                         <td>{{record.notes}}</td>
                     </tr>
                 </tbody>

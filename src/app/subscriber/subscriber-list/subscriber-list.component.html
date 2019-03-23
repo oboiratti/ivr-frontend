@@ -26,7 +26,7 @@
               <th>Phone</th>
               <th>Start Date</th>
               <th>Language</th>
-              <th>Content</th>
+              <th>Type</th>
               <!-- <th>Receive Outgoing Calls</th> -->
               <th>Actions</th>
             </tr>
@@ -38,10 +38,7 @@
               <td>{{subscriber.phoneNumber}}</td>
               <td>{{subscriber.startDate | date:'mediumDate'}}</td>
               <td>{{subscriber.language.name}}</td>
-              <td>
-                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
-                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
-              </td>
+              <td>{{subscriber.subscriberType.name}}</td>
               <!-- <td>Yes</td> -->
               <td>
                 <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
