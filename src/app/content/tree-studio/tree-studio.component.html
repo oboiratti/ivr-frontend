@@ -17,8 +17,8 @@
 						<a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
 						<div class="dropdown-divider" role="presentation"></div>
 						<a class="dropdown-item" role="presentation"  (click)="addMultiChoice()">Multiple Choice Question</a>
-						<a class="dropdown-item" role="presentation"  (click)="addMessage()">Numeric Question</a>
-						<a class="dropdown-item dropdown-submenu" role="presentation"  (click)="addMessage()">Open-ended Question</a>
+						<a class="dropdown-item" role="presentation"  (click)="addNumeric()">Numeric Question</a>
+						<a class="dropdown-item dropdown-submenu" role="presentation"  (click)="addOpenEnded()">Open-ended Question</a>
 						<div class="dropdown-divider" role="presentation"></div>
 					</div>
 				</div>
@@ -181,6 +181,58 @@
 												<label style="margin-right: 5px;">Wait</label>
 												<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
 													[(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
+											</div>
+									</div>
+
+									<!-- Numeric -->
+									<div id="Numeric" *ngIf="numericForm"> 
+										<h5 class="d-flex">Edit numeric question</h5>
+										<div class="form-group"><label><strong>Question Title</strong></label>
+											<textarea class="border rounded form-control"  
+												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
+												(ngModelChange)="updateMessageTitle()"></textarea>
+										</div>
+										<div class="form-group">
+											<label class="d-block"><strong>Maximum Number of Response Digits</strong></label>
+											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
+												[(ngModel)]="currentNode.custom.maxDigitNumber" name="currentNode.custom.maxDigitNumber">
+										</div>
+										<div class="form-group">
+											<label class="d-block"><strong>Repeat Questions</strong></label>
+											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" 
+												[(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax"> times for incorrect responses
+										</div>
+										<div class="form-group">
+											<label class="d-block"><strong>Repeat Timeout</strong></label>
+											<label style="margin-right: 5px;">Wait</label>
+											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
+												[(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
+										</div>
+									</div>
+
+									<!-- Openended -->
+									<div id="Numeric" *ngIf="openForm"> 
+										<h5 class="d-flex">Edit Open-Ended Question</h5>
+										<div class="form-group"><label><strong>Question Title</strong></label>
+											<textarea class="border rounded form-control"  
+												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
+												(ngModelChange)="updateMessageTitle()"></textarea>
+										</div>
+										<div class="form-group">
+											<label class="d-block"><strong>Maximum Record Duration</strong></label>
+											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
+												[(ngModel)]="currentNode.custom.maxOpenLength" name="currentNode.custom.maxOpenLength">
+												minutes
+										</div>
+										<div class="form-group" >
+											<label class="d-block"><strong>End record by pressing</strong></label>
+												<select style="width: 50px;" class="form-control" 
+													[(ngModel)] = "currentNode.custom.endRecordingDigits"
+													name="currentNode.custom.endRecordingDigits">
+													<option *ngFor="let key of phoneKeys" value={{key}}>
+															{{key}}
+													</option>
+												</select>
 											</div>
 									</div>
 

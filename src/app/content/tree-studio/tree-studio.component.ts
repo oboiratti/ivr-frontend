@@ -149,6 +149,7 @@ export class TreeStudioComponent implements OnInit {
       { from: '4', to: '5'},
     ]*/
 
+    // MESSAGE
     this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.message,
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
@@ -189,6 +190,89 @@ export class TreeStudioComponent implements OnInit {
       )
     );
 
+    // OPEN-ENDED
+    this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.open,
+      $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
+        // First Rectangle
+        $(go.Shape, 'Rectangle', {
+          fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
+          stroke: '#aaa', strokeWidth: 1, portId: '1', cursor: 'pointer',
+          // allow many kinds of links
+          toLinkable: true, toSpot: go.Spot.TopCenter
+        }),
+        $(go.TextBlock,
+          { margin: 4, text: 'Open-Ended', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
+            font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
+          }),
+        $(go.Panel, 'Vertical', { alignmentFocus: go.Spot.TopLeft, padding: 5 },
+          $(go.TextBlock,
+            { margin: 2, font: 'bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif', textAlign: 'left', height: 40,
+              maxSize: new go.Size(150, 60), wrap: go.TextBlock.WrapFit
+            }, new go.Binding('text', 'mTitle', (e: string ) => {
+                let text = e;
+                if ( text.length > 75) {
+                  text = text.substring(0, 75).concat('...');
+                }
+                return text;
+            }))
+        ),
+        $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
+          $(go.Panel, 'Auto', {},
+            $(go.Shape, 'Rectangle',
+              { fromLinkable: true, fromSpot: go.Spot.BottomCenter, fill: '#9895953b',
+                stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
+            }, new go.Binding('portId', 'mPortId')),
+            $(go.TextBlock,
+              { text: '1', height: 13, textAlign: 'center', width: 150, margin: 5,
+                font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
+              }),
+          )
+        )
+      )
+    );
+
+    // NUMERIC
+    this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.numeric,
+      $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
+        // First Rectangle
+        $(go.Shape, 'Rectangle', {
+          fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
+          stroke: '#aaa', strokeWidth: 1, portId: '1', cursor: 'pointer',
+          // allow many kinds of links
+          toLinkable: true, toSpot: go.Spot.TopCenter
+        }),
+        $(go.TextBlock,
+          { margin: 4, text: 'Numeric', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
+            font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
+          }),
+        $(go.Panel, 'Vertical', { alignmentFocus: go.Spot.TopLeft, padding: 5 },
+          $(go.TextBlock,
+            { margin: 2, font: 'bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif', textAlign: 'left', height: 40,
+              maxSize: new go.Size(150, 60), wrap: go.TextBlock.WrapFit
+            }, new go.Binding('text', 'mTitle', (e: string ) => {
+                let text = e;
+                if ( text.length > 75) {
+                  text = text.substring(0, 75).concat('...');
+                }
+                return text;
+            }))
+        ),
+        $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
+          $(go.Panel, 'Auto', {},
+            $(go.Shape, 'Rectangle',
+              { fromLinkable: true, fromSpot: go.Spot.BottomCenter, fill: '#9895953b',
+                stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
+            }, new go.Binding('portId', 'mPortId')),
+            $(go.TextBlock,
+              { text: '1', height: 13, textAlign: 'center', width: 150, margin: 5,
+                font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
+              }),
+          )
+        )
+      )
+    );
+
+    // MULTICHOICE
     this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.multichoice,
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
@@ -230,6 +314,7 @@ export class TreeStudioComponent implements OnInit {
           })
       ));
 
+    // LINK TEMPLATE
     this.diagram.linkTemplate = $(go.Link, {
           relinkableFrom: true,
           relinkableTo: true,
@@ -247,6 +332,7 @@ export class TreeStudioComponent implements OnInit {
     // this.diagram.model.addNodeData(data);
   }
 
+  // ADD PORT
   addPort(key: string) {
     this.diagram.startTransaction('addPort');
     this.diagram.selection.each((node) => {
@@ -290,29 +376,6 @@ export class TreeStudioComponent implements OnInit {
   generateNodeId() {
     // Generate globally unique identifyer for node
     return this.tree.id + '_' + Math.random().toString(36).substr(2, 9);
-  }
-
-  showForm(type: string) {
-    switch (type) {
-      case 'Message':
-        this.showMessageForm();
-        break;
-      case 'Openended':
-        this.showOpenForm();
-        break;
-      case 'Multichoice':
-        this.showMultiForm()
-        break;
-      case 'Treeform':
-        this.showTreeForm();
-        break;
-      case 'Numeric':
-        this.showNumericForm();
-        break;
-      default:
-        this.showTreeForm();
-        break;
-    }
   }
 
   isFirstNode() { // todo
@@ -377,6 +440,53 @@ export class TreeStudioComponent implements OnInit {
     this.addPort(newMulti.key);
   }
 
+  addNumeric() {
+    const newNumeric: blockNode = {
+      type: TreeConfig.nodeTypes.numeric,
+      key: this.generateNodeId(),
+      custom : {
+        title: 'New Numeric Question',
+        maxDigitNumber: '2', // Key to press to repeat
+        repeatDelay: '7',  // Seconds before repeat
+        repeatMax: '3',
+      },
+      audio: null,
+      sms: '',
+      tags: [],
+      isStartingNode: this.isFirstNode(),
+      includeInSummary: false,
+    };
+
+    const nodeBlock = { key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.numeric };
+    if (this.isFirstNode) { this.tree.startingNodeKey = newNumeric.key; }
+    this.tree.nodes.push(newNumeric);
+    this.diagram.model.addNodeData(nodeBlock);
+  }
+
+  addOpenEnded() {
+    const newNumeric: blockNode = {
+      type: TreeConfig.nodeTypes.open,
+      key: this.generateNodeId(),
+      custom : {
+        title: 'New Open-ended Question',
+        maxOpenLength: 3, // Key to press to repeat
+        endRecordingDigits: '1',  // Seconds before repeat
+        repeatDelay: 7,
+        isInputRequired:true
+      },
+      audio: null,
+      sms: '',
+      tags: [],
+      isStartingNode: this.isFirstNode(),
+      includeInSummary: false,
+    };
+
+    const nodeBlock = { key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.open };
+    if (this.isFirstNode) { this.tree.startingNodeKey = newNumeric.key; }
+    this.tree.nodes.push(newNumeric);
+    this.diagram.model.addNodeData(nodeBlock);
+  }
+
   loadNode(node: go.Part) {
     const selectedNodeData = node.data;
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
@@ -394,13 +504,6 @@ export class TreeStudioComponent implements OnInit {
   addChoice(i: number) {
     let num: number = this.currentNode.custom.choices.length;
     if (num == i ) { this.currentNode.custom.choices.push({ key: num + 1, value : '' }); }
-  }
-
-  addNumeric() {
-
-  }
-
-  addOpenEnded() {
   }
 
   saveTree() {
@@ -455,6 +558,30 @@ export class TreeStudioComponent implements OnInit {
 
   // UTILITY FUNCTIONS
   // Show Forms
+
+  showForm(type: string) {
+    switch (type) {
+      case 'Message':
+        this.showMessageForm();
+        break;
+      case 'Openended':
+        this.showOpenForm();
+        break;
+      case 'Multichoice':
+        this.showMultiForm()
+        break;
+      case 'Treeform':
+        this.showTreeForm();
+        break;
+      case 'Numeric':
+        this.showNumericForm();
+        break;
+      default:
+        this.showTreeForm();
+        break;
+    }
+  }
+
   showMessageForm() {
     this.messageForm = true;
     this.openForm = false;
