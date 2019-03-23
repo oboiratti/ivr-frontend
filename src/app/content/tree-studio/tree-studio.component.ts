@@ -528,6 +528,15 @@ export class TreeStudioComponent implements OnInit {
     // this.diagram.model = go.Model.fromJson(this.file)
   }
 
+  deleteNode() {
+
+  }
+
+
+  copyNode() {
+
+  }
+
   loadLanguages() {
     this.languages = [
       {id: '1342', name: 'Twi', description: ''},
