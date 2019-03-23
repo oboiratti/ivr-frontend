@@ -31,6 +31,19 @@
                                 This field is required
                             </div>
                         </div>
+                        <div class="form-group" *ngIf="modelName === 'commodity'">
+                            <label>Subscriber Type</label>
+                            <select class="form-control" formControlName="subscriberTypeId"
+                                [class.is-invalid]="formGroup.controls.subscriberTypeId.dirty && formGroup.controls.subscriberTypeId.invalid">
+                                <option *ngFor="let subscriberType of subscriberTypes$ | async"
+                                    [ngValue]="subscriberType.id">{{subscriberType.name}}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="formGroup.controls.subscriberTypeId.dirty && formGroup.controls.subscriberTypeId.invalid">
+                                <div *ngIf="formGroup.controls.subscriberTypeId.errors.required">
+                                    This field is required
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Description</label>
                             <textarea rows="3" class="form-control" formControlName="notes"></textarea>
@@ -58,6 +71,7 @@
                     <tr>
                         <th class="table-index">#</th>
                         <th>Name</th>
+                        <th *ngIf="modelName === 'commodity'">Subscriber Type</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -65,6 +79,7 @@
                     <tr *ngFor="let record of records; let i = index" class="pointer" (click)="selectRow(record)">
                         <td class="table-index">{{i + 1}}.</td>
                         <td>{{record.name}}</td>
+                        <td *ngIf="modelName === 'commodity'">{{record.subscriberType.name}}</td>
                         <td>{{record.notes}}</td>
                     </tr>
                 </tbody>

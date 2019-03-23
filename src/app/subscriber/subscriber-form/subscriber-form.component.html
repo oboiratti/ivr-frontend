@@ -68,6 +68,41 @@
 
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
+              <label>Date of Birth</label>
+              <input type="date" class="form-control" formControlName="dateOfBirth"
+                [class.is-invalid]="dateOfBirth.dirty && dateOfBirth.invalid">
+              <div class="invalid-msg" *ngIf="dateOfBirth.dirty && dateOfBirth.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Highest Education Level</label>
+              <select class="form-control" formControlName="educationLevelId"
+                [class.is-invalid]="educationLevelId.dirty && educationLevelId.invalid">
+                <option *ngFor="let educationLevel of educationalLevels$ | async" [ngValue]="educationLevel.id">{{educationLevel.name}}</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="educationLevelId.dirty && educationLevelId.invalid">
+                <div *ngIf="educationLevelId.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Region</label>
+              <ng-select [items]="regions$ | async" bindLabel="name" bindValue="id" placeholder="Select Region"
+                [clearable]="false" formControlName="regionId"
+                [class.invalid-input]="regionId.dirty && regionId.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="regionId.dirty && regionId.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
               <label>District</label>
               <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
                 [clearable]="false" formControlName="districtId"
@@ -76,9 +111,11 @@
                 This field is required
               </div>
             </div>
+          </div>
 
+          <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
-              <label>Location</label>
+              <label>Town</label>
               <input type="text" class="form-control" formControlName="location"
                 [class.is-invalid]="location.dirty && location.invalid">
               <div class="invalid-feedback" *ngIf="location.dirty && location.invalid">
@@ -88,6 +125,44 @@
               </div>
             </div>
           </div>
+          <hr>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Subscriber Type</label>
+              <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
+                [clearable]="false" formControlName="subscriberTypeId"
+                [class.invalid-input]="subscriberTypeId.dirty && subscriberTypeId.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="subscriberTypeId.dirty && subscriberTypeId.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Primary Commodity</label>
+              <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
+                [clearable]="false" formControlName="primaryCommodity"
+                [class.invalid-input]="primaryCommodity.dirty && primaryCommodity.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="primaryCommodity.dirty && primaryCommodity.errors">
+                This field is required
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Other Commodities</label>
+              <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id" placeholder="Select Other Commodities"
+                [clearable]="false" [multiple]="true" formControlName="otherCommodities"
+                [class.is-invalid]="otherCommodities.dirty && otherCommodities.invalid"></ng-select>
+              <!-- <div class="invalid-feedback" *ngIf="otherCommodities.dirty && otherCommodities.invalid">
+                <div *ngIf="otherCommodities.errors.required">
+                  This field is required
+                </div>
+              </div> -->
+            </div>
+          </div>
+          <hr>
 
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
@@ -117,12 +192,12 @@
           </div>
 
           <div class="form-row">
-            <div class="form-group col-sm-12 col-md-6">
+            <!-- <div class="form-group col-sm-12 col-md-6">
               <label>Comments</label>
               <input type="text" class="form-control" formControlName="comments">
-            </div>
+            </div> -->
 
-            <div class="form-group col-sm-12 col-md-6">
+            <div class="form-group col-sm-12">
               <label>Subscriber Group</label>
               <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
                 [clearable]="false" [multiple]="true" formControlName="subscriberGroups"
@@ -134,9 +209,6 @@
           </div>
 
           <div>
-            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
-              <i class="fa fa-trash"></i> Delete
-            </button> -->
             <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
               (valid)="save(form.value)">
               <i class="fa fa-save"></i> Save

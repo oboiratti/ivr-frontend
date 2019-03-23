@@ -4,6 +4,8 @@ import { LookUps, SettingsService } from '../settings.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MessageDialog } from '../../../shared/message_helper';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { Observable } from 'rxjs';
+import { Lookup } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-general-lookup',
@@ -23,11 +25,13 @@ export class GeneralLookupComponent implements OnInit {
   deleting: boolean;
   selectedRecord: any;
   @BlockUI() blockForm: NgBlockUI;
+  subscriberTypes$: Observable<Lookup[]>
 
   constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private settingsService: SettingsService) {
     this.formGroup = this.formBuilder.group({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
+      subscriberTypeId: new FormControl(''),
       notes: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -40,28 +44,30 @@ export class GeneralLookupComponent implements OnInit {
     this.modelName = this.activatedRoute.snapshot.paramMap.get('model');
     this.model = LookUps.models.find(model => model.name === this.modelName)
     this.fetchRecords();
+    if (this.modelName === 'commodity') { this.loadSubscriberType() }
   }
 
   openForm() {
-    this.title = "New " + this.model.label;
+    this.title = 'New ' + this.model.label;
     this.showForm = true;
   }
 
   closeForm() {
-    this.title = "New " + this.model.label;
+    this.title = 'New ' + this.model.label;
     this.showForm = false;
     this.formGroup.reset();
   }
 
   selectRow(record: any) {
     this.formGroup.patchValue(record)
-    this.title = "Edit " + this.model.label;
+    this.title = 'Edit ' + this.model.label;
     this.showForm = true;
+    if (this.modelName === 'commodity') { this.formGroup.patchValue({ subscriberTypeId: record.subscriberType.id }) }
   }
 
   save() {
     this.record = this.formGroup.value;
-    this.blockForm.start("Saving...");
+    this.blockForm.start('Saving...');
     this.settingsService.save(this.modelName, this.record).subscribe((res) => {
       this.blockForm.stop();
       if (res.success) {
@@ -70,14 +76,14 @@ export class GeneralLookupComponent implements OnInit {
       }
     }, err => {
       this.blockForm.stop();
-      console.log("Error -> " + err);
+      console.log('Error -> ' + err);
     });
   }
 
   remove(id: number) {
-    MessageDialog.confirm("Delete Item", "Are you sure you want to delete this item").then((confirm) => {
+    MessageDialog.confirm('Delete Item', 'Are you sure you want to delete this item').then((confirm) => {
       if (confirm.value) {
-        this.blockForm.start("Deleting...")
+        this.blockForm.start('Deleting...')
         this.settingsService.destroy(this.modelName, id).subscribe((res) => {
           this.blockForm.stop()
           if (res.success) {
@@ -86,19 +92,23 @@ export class GeneralLookupComponent implements OnInit {
           }
         }, err => {
           this.blockForm.stop();
-          console.log("Error -> " + err.message);
+          console.log('Error -> ' + err.message);
         });
       }
-    }).catch((err) => {});
+    }).catch((err) => { });
   }
 
   private fetchRecords() {
-    this.blockForm.start("Loading")
+    this.blockForm.start('Loading')
     this.settingsService.fetch(this.model.name).subscribe((res) => {
       this.blockForm.stop()
       if (res.success) {
         this.records = res.data;
       }
     }, () => this.blockForm.stop());
+  }
+
+  private loadSubscriberType() {
+    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
   }
 }
