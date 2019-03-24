@@ -44,6 +44,7 @@ export class SubscriberImportComponent implements OnInit {
   selectFile(evt: any) {
     const target: DataTransfer = <DataTransfer>(evt.target);
     if (target.files.length !== 1) { throw new Error('Cannot use multiple files'); }
+    this.filename = target.files[0].name
     const reader: FileReader = new FileReader();
     reader.onload = (e: any) => {
       const bstr: string = e.target.result;
@@ -52,7 +53,6 @@ export class SubscriberImportComponent implements OnInit {
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
       const rows = <any>(XLSX.utils.sheet_to_csv(ws));
       const lines = rows.split('\n');
-      console.log(lines.length)
       if (lines.length <= 2) {
         MessageDialog.error('The upload file should not be empty');
         return;
@@ -70,7 +70,6 @@ export class SubscriberImportComponent implements OnInit {
       this.data = result.map((rec: any) => {
         return this.refactorRecord(rec)
       });
-      console.log(this.data)
     };
     reader.readAsBinaryString(target.files[0]);
   }
@@ -105,10 +104,6 @@ export class SubscriberImportComponent implements OnInit {
     return rec;
   }
 
-  uploadFile() {
-    console.log(this.form.value);
-  }
-
   downloadTemplate() {
     this.blockUi.start('Downloading...');
     this.subscriberService.downloadTemplate().subscribe((res: any) => {
@@ -116,6 +111,19 @@ export class SubscriberImportComponent implements OnInit {
       if (res.success) {
         const data = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + res.data;
         window.open(data, '_blank', '')
+      }
+    }, err => {
+      this.blockUi.stop();
+      console.log('Error -> ' + err.message);
+    });
+  }
+
+  saveUploadData() {
+    this.blockUi.start('Saving...');
+    this.subscriberService.saveUploadData(this.data).subscribe((res: any) => {
+      this.blockUi.stop();
+      if (res.success) {
+        this.data = null
       }
     }, err => {
       this.blockUi.stop();

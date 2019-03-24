@@ -35,15 +35,16 @@
             <input type="file" class="custom-file-input" accept=".xlsx" (change)="selectFile($event)">
             <label class="custom-file-label">Choose file</label>
         </div>
+        <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
     </div>
     <div class="col">
         <button type="button" class="btn btn-primary-custom border border-dark" (click)="uploadFile()">Upload File</button>
     </div>
 </div>
 
-<div class="ml-5 pl-3 mt-2">
+<!--<div class="ml-5 pl-3 mt-2">
     <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
-</div>
+</div>-->
 <hr>
 
 <div class="row">
@@ -81,19 +82,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let d of data | async; let i = index">
+                        <tr *ngFor="let d of data; let i = index">
                             <td>{{i + 1}}</td>
                             <td>{{d.code}}</td>
                             <td>{{d.name}}</td>
                             <td>{{d.phoneNumber}}</td>
                             <td>{{d.dateOfBirth | date:'mediumDate'}}</td>
                             <td>{{d.gender}}</td>
-
-                            <td>{{subscriber.startDate | date:'mediumDate'}}</td>
+                            <td>{{d.location}}</td>
+                            <td>{{d.startDate | date:'mediumDate'}}</td>
+                            <td>{{d.voice}}</td>
+                            <td>{{d.sms}}</td>
+                            <td>{{d.landSize}}</td>
+                            <td>{{d.language}}</td>
+                            <td>{{d.district}}</td>
+                            <td>{{d.educationalLevel}}</td>
+                            <td>{{d.type}}</td>
+                            <td>{{d.group1}}</td>
+                            <td>{{d.group2}}</td>
+                            <td>{{d.group3}}</td>
+                            <td>{{d.group4}}</td>
+                            <td>{{d.group5}}</td>
+                            <td>{{d.primaryCommodity}}</td>
+                            <td>{{d.commodity2}}</td>
+                            <td>{{d.commodity3}}</td>
+                            <td>{{d.commodity4}}</td>
+                            <td>{{d.commodity5}}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <hr/>
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary-custom border border-dark pull-right" (click)="saveUploadData()">Save Data</button>
+            </div>
+        </div>
+
     </div>
 </div>

@@ -91,4 +91,8 @@ export class SubscriberService {
         })
       )
   }
+
+  saveUploadData(params: any[]) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/subscriber/saveuploaddata`, params)
+  }
 }
