@@ -82,4 +82,13 @@ export class SubscriberService {
       })
     )
   }
+
+  downloadTemplate() {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/subscriber/downloaduploadtemplate`)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      )
+  }
 }

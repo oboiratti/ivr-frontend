@@ -33,8 +33,7 @@
                         </div>
                         <div class="form-group" *ngIf="modelName === 'commodity'">
                             <label>Subscriber Type</label>
-                            <select class="form-control" formControlName="subscriberTypeId"
-                                [class.is-invalid]="formGroup.controls.subscriberTypeId.dirty && formGroup.controls.subscriberTypeId.invalid">
+                            <select class="form-control" formControlName="subscriberTypeId" [class.is-invalid]="formGroup.controls.subscriberTypeId.dirty && formGroup.controls.subscriberTypeId.invalid">
                                 <option *ngFor="let subscriberType of subscriberTypes$ | async"
                                     [ngValue]="subscriberType.id">{{subscriberType.name}}</option>
                             </select>
@@ -79,7 +78,7 @@
                     <tr *ngFor="let record of records; let i = index" class="pointer" (click)="selectRow(record)">
                         <td class="table-index">{{i + 1}}.</td>
                         <td>{{record.name}}</td>
-                        <td *ngIf="modelName === 'commodity'">{{record.subscriberType.name}}</td>
+                        <td *ngIf="modelName === 'commodity'">{{record.subscriberType}}</td>
                         <td>{{record.notes}}</td>
                     </tr>
                 </tbody>

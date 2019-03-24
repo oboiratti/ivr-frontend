@@ -1,80 +1,99 @@
 <div class="row mx-5">
-  <div class="col-sm-12">
-    <div class="p-2 text-uppercase form-header-text">Import Subscribers</div>
-  </div>
+    <div class="col-sm-12">
+        <div class="p-2 text-uppercase form-header-text">Import Subscribers</div>
+    </div>
 </div><br>
 
 <div class="alert alert-primary mx-3" role="alert">
-  <h6 class="alert-heading text-uppercase"><u>Instructions</u></h6>
-  <div class="ml-2">
-    <ol>
-      <li>
-        Upload an Excel spreadsheet <b>(.xlsx)</b> with a phone number field in the file. (View example)<br>
-        <em>Only columns that are specified will be updated. When creating subscribers, when columns are not provided,
+    <h6 class="alert-heading text-uppercase"><u>Instructions</u></h6>
+    <div class="ml-2">
+        <ol>
+            <li>
+                Upload an Excel spreadsheet <b>(.xlsx)</b> with a phone number field in the file. (View example)<br>
+                <em>Only columns that are specified will be updated. When creating subscribers, when columns are not provided,
           the default columns for the following are: Language - Unknown; Start Date - Today; </em><br>
-        <em>If you provide a content type column, eg. "Receive Voice" or "Receive SMS", then newly-created subscribers
+                <em>If you provide a content type column, eg. "Receive Voice" or "Receive SMS", then newly-created subscribers
           will have their setting for that content type set to ON or OFF based on that column. Any content type not
           specified in the spreadsheet will be set to OFF.</em>
-      </li>
-      <li>
-        After clicking "Upload File", match the headings from your spreadsheet file with the existing subscriber
-        headings in the drop-down menus.
-      </li>
-      <li>
-        If a heading does not yet exist, select <b>New</b> and enter the name of the custom field. These can be edited
-        later
-        from the Subscriber Properties page.
-      </li>
-    </ol>
-  </div>
+            </li>
+            <li>
+                After clicking "Upload File", match the headings from your spreadsheet file with the existing subscriber headings in the drop-down menus.
+            </li>
+            <li>
+                If a heading does not yet exist, select <b>New</b> and enter the name of the custom field. These can be edited later from the Subscriber Properties page.
+            </li>
+        </ol>
+    </div>
 </div>
 
 <div class="row mx-5">
-  <div class="col">
-    <div class="custom-file">
-      <input type="file" class="custom-file-input" accept=".xlsx" (change)="selectFile($event)">
-      <label class="custom-file-label">Choose file</label>
+    <div class="col">
+        <button type="button" class="btn border border-dark" (click)="downloadTemplate()" style="background-color: #2fb1ec; color: white;">Download Template</button>
     </div>
-  </div>
-  <div class="col">
-    <button type="button" class="btn btn-primary-custom border border-dark" (click)="uploadFile()">Upload File</button>
-  </div>
+    <div class="col">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" accept=".xlsx" (change)="selectFile($event)">
+            <label class="custom-file-label">Choose file</label>
+        </div>
+    </div>
+    <div class="col">
+        <button type="button" class="btn btn-primary-custom border border-dark" (click)="uploadFile()">Upload File</button>
+    </div>
 </div>
 
 <div class="ml-5 pl-3 mt-2">
-  <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
+    <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
 </div>
 <hr>
 
 <div class="row">
-  <div class="col">
-    <div class="card">
-      <div class="table-responsive-sm">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Filename</th>
-              <th>Rows</th>
-              <th>Status</th>
-              <th>Details</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let import of imports$ | async; let i = index">
-              <td>{{i + 1}}</td>
-              <td>{{import.filename}}</td>
-              <td>{{import.rows}}</td>
-              <td>{{import.status}}</td>
-              <td>{{import.details}}</td>
-              <td>
-                <button class="btn btn-info btn-sm">Download</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+    <div class="col">
+        <div class="card">
+            <div class="table-responsive-sm">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Date of Birth</th>
+                            <th>Gender</th>
+                            <th>Location</th>
+                            <th>Start Date</th>
+                            <th>Voice</th>
+                            <th>SMS</th>
+                            <th>Land Size</th>
+                            <th>Language</th>
+                            <th>District</th>
+                            <th>Educational Level</th>
+                            <th>Type</th>
+                            <th>Group 1</th>
+                            <th>Group 2</th>
+                            <th>Group 3</th>
+                            <th>Group 4</th>
+                            <th>Group 5</th>
+                            <th>Primary Commodity</th>
+                            <th>Commodity 2</th>
+                            <th>Commodity 3</th>
+                            <th>Commodity 4</th>
+                            <th>Commodity 5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let d of data | async; let i = index">
+                            <td>{{i + 1}}</td>
+                            <td>{{d.code}}</td>
+                            <td>{{d.name}}</td>
+                            <td>{{d.phoneNumber}}</td>
+                            <td>{{d.dateOfBirth | date:'mediumDate'}}</td>
+                            <td>{{d.gender}}</td>
+
+                            <td>{{subscriber.startDate | date:'mediumDate'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
