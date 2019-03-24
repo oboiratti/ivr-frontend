@@ -48,7 +48,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     this.subscriberTypeValueChangeListener()
     const id = +this.activatedRoute.snapshot.paramMap.get('id')
     if (id) { this.findSubscriber(id) }
-    this.disableComponents()
+    this.disableControls()
   }
 
   ngOnDestroy() {
@@ -192,18 +192,24 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
         this.form.patchValue(data)
         this.form.patchValue({
           startDate: new Date(data.startDate).toISOString().substring(0, 10),
+          // dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
           languageId: data.language.id,
           regionId: data.region.id,
           districtId: data.district.id,
           educationLevelId: data.educationalLevel.educationLevelId,
           subscriberTypeId: data.subscriberType.subscriberTypeId,
-          subscriberGroups: data.subscriberGroups.map(grp => grp.groupId)
+          subscriberGroups: data.subscriberGroups.map(grp => grp.groupId),
+          primaryCommodity: data.subscriberCommodities ? data.subscriberCommodities
+            .find(elm => elm.isPricipalCommodity === true).commodityId : null,
+          otherCommodities: data.subscriberCommodities ? data.subscriberCommodities
+            .filter(elm => elm.isPricipalCommodity === false)
+            .map(elm => elm.commodityId) : null
         })
       }
     }, () => this.blockUi.stop())
   }
 
-  private disableComponents() {
+  private disableControls() {
     if (!this.regionId.value) { this.districtId.disable() }
     if (!this.districtId.value) { this.location.disable() }
     if (!this.subscriberTypeId.value) {

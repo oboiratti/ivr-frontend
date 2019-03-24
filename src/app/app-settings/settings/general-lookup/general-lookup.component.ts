@@ -26,12 +26,14 @@ export class GeneralLookupComponent implements OnInit {
   selectedRecord: any;
   @BlockUI() blockForm: NgBlockUI;
   subscriberTypes$: Observable<Lookup[]>
+  regions$: Observable<Lookup[]>
 
   constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private settingsService: SettingsService) {
     this.formGroup = this.formBuilder.group({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
       subscriberTypeId: new FormControl(''),
+      regionId: new FormControl(''),
       notes: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -45,6 +47,7 @@ export class GeneralLookupComponent implements OnInit {
     this.model = LookUps.models.find(model => model.name === this.modelName)
     this.fetchRecords();
     if (this.modelName === 'commodity') { this.loadSubscriberType() }
+    if (this.modelName === 'district') { this.loadRegions() }
   }
 
   openForm() {
@@ -63,6 +66,7 @@ export class GeneralLookupComponent implements OnInit {
     this.title = 'Edit ' + this.model.label;
     this.showForm = true;
     if (this.modelName === 'commodity') { this.formGroup.patchValue({ subscriberTypeId: record.subscriberType.id }) }
+    if (this.modelName === 'district') { this.formGroup.patchValue({ regionId: record.region.id }) }
   }
 
   save() {
@@ -110,5 +114,9 @@ export class GeneralLookupComponent implements OnInit {
 
   private loadSubscriberType() {
     this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
+  }
+
+  private loadRegions() {
+    this.regions$ = this.settingsService.fetch2('region')
   }
 }

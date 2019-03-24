@@ -130,7 +130,7 @@
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Subscriber Type</label>
-              <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
+              <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Type"
                 [clearable]="false" formControlName="subscriberTypeId"
                 [class.invalid-input]="subscriberTypeId.dirty && subscriberTypeId.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="subscriberTypeId.dirty && subscriberTypeId.errors">
@@ -140,7 +140,7 @@
 
             <div class="form-group col-sm-12 col-md-6">
               <label>Primary Commodity</label>
-              <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
+              <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id" placeholder="Select Primary Commodity"
                 [clearable]="false" formControlName="primaryCommodity"
                 [class.invalid-input]="primaryCommodity.dirty && primaryCommodity.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="primaryCommodity.dirty && primaryCommodity.errors">
