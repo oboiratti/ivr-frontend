@@ -71,8 +71,6 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     }
 
     params.subscriberCommodities.push({commodityId: params.primaryCommodity, isPrimaryCommodity: true})
-    console.log(params);
-    
 
     this.blockUi.start('Saving...')
     this.saveSubscription = this.subscriberService.saveSubscriber(formData).subscribe(res => {
