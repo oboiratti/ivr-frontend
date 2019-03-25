@@ -18,7 +18,8 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   subscribers$: Observable<Subscriber[]>;
   @BlockUI() blockUi: NgBlockUI;
   unsubscribe$ = new Subject<void>();
-  filter = {};
+  filter = <SubscriberQuery>{};
+  name = ''
   lastFilter: SubscriberQuery;
   totalRecords = 0;
 	currentPage = 1;
@@ -69,7 +70,7 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getSubscribers(filter: SubscriberQuery) {
+  getSubscribers(filter: SubscriberQuery) {
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...');

@@ -73,7 +73,7 @@ export class TreeListComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getTree(filter: TreeQuery) {
+  getTree(filter: TreeQuery) {
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
     filter.status = this.status;
     this.lastFilter = Object.assign({}, filter);

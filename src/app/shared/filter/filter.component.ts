@@ -10,7 +10,7 @@ export class FilterComponent implements OnInit {
   @Output() search = new EventEmitter<any>()
   @Input() placeholder: string
   @Input() model: any
-  @Input() name: any
+  @Input() label: any
   @Input() filter: any
 
   constructor() { }
@@ -19,7 +19,7 @@ export class FilterComponent implements OnInit {
   }
 
   doSearch() {
-    this.filter[this.name] = this.model
+    this.filter[this.label] = this.model
     this.search.emit(this.filter)
   }
 }

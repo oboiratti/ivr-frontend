@@ -77,7 +77,7 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getMedia(filter: MediaQuery) {
+  getMedia(filter: MediaQuery) {
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
     filter.status = this.status;
     this.lastFilter = Object.assign({}, filter);

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <filter class="float-left" placeholder="Search by name" name="name" [model]="name" (search)="getSubscribers($event)" [filter]="filter">
+    <filter class="float-left" placeholder="Search by name" label="name" [model]="name" (search)="getSubscribers($event)" [filter]="filter">
       <div class="form-group">
         <input type="text" class="form-control" name="phone" placeholder="Phone Number" [(ngModel)]="filter.phone">
       </div>

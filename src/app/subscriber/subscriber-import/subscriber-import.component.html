@@ -27,18 +27,15 @@
 </div>
 
 <div class="row mx-5">
-    <div class="col">
+    <div class="col-4">
         <button type="button" class="btn border border-dark" (click)="downloadTemplate()" style="background-color: #2fb1ec; color: white;">Download Template</button>
     </div>
-    <div class="col">
+    <div class="col-4">
         <div class="custom-file">
             <input type="file" class="custom-file-input" accept=".xlsx" (change)="selectFile($event)">
             <label class="custom-file-label">Choose file</label>
         </div>
         <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-primary-custom border border-dark" (click)="uploadFile()">Upload File</button>
     </div>
 </div>
 

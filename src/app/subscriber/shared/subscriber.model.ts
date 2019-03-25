@@ -26,6 +26,8 @@ export interface SubscriberGroup extends Lookup {
 
 export interface SubscriberQuery extends ModelQuery {
     name: string
+    phone: string
+    location: string
 }
 
 export interface SubscriberUploadModel {
