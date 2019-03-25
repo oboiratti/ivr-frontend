@@ -4,9 +4,12 @@ import { RouteNames } from '../shared/constants';
 import { ContentComponent } from './content.component';
 import { AuthGuard } from '../auth-guard.service';
 import { TreeListComponent } from './tree-list/tree-list.component';
+import { TreeFormComponent } from './tree-form/tree-form.component';
+import { TreeDetailsComponent } from './tree-details/tree-details.component';
 import { MediaLibraryComponent } from './media-library/media-library.component';
 import { MediaFormComponent } from './media-form/media-form.component';
 import { MediaDetailsComponent } from './media-details/media-details.component';
+import { TreeStudioComponent } from './tree-studio/tree-studio.component';
 
 const routes: Routes = [
   {
@@ -21,6 +24,26 @@ const routes: Routes = [
     children: [
       {
         path: RouteNames.treeList,
+        component: TreeListComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeListForm,
+        component: TreeFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeListDetails,
+        component: TreeDetailsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeListFormEdit,
+        component: TreeFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeStudiox,
         component: TreeListComponent,
         canActivate: [AuthGuard]
       },
@@ -44,6 +67,11 @@ const routes: Routes = [
         component: MediaFormComponent,
         canActivate: [AuthGuard]
       },
+      {
+        path: RouteNames.treeStudio,
+        component: TreeStudioComponent,
+        canActivate: [AuthGuard]
+      }
     ]
   }
 ];

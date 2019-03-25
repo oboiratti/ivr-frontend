@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-sm-12 col-md-8 offset-md-2">
+        <form [formGroup]="form">
+            <div class="card">
+                <div class="card-header">
+                    <div class="p-2 text-uppercase form-header-text">{{formType}} Tree Form</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-sm-12 col-md-8">
+                            <label>Title <i class="fa fa-asterisk color-maroon"></i></label>
+                            <input type="text" class="form-control" formControlName="title" [class.is-invalid]="title.dirty && title.invalid">
+                            <div class="invalid-feedback" *ngIf="title.dirty && title.invalid">
+                                <div *ngIf="title.errors.required">
+                                    This field is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-4">
+                            <label>Language <i class="fa fa-asterisk color-maroon"></i></label>
+                            <select class="form-control" formControlName="languageId" [class.is-invalid]="languageId.dirty && languageId.invalid">
+                <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
+              </select>
+                            <div class="invalid-feedback" *ngIf="languageId.dirty && languageId.invalid">
+                                <div *ngIf="languageId.errors.required">
+                                    This field is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12">
+                            <label>Description</label>
+                            <textarea class="form-control" formControlName="description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group col-sm-12 col-md-12">
+                            <label>Tags</label>
+                            <ng-select [items]="tags$ | async" bindLabel="name" bindValue="name" placeholder="Select Tags" [clearable]="true" [multiple]="true" formControlName="tagsList" [class.is-invalid]="tagsList.dirty && tagsList.invalid"></ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form" (valid)="save(form.value)" [disabled]="form.invalid">
+                                <i class="fa fa-upload"></i> Save Tree
+                              </button>
+                    <button type="button" class="btn float-right border border-dark" (click)="closeForm()">
+                                <i class="fa fa-close"></i> Cancel
+                              </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
