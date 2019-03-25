@@ -35,11 +35,11 @@ export class TreeStudioComponent implements OnInit {
   private openNode: openended;
 
 
-  private messageForm: boolean;
-  private multiForm: boolean;
-  private numericForm: boolean;
-  private openForm: boolean;
-  private treeForm: boolean;
+  messageForm: boolean;
+  multiForm: boolean;
+  numericForm: boolean;
+  openForm: boolean;
+  treeForm: boolean;
 
 
   @ViewChild('diagramDiv')

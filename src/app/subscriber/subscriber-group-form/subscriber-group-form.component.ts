@@ -40,7 +40,7 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   save(formData: any) {
     if (formData.subscribers) {
       formData.subscribers = formData.subscribers.map(elm => {
-        return { subscriberId: elm }
+        return { id: elm }
       })
     }
 
