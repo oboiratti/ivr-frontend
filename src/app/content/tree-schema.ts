@@ -16,7 +16,6 @@ interface connection {
 	from: string;
 }
 
-
 interface blockNode {
   type: string;
   custom:  any;
@@ -52,6 +51,7 @@ interface choice {
 	key: number;
 	value: string;
 }
+
 interface openended {
 	title: string;
 	isInputRequired:  boolean;
