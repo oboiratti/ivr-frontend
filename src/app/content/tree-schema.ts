@@ -1,4 +1,4 @@
-interface tree {
+interface tree1 {
 	id: string;
 	versionId: string;
 	title: string;
@@ -87,7 +87,7 @@ interface audio {
 	url: string;
 }
 
-export{ numeric, openended, multichoice, message, blockNode, connection, tree, multi_options, lookup, audio , choice }
+export{ numeric, openended, multichoice, message, blockNode, connection, tree1 , multi_options, lookup, audio , choice }
 
 
 

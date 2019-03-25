@@ -1,8 +1,16 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import * as go from 'gojs';
-import { numeric, openended, multichoice, message, blockNode , connection, tree, choice , multi_options, lookup, audio } from '../tree-schema';
-import { Observable, Subscriber } from 'rxjs';
+import { numeric, openended, multichoice, message, blockNode , connection, tree1, choice , multi_options, lookup, audio } from '../tree-schema';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { TreeConfig} from '../tree-config';
+import { TreeService } from '../shared/tree.service';
+import { Tree, TreeQuery } from '../shared/tree.model';
+import { finalize } from 'rxjs/operators';
+import { MessageDialog } from 'src/app/shared/message_helper';
+import { Lookup } from 'src/app/shared/common-entities.model';
+import { ActivatedRoute, Router, Route } from '@angular/router';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import { RouteNames } from 'src/app/shared/constants';
 
 
 // This requires us to include
@@ -17,10 +25,11 @@ import { GuidedDraggingTool } from 'gojs/extensionsTS/GuidedDraggingTool';
 })
 
 export class TreeStudioComponent implements OnInit {
+
   private diagram: go.Diagram = new go.Diagram();
   private palette: go.Palette = new go.Palette();
   private $: any;
-  private tree: tree;
+  private tree: tree1;
 
   private phoneKeys: Array<string>;
   private repeatDelay: Array<string>;
@@ -40,7 +49,11 @@ export class TreeStudioComponent implements OnInit {
   private numericForm: boolean;
   private openForm: boolean;
   private treeForm: boolean;
+  treeId: number;
 
+  @BlockUI() blockUi: NgBlockUI;
+  findSubscription: Subscription;
+  deleteSubscription: Subscription;
 
   @ViewChild('diagramDiv')
   private diagramRef: ElementRef;
@@ -65,8 +78,9 @@ export class TreeStudioComponent implements OnInit {
   private file: string;
   private optlist: multi_options[];
 
-  constructor() {
-    this.loadTree();
+  constructor(private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private treeService: TreeService ) {
     this.loadLanguages();
     this.loadTags();
     this.loadAudios();
@@ -507,27 +521,6 @@ export class TreeStudioComponent implements OnInit {
     //;
   }
 
-  saveTree() {
-    this.file = this.diagram.model.toJson();
-  }
-
-  loadTree() {
-    // This page only edits a tree. The tree should have been created before coming here. 
-    const test_tree: tree = {
-      id: '1',
-      versionId: '',
-      title: 'This is a test tree',
-      description: 'This is a sample test description',
-      language: {id: '1342', name: 'Twi', description: ''},
-      hasVoice: true,
-      hasSms: false,
-      startingNodeKey: '',
-      nodes: [],
-      connections: []
-    }
-    this.tree = test_tree;
-    // this.diagram.model = go.Model.fromJson(this.file)
-  }
 
   deleteNode() {
 
@@ -632,7 +625,38 @@ export class TreeStudioComponent implements OnInit {
     this.numericForm = true;
   }
 
+  saveTree() {
+    this.blockUi.start('Loading...');
+    this.findSubscription = this.treeService.saveTree1(this.tree).subscribe(res => {
+      this.blockUi.stop();
+      if (res.success) {
+        this.tree = res.data;
+      }
+    }, () => this.blockUi.stop());
+  }
+
+  loadTree(id:number) {
+    this.blockUi.start('Loading...');
+    this.findSubscription = this.treeService.findTree1(id).subscribe(res => {
+      this.blockUi.stop();
+      if (res.success) {
+        this.tree = res.data;
+      }
+    }, () => this.blockUi.stop());
+    // this.diagram.model = go.Model.fromJson(this.file)
+  }
+
   ngOnInit() {
     this.diagram.div = this.diagramRef.nativeElement;
+
+    const id = +this.activatedRoute.snapshot.paramMap.get('id');
+
+    this.tree = <tree1>{};
+    if (id) {
+      this.treeId = id;
+      this.loadTree(id);
+    } else {
+      this.router.navigateByUrl(`content/${RouteNames.treeList}`);
+    }
   }
 }
