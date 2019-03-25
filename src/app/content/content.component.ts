@@ -15,7 +15,7 @@ export class ContentComponent implements OnInit {
 
   ngOnInit() {
     this.submenus = [
-      { label: 'Trees', route: RouteNames.treeList, icon: 'fa fa-folder' },
+      { label: 'Trees', route: RouteNames.treeList, icon: 'fa fa-sitemap' },
       { label: 'Media Library', route: RouteNames.mediaLibrary, icon: 'fa fa-folder' }
       /* { label: 'Messages', route: RouteNames.subscriberGroupList, icon: 'fa fa-folder' },
       { label: 'Language Selector', route: RouteNames.subscriberExport, icon: '' },

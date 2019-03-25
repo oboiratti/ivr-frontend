@@ -5,8 +5,6 @@ import { AuthGuard } from './auth-guard.service';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { RouteNames } from './shared/constants';
-import { SubscriberListComponent } from './subscriber/subscriber-list/subscriber-list.component';
-import { SubscriberComponent } from './subscriber/subscriber.component';
 
 const routes: Routes = [
   {

@@ -9,6 +9,7 @@ import { TreeDetailsComponent } from './tree-details/tree-details.component';
 import { MediaLibraryComponent } from './media-library/media-library.component';
 import { MediaFormComponent } from './media-form/media-form.component';
 import { MediaDetailsComponent } from './media-details/media-details.component';
+import { TreeStudioComponent } from './tree-studio/tree-studio.component';
 
 const routes: Routes = [
   {
@@ -66,6 +67,11 @@ const routes: Routes = [
         component: MediaFormComponent,
         canActivate: [AuthGuard]
       },
+      {
+        path: RouteNames.treeStudio,
+        component: TreeStudioComponent,
+        canActivate: [AuthGuard]
+      }
     ]
   }
 ];

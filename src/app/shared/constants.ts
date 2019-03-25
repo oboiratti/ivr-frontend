@@ -25,14 +25,19 @@ export class RouteNames {
     static treeListForm = 'trees/form';
     static treeListDets = 'trees/details';
     static treeListDetails = 'trees/details/:id';
-    static treeStudio = 'trees/studio';
-    static treeStudiox = 'trees/studio/:id';
+    // static treeStudio = 'trees/studio';
+    // static treeStudiox = 'trees/studio/:id';
     static treeListFormEdit = 'trees/form/:id';
     static mediaLibrary = 'medialibrary';
     static mediaLibraryForm = 'medialibrary/form';
     static mediaLibraryDets = 'medialibrary/details';
     static mediaLibraryDetails = 'medialibrary/details/:id';
     static mediaLibraryFormEdit = 'medialibrary/form/:id';
+
+    /** Tree Builder Routes */
+    static treeStudio = 'trees/studio';
+    static treeStudioEdit = 'trees/studio/edit/:id';
+    static treeStudiox = 'trees/studio/:id';
 
     static campaign = 'campaign';
     static outbound = 'outbound';

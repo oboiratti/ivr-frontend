@@ -23,6 +23,7 @@ import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { AppSettingsModule } from './app-settings/app-settings.module';
 import { SettingsService } from './app-settings/settings/settings.service';
 
+
 @NgModule({
   declarations: [
     AppComponent,
