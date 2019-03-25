@@ -66,6 +66,11 @@ const routes: Routes = [
         path: RouteNames.treeStudio,
         component: TreeStudioComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeStudioEdit,
+        component: TreeStudioComponent,
+        canActivate: [AuthGuard]
       }
     ]
   }

@@ -80,7 +80,6 @@ export class TreeStudioComponent implements OnInit {
     private treeService: TreeService, private mediaService: MediaService ) {
     this.loadLanguages();
     this.loadTags();
-    this.loadAudios();
 
     // Form init
     this.phoneKeys = TreeConfig.phoneKeys;
@@ -624,6 +623,7 @@ export class TreeStudioComponent implements OnInit {
       this.blockUi.stop();
       if (res.success) {
         this.tree = res.data;
+        this.loadAudios();
       }
     }, () => this.blockUi.stop());
     // this.diagram.model = go.Model.fromJson(this.file)
