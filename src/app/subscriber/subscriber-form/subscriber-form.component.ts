@@ -122,6 +122,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   get subscriberTypeId() { return this.form.get('subscriberTypeId') }
   get primaryCommodity() { return this.form.get('primaryCommodity') }
   get otherCommodities() { return this.form.get('otherCommodities') }
+  get landSize() { return this.form.get('landSize') }
 
   private setupForm() {
     this.form = this.fb.group({
@@ -148,6 +149,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       subscriberTypeId: new FormControl(null, Validators.required),
       primaryCommodity: new FormControl(null, Validators.required),
       otherCommodities: new FormControl(null),
+      landSize: new FormControl(null),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
       modifiedAt: new FormControl(null),

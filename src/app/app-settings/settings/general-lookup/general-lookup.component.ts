@@ -27,6 +27,7 @@ export class GeneralLookupComponent implements OnInit {
   @BlockUI() blockForm: NgBlockUI;
   subscriberTypes$: Observable<Lookup[]>
   regions$: Observable<Lookup[]>
+  pillars$: Observable<Lookup[]>
 
   constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private settingsService: SettingsService) {
     this.formGroup = this.formBuilder.group({
@@ -34,6 +35,7 @@ export class GeneralLookupComponent implements OnInit {
       name: new FormControl('', Validators.required),
       subscriberTypeId: new FormControl(''),
       regionId: new FormControl(''),
+      pillarId: new FormControl(''),
       notes: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -48,6 +50,7 @@ export class GeneralLookupComponent implements OnInit {
     this.fetchRecords();
     if (this.modelName === 'commodity') { this.loadSubscriberType() }
     if (this.modelName === 'district') { this.loadRegions() }
+    if (this.modelName === 'topic') { this.loadPillars() }
   }
 
   openForm() {
@@ -67,6 +70,7 @@ export class GeneralLookupComponent implements OnInit {
     this.showForm = true;
     if (this.modelName === 'commodity') { this.formGroup.patchValue({ subscriberTypeId: record.subscriberType.id }) }
     if (this.modelName === 'district') { this.formGroup.patchValue({ regionId: record.region.id }) }
+    if (this.modelName === 'topic') { this.formGroup.patchValue({ pillarId: record.pillar.id }) }
   }
 
   save() {
@@ -118,5 +122,9 @@ export class GeneralLookupComponent implements OnInit {
 
   private loadRegions() {
     this.regions$ = this.settingsService.fetch2('region')
+  }
+
+  private loadPillars() {
+    this.pillars$ = this.settingsService.fetch2('pillar')
   }
 }
