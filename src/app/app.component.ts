@@ -5,6 +5,8 @@ import { AuthService } from './auth/auth.service';
 import { RouteNames } from './shared/constants';
 import { IMenuItem } from './shared/common-entities.model';
 
+declare var $: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit {
     this.checkLogin();
     this.setMenuItems();
     // this.setName()
+    $('#preloader-body').hide();
   }
 
   checkLogin() {
