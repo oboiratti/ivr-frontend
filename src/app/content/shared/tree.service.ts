@@ -68,4 +68,8 @@ export class TreeService {
   deactivateTree(id: number) {
     return this.http.get<ResponseObject<Tree>>(`${environment.baseUrl}/trees/deactivate?id=${id}`);
   }
+
+  saveNodes(params: Tree) {
+    return this.http.post<ResponseObject<Tree>>(`${environment.baseUrl}/trees/savenodes`, params);
+  }
 }
