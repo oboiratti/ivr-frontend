@@ -29,19 +29,25 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
     this.setupForm()
     this.loadSubscribers()
     const id = +this.activatedRoute.snapshot.paramMap.get('id')
-    if (id) this.findSubscriberGroup(id)
+    if (id) { this.findSubscriberGroup(id) }
   }
 
   ngOnDestroy() {
-    if (this.saveSubscription) this.saveSubscription.unsubscribe()
-    if (this.findSubscription) this.findSubscription.unsubscribe()
+    if (this.saveSubscription) { this.saveSubscription.unsubscribe() }
+    if (this.findSubscription) { this.findSubscription.unsubscribe() }
   }
 
-  save(formData: SubscriberGroup) {
-    this.blockUi.start("Saving...")
+  save(formData: any) {
+    if (formData.subscribers) {
+      formData.subscribers = formData.subscribers.map(elm => {
+        return { subscriberId: elm }
+      })
+    }
+
+    this.blockUi.start('Saving...')
     this.saveSubscription = this.subscriberService.saveSubscriberGroup(formData).subscribe(res => {
       this.blockUi.stop()
-      if (res.success) this.closeForm()
+      if (res.success) { this.closeForm() }
     }, () => this.blockUi.stop())
   }
 
@@ -58,7 +64,7 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
       id: new FormControl(null),
       name: new FormControl('', Validators.required),
       notes: new FormControl(''),
-      subscribers: new FormControl(''),
+      subscribers: new FormControl(null),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
       modifiedAt: new FormControl(null),
@@ -71,10 +77,10 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   }
 
   private findSubscriberGroup(id: number) {
-    this.blockUi.start("Loading...")
+    this.blockUi.start('Loading...')
     this.findSubscription = this.subscriberService.findSubscriberGroup(id).subscribe(res => {
       this.blockUi.stop()
-      if (res.success) this.form.patchValue(res.data)
+      if (res.success) { this.form.patchValue(res.data) }
     }, () => this.blockUi.stop())
   }
 }

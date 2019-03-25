@@ -6,6 +6,7 @@ export interface Subscriber {
     name: string
     language: Lookup
     startDate: Date
+    dateOfBirth: Date
     gender: string
     location: string
     comments: string
@@ -13,6 +14,7 @@ export interface Subscriber {
     district: District
     educationalLevel: any
     subscriberType: any
+    subscriberCommodities: any[],
     subscriberGroups: SubscriberGroup[]
 }
 
@@ -23,7 +25,7 @@ export interface SubscriberGroup extends Lookup {
 }
 
 export interface SubscriberQuery extends ModelQuery {
-
+    name: string
 }
 
 export interface SubscriberUploadModel {
