@@ -22,6 +22,12 @@ export class RouteNames {
 
     static content = 'content';
     static treeList = 'trees';
+    static treeListForm = 'trees/form';
+    static treeListDets = 'trees/details';
+    static treeListDetails = 'trees/details/:id';
+    static treeStudio = 'trees/studio';
+    static treeStudiox = 'trees/studio/:id';
+    static treeListFormEdit = 'trees/form/:id';
     static mediaLibrary = 'medialibrary';
     static mediaLibraryForm = 'medialibrary/form';
     static mediaLibraryDets = 'medialibrary/details';

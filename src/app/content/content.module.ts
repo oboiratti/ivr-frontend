@@ -7,6 +7,8 @@ import { ContentRoutingModule } from './content-routing.module';
 import { ContentComponent } from './content.component';
 import { SharedModule } from '../shared/shared.module';
 import { TreeListComponent } from './tree-list/tree-list.component';
+import { TreeFormComponent } from './tree-form/tree-form.component';
+import { TreeDetailsComponent } from './tree-details/tree-details.component';
 import { MediaLibraryComponent } from './media-library/media-library.component';
 import { MediaFormComponent } from './media-form/media-form.component';
 import { MediaDetailsComponent } from './media-details/media-details.component';
@@ -15,6 +17,8 @@ import { MediaDetailsComponent } from './media-details/media-details.component';
   declarations: [
     ContentComponent,
     TreeListComponent,
+    TreeFormComponent,
+    TreeDetailsComponent,
     MediaLibraryComponent,
     MediaFormComponent,
     MediaDetailsComponent],
