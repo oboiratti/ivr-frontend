@@ -35,9 +35,8 @@ export class RouteNames {
     static mediaLibraryFormEdit = 'medialibrary/form/:id';
 
     /** Tree Builder Routes */
-    static treeStudio = 'trees/studio';
     static treeStudioEdit = 'trees/studio/edit/:id';
-    static treeStudiox = 'trees/studio/:id';
+    static treeStudio = 'trees/studio/:id';
 
     static campaign = 'campaign';
     static outbound = 'outbound';

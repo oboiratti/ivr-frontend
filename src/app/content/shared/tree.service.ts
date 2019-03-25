@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
-import { Tree, TreeQuery} from './tree.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { numeric, openended, multichoice, message, blockNode , connection, tree1, choice , multi_options, lookup, audio } from '../tree-schema';
+import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, TreeQuery, Choice } from '../shared/tree.model';
 
 
 @Injectable({
@@ -54,10 +53,6 @@ export class TreeService {
     return this.http.get<ResponseObject<Tree>>(`${environment.baseUrl}/trees/get/${id}`);
   }
 
-  findTree1(id: number) {
-    return this.http.get<ResponseObject<tree1>>(`${environment.baseUrl}/trees/get/${id}`);
-  }
-
   deleteTree(id: number) {
     return this.http.delete<ResponseObject<Tree>>(`${environment.baseUrl}/trees/delete/${id}`);
   }
@@ -66,12 +61,6 @@ export class TreeService {
     if (params.id) { return this.http.put<ResponseObject<Tree>>(`${environment.baseUrl}/trees`, params); }
     return this.http.post<ResponseObject<Tree>>(`${environment.baseUrl}/trees`, params);
   }
-
-  saveTree1(params: tree1) {
-    if (params.id) { return this.http.put<ResponseObject<tree1>>(`${environment.baseUrl}/trees`, params); }
-    return this.http.post<ResponseObject<tree1>>(`${environment.baseUrl}/trees`, params);
-  }
-
 
   activateTree(id: number) {
     return this.http.get<ResponseObject<Tree>>(`${environment.baseUrl}/trees/activate?id=${id}`);

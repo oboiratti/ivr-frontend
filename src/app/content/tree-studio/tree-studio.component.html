@@ -247,9 +247,9 @@
 											
 											<div class="card-body inner-card" style="max-height: 250px;">
 												<div *ngIf="currentNode.audio != null" class="card-header inner-card" style="margin-bottom: 30px;">
-													<label>{{currentNode.audio.name}}</label>
+													<label>{{currentNode.audio.title}}</label>
 													<audio controls>
-														<source src="{{currentNode.audio.url}}">
+														<source src="{{currentNode.audio.fileUrl}}">
 													</audio>	
 												</div>
 												<h6 class="card-title">Select Audio</h6>

@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import * as go from 'gojs';
-import { numeric, openended, multichoice, message, blockNode , connection, tree1, choice , multi_options, lookup, audio } from '../tree-schema';
 import { Observable, Subscriber, Subscription } from 'rxjs';
 import { TreeConfig} from '../tree-config';
 import { TreeService } from '../shared/tree.service';
-import { Tree, TreeQuery } from '../shared/tree.model';
+import { MediaService } from '../shared/media.service';
+import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
+import { Media, MediaQuery } from '../shared/media.model';
 import { finalize } from 'rxjs/operators';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { Lookup } from 'src/app/shared/common-entities.model';
 import { ActivatedRoute, Router, Route } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { RouteNames } from 'src/app/shared/constants';
-
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -29,20 +29,19 @@ export class TreeStudioComponent implements OnInit {
   private diagram: go.Diagram = new go.Diagram();
   private palette: go.Palette = new go.Palette();
   private $: any;
-  private tree: tree1;
+  private tree: Tree;
 
   private phoneKeys: Array<string>;
   private repeatDelay: Array<string>;
   private repeatNumber: Array<string>;
-  private languages: Array<lookup>;
-  private tags: Array<lookup>;
-  private audios: Array<audio>;
+  private languages: Array<Lookup>;
+  private tags: Array<Lookup>;
+  private audios: Array<Media>;
 
-  private currentNode: blockNode;
-  private multiNode: multichoice;
-  private numericNode: numeric;
-  private openNode: openended;
-
+  private currentNode: BlockNode;
+  private multiNode: Multichoice;
+  private numericNode: Numeric;
+  private openNode: Openended;
 
   private messageForm: boolean;
   private multiForm: boolean;
@@ -76,11 +75,9 @@ export class TreeStudioComponent implements OnInit {
 
   // Local Variables
   private file: string;
-  private optlist: multi_options[];
 
-  constructor(private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private treeService: TreeService ) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,
+    private treeService: TreeService, private mediaService: MediaService ) {
     this.loadLanguages();
     this.loadTags();
     this.loadAudios();
@@ -97,11 +94,7 @@ export class TreeStudioComponent implements OnInit {
     // Place GoJS license key here:
     // (go as any).licenseKey = '...'
     this.diagram = new go.Diagram();
-    this.optlist = [
-        {name: 'yes', value: 'yes'},
-        {name: 'no', value: 'no'},
-        {name: 'may be', value: 'may be'}
-    ];
+
     // DIAGRAM PROPERTIES
     this.diagram.initialContentAlignment = go.Spot.Center;
     this.diagram.allowDrop = true;
@@ -398,7 +391,7 @@ export class TreeStudioComponent implements OnInit {
   }
 
   addMessage() {
-    const newMessage: blockNode = {
+    const newMessage: BlockNode = {
       type: TreeConfig.nodeTypes.message,
       key: this.generateNodeId(),
       custom: {
@@ -422,7 +415,7 @@ export class TreeStudioComponent implements OnInit {
   }
 
   addMultiChoice() {
-    const newMulti: blockNode = {
+    const newMulti: BlockNode = {
       type: TreeConfig.nodeTypes.multichoice,
       key: this.generateNodeId(),
       custom : {
@@ -446,12 +439,12 @@ export class TreeStudioComponent implements OnInit {
     if (this.isFirstNode) { this.tree.startingNodeKey = newMulti.key; }
     this.tree.nodes.push(newMulti);
     this.diagram.model.addNodeData(nodeBlock);
-    //let newNode = this.diagram.findNodeForKey(newMulti.key)
+    // let newNode = this.diagram.findNodeForKey(newMulti.key)
     this.addPort(newMulti.key, "1");
   }
 
   addNumeric() {
-    const newNumeric: blockNode = {
+    const newNumeric: BlockNode = {
       type: TreeConfig.nodeTypes.numeric,
       key: this.generateNodeId(),
       custom : {
@@ -474,7 +467,7 @@ export class TreeStudioComponent implements OnInit {
   }
 
   addOpenEnded() {
-    const newNumeric: blockNode = {
+    const newNumeric: BlockNode = {
       type: TreeConfig.nodeTypes.open,
       key: this.generateNodeId(),
       custom : {
@@ -512,13 +505,12 @@ export class TreeStudioComponent implements OnInit {
   }
 
   addChoice(i: number) {
-    let num: number = this.currentNode.custom.choices.length;
-    if (num == i ) { 
+    const num: number = this.currentNode.custom.choices.length;
+    if (num === i ) {
       this.currentNode.custom.choices.push({ key: num + 1, value : '' }); 
-      let name = num + 1;
+      const name: number = num + 1;
       this.addPort(this.currentNode.key, name.toString());
     }
-    //;
   }
 
 
@@ -533,28 +525,19 @@ export class TreeStudioComponent implements OnInit {
 
   loadLanguages() {
     this.languages = [
-      {id: '1342', name: 'Twi', description: ''},
-      {id: '2342', name: 'English', description: ''},
-      {id: '3342', name: 'French', description: ''},
-      {id: '4342', name: 'Ga', description: ''}
+      {id: 1342, name: 'Twi'},
+      {id: 2342, name: 'English'},
+      {id: 3342, name: 'French'},
+      {id: 4342, name: 'Ga'}
     ];
   }
 
   loadTags() {
     this.tags = [
-      {id: '1', name: 'Good Farmers', description: ''},
-      {id: '2', name: 'English Speakers', description: ''},
-      {id: '3', name: 'Good', description: ''},
-      {id: '4', name: 'Follow up', description: ''}
-    ];
-  }
-
-  loadAudios() {
-    this.audios = [
-      {id: '1', name: 'Welcome Farmers', url: 'https://go.votomobile.org/audiofiles/play/593e90d3bdecc2.62935054/ogg'},
-      {id: '2', name: 'How many workers do you have', url: 'https://go.votomobile.org/audiofiles/play/593e90d3bdecc2.62935054/ogg'},
-      {id: '3', name: 'Do you use fertilizer', url: 'https://go.votomobile.org/audiofiles/play/593e90d3bdecc2.62935054/ogg'},
-      {id: '4', name: 'What is the size of your farm', url: 'https://go.votomobile.org/audiofiles/play/593e90d3bdecc2.62935054/ogg'}
+      {id: 1, name: 'Good Farmers'},
+      {id: 2, name: 'English Speakers'},
+      {id: 3, name: 'Good'},
+      {id: 4, name: 'Follow up'}
     ];
   }
 
@@ -627,7 +610,7 @@ export class TreeStudioComponent implements OnInit {
 
   saveTree() {
     this.blockUi.start('Loading...');
-    this.findSubscription = this.treeService.saveTree1(this.tree).subscribe(res => {
+    this.findSubscription = this.treeService.saveTree(this.tree).subscribe(res => {
       this.blockUi.stop();
       if (res.success) {
         this.tree = res.data;
@@ -635,9 +618,9 @@ export class TreeStudioComponent implements OnInit {
     }, () => this.blockUi.stop());
   }
 
-  loadTree(id:number) {
+  loadTree(id: number) {
     this.blockUi.start('Loading...');
-    this.findSubscription = this.treeService.findTree1(id).subscribe(res => {
+    this.findSubscription = this.treeService.findTree(id).subscribe(res => {
       this.blockUi.stop();
       if (res.success) {
         this.tree = res.data;
@@ -646,12 +629,17 @@ export class TreeStudioComponent implements OnInit {
     // this.diagram.model = go.Model.fromJson(this.file)
   }
 
+  loadAudios() {
+    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
+        this.audios = res;
+    });
+  }
+
   ngOnInit() {
     this.diagram.div = this.diagramRef.nativeElement;
 
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
-
-    this.tree = <tree1>{};
+    this.tree = <Tree>{};
     if (id) {
       this.treeId = id;
       this.loadTree(id);
