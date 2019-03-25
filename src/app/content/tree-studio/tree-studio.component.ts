@@ -146,7 +146,10 @@ export class TreeStudioComponent implements OnInit {
       $(go.Shape, { strokeWidth: 6, stroke: 'rgb(66, 139, 202)', strokeJoin: 'round'})
     );
 
-    this.diagram.model = $(go.GraphLinksModel, {});
+    this.diagram.model = $(go.GraphLinksModel, {
+      linkFromPortIdProperty: "fromPort",  // required information:
+      linkToPortIdProperty: "toPort",
+    });
 
     // MESSAGE
     this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.message,
@@ -298,15 +301,26 @@ export class TreeStudioComponent implements OnInit {
                 return text;
             }))
         ),
-        $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill }, {
-              
-          })
-      ));
-    // this.diagram.model.addNodeData(data);
+        $(go.Panel, 'Horizontal', new go.Binding("itemArray", "bottomArray"), { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill,
+          itemTemplate: $(go.Panel,'Auto',{},
+            $(go.Shape, 'Rectangle',
+              { 
+                fill: '#9895953b', stretch: go.GraphObject.Fill, 
+                stroke: '#aaa', strokeWidth: 1,
+                cursor: "pointer",
+                toLinkable: true, toSpot: go.Spot.BottomCenter,
+                _side: "bottom",
+              }, new go.Binding("portId", "portId"),
+            ),
+            $(go.TextBlock, { height:20, font: '10px bold sans-serif',textAlign: 'center' }, new go.Binding('text','choice'))
+          )
+        }
+      )
+    ))
   }
 
   // ADD PORT
-  addPort(key: string) {
+  addPort(key: string,choice:string) {
     this.diagram.startTransaction('addPort');
     let node = this.diagram.findNodeForKey(key);
     if (!(node instanceof go.Node)) { return; }
@@ -315,14 +329,14 @@ export class TreeStudioComponent implements OnInit {
     console.log('Port node', node)
     //while (node.findPort('choice' + i.toString()) !== node) { i++; }
     // now this new port name is unique within the whole Node because of the side prefix
-    const name = i.toString();
+    const name = key+i.toString();
     // get the Array of port data to be modified
     const arr = node.data['childArray'];
     if (arr) {
       // create a new port data object
       const newportdata = {
-        portId: name
-        // if you add port data properties here, you should copy them in copyPortData above
+        portId: name,
+        choice: choice
       };
       // and add it to the Array of port data
       this.diagram.model.insertArrayItem(arr, -1, newportdata);
@@ -418,7 +432,8 @@ export class TreeStudioComponent implements OnInit {
     if (this.isFirstNode) { this.tree.startingNodeKey = newMulti.key; }
     this.tree.nodes.push(newMulti);
     this.diagram.model.addNodeData(nodeBlock);
-    this.addPort(newMulti.key);
+    //let newNode = this.diagram.findNodeForKey(newMulti.key)
+    this.addPort(newMulti.key, "1");
   }
 
   addNumeric() {
@@ -484,9 +499,12 @@ export class TreeStudioComponent implements OnInit {
 
   addChoice(i: number) {
     let num: number = this.currentNode.custom.choices.length;
-    if (num == i ) { this.currentNode.custom.choices.push({ key: num + 1, value : '' }); }
-    let name = num + 1;
-    this.makePort(this.currentNode.key, num.toString());
+    if (num == i ) { 
+      this.currentNode.custom.choices.push({ key: num + 1, value : '' }); 
+      let name = num + 1;
+      this.addPort(this.currentNode.key, name.toString());
+    }
+    //;
   }
 
   saveTree() {
