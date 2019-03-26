@@ -1,22 +1,30 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import * as go from 'gojs';
-import { Observable, Subscriber, Subscription } from 'rxjs';
-import { TreeConfig} from '../tree-config';
-import { TreeService } from '../shared/tree.service';
-import { MediaService } from '../shared/media.service';
-import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
-import { Media, MediaQuery } from '../shared/media.model';
-import { finalize } from 'rxjs/operators';
-import { MessageDialog } from 'src/app/shared/message_helper';
-import { Lookup } from 'src/app/shared/common-entities.model';
-import { ActivatedRoute, Router, Route } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+  } from '@angular/core';
+import { finalize } from 'rxjs/operators';
+import { GuidedDraggingTool } from 'gojs/extensionsTS/GuidedDraggingTool';
+import { Lookup } from 'src/app/shared/common-entities.model';
+import { Media, MediaQuery } from '../shared/media.model';
+import { MediaService } from '../shared/media.service';
+import { MessageDialog } from 'src/app/shared/message_helper';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { RouteNames } from 'src/app/shared/constants';
+import { TreeConfig } from '../tree-config';
+import { TreeService } from '../shared/tree.service';
+import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
 // in the 'includes' list of this project's tsconfig.json
-import { GuidedDraggingTool } from 'gojs/extensionsTS/GuidedDraggingTool';
 
 @Component({
   selector: 'app-tree-studio',
@@ -34,8 +42,9 @@ export class TreeStudioComponent implements OnInit {
   private phoneKeys: Array<string>;
   private repeatDelay: Array<string>;
   private repeatNumber: Array<string>;
-  private languages: Array<Lookup>;
-  private tags: Array<Lookup>;
+  languages: Observable<Lookup[]>;
+  tags: Observable<Lookup[]>;
+
   private audios: Array<Media>;
 
   private currentNode: BlockNode;
@@ -78,15 +87,12 @@ export class TreeStudioComponent implements OnInit {
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private treeService: TreeService, private mediaService: MediaService ) {
-    this.loadLanguages();
-    this.loadTags();
 
     // Form init
     this.phoneKeys = TreeConfig.phoneKeys;
     this.repeatDelay = TreeConfig.repeatDelaySeconds;
     this.repeatNumber = TreeConfig.maxRepeatNumber;
 
-    console.log(this.tree);
     this.showForm('Treeform');
     this.$ = go.GraphObject.make;
     const $ = this.$;
@@ -116,8 +122,18 @@ export class TreeStudioComponent implements OnInit {
         this.loadNode(node);
         this.showForm(node.category);
         this.nodeSelected.emit(node instanceof go.Node ? node : null);
+      }else{
+        this.showTreeForm();
       }
     });
+
+    this.diagram.addDiagramListener('ChangingSelection', (e: go.DiagramEvent)  => {
+      //this.showTreeForm();
+    });
+
+    this.diagram.addDiagramListener('LinkDrawn', (e: go.DiagramEvent) => {
+      //this.showTreeForm();
+    })
     // this.diagram.addModelChangedListener(e => e.isTransactionFinished && this.modelChanged.emit(e));
 
     this.diagram.addModelChangedListener((evt) => {
@@ -490,7 +506,9 @@ export class TreeStudioComponent implements OnInit {
   }
 
   loadNode(node: go.Part) {
+    if(!node) return;
     const selectedNodeData = node.data;
+    if(!selectedNodeData.key) return ;
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
     this.showForm(this.currentNode.key);
     console.log('Current Node', this.currentNode);
@@ -512,32 +530,20 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-
   deleteNode() {
 
   }
-
 
   copyNode() {
 
   }
 
-  loadLanguages() {
-    this.languages = [
-      {id: 1342, name: 'Twi'},
-      {id: 2342, name: 'English'},
-      {id: 3342, name: 'French'},
-      {id: 4342, name: 'Ga'}
-    ];
+  private loadLanguages() {
+    this.languages = this.mediaService.fetchLanguages();
   }
 
-  loadTags() {
-    this.tags = [
-      {id: 1, name: 'Good Farmers'},
-      {id: 2, name: 'English Speakers'},
-      {id: 3, name: 'Good'},
-      {id: 4, name: 'Follow up'}
-    ];
+  private loadTags() {
+    this.tags = this.mediaService.fetchTags();
   }
 
 
@@ -617,19 +623,28 @@ export class TreeStudioComponent implements OnInit {
     }, () => this.blockUi.stop());
   }
 
-  loadTree(id: number) {
+  private loadTree(id: number) {
     this.blockUi.start('Loading...');
     this.findSubscription = this.treeService.findTree(id).subscribe(res => {
       this.blockUi.stop();
       if (res.success) {
-        this.tree = res.data;
+        let tree = res.data;
+        tree.nodes =  this.processNewTree(res.data.nodes);
+        this.tree = tree;
+        console.log('Tree => ', this.tree)
         this.loadAudios();
       }
     }, () => this.blockUi.stop());
     // this.diagram.model = go.Model.fromJson(this.file)
   }
 
-  loadAudios() {
+  private processNewTree(node:string): Array<BlockNode> {
+    let nodes: Array<BlockNode>;
+    nodes = (node == null) ? [] : JSON.parse(node) ;
+    return nodes;
+  }
+
+  private loadAudios() {
     this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
         this.audios = res;
     });
@@ -637,6 +652,9 @@ export class TreeStudioComponent implements OnInit {
 
   ngOnInit() {
     this.diagram.div = this.diagramRef.nativeElement;
+    
+    this.loadLanguages();
+    this.loadTags();
 
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
     this.tree = <Tree>{};
@@ -647,4 +665,9 @@ export class TreeStudioComponent implements OnInit {
       this.router.navigateByUrl(`content/${RouteNames.treeList}`);
     }
   }
+
+  ngOnDestroy() {
+    if (this.findSubscription) { this.findSubscription.unsubscribe(); }
+  }
+
 }
