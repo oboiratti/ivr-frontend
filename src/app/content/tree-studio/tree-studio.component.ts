@@ -88,6 +88,7 @@ export class TreeStudioComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private treeService: TreeService, private mediaService: MediaService ) {
 
+    window.tree = this.tree;
     // Form init
     this.phoneKeys = TreeConfig.phoneKeys;
     this.repeatDelay = TreeConfig.repeatDelaySeconds;
@@ -101,14 +102,13 @@ export class TreeStudioComponent implements OnInit {
     this.diagram = new go.Diagram();
 
     // DIAGRAM PROPERTIES
-    this.diagram.initialContentAlignment = go.Spot.Center;
     this.diagram.allowDrop = true;
     this.diagram.undoManager.isEnabled = true;
     this.diagram.toolManager.draggingTool = new GuidedDraggingTool();
     this.diagram.toolManager.draggingTool.dragsTree = true;
     this.diagram.commandHandler.deletesTree = true;
     this.diagram.layout = $(go.TreeLayout, { angle: 90 });
-    this.diagram.initialContentAlignment = go.Spot.TopLeft;
+    this.diagram.initialContentAlignment = go.Spot.TopCenter;
 
     // DIAGRAM EVENTS
     this.diagram.addDiagramListener('BackgroundSingleClicked', (e: go.DiagramEvent) => {
@@ -160,7 +160,8 @@ export class TreeStudioComponent implements OnInit {
     this.diagram.linkTemplate = $(go.Link, {
         relinkableFrom: true,
         relinkableTo: true,
-        //curve: go.Link.JumpGap,
+        curve: go.Link.JumpGap,
+        routing: go.Link.Orthogonal,
         reshapable: true,
         corner: 10
       },
@@ -179,10 +180,10 @@ export class TreeStudioComponent implements OnInit {
         // First Rectangle
         $(go.Shape, 'Rectangle', { // fill: '#f5f5f5'
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
-          stroke: '#aaa', strokeWidth: 1, portId: 'largeRectPort', cursor: 'pointer',
+          stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toSpot: go.Spot.TopCenter
-        }),
+        }, new go.Binding('portId','toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Message', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
             font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
@@ -197,19 +198,21 @@ export class TreeStudioComponent implements OnInit {
                   text = text.substring(0, 75).concat('...');
                 }
                 return text;
-            }))
+            })
+          )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
-          $(go.Panel, 'Auto', {},
-            $(go.Shape, 'Rectangle',// fill: '#9895953b'
-              { fromLinkable: true, fromSpot: go.Spot.BottomCenter, fill: '#9895953b',
-                stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150,
-                portId: 'bottomRectPort'
+          $(go.Panel, 'Auto', { fromLinkable: true, fromSpot: go.Spot.BottomCenter }, 
+            new go.Binding('portId', 'fromPortId'),
+            $(go.Shape, 'Rectangle',
+              { fill: '#9895953b',
+                stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
               { text: '1', height: 13, textAlign: 'center', width: 150, margin: 5,
                 font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
-              }),
+              }
+            ),
           )
         )
       )
@@ -221,10 +224,10 @@ export class TreeStudioComponent implements OnInit {
         // First Rectangle
         $(go.Shape, 'Rectangle', {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
-          stroke: '#aaa', strokeWidth: 1, portId: '1', cursor: 'pointer',
+          stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toSpot: go.Spot.TopCenter
-        }),
+        }, new go.Binding('portId', 'toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Open-Ended', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
             font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
@@ -239,33 +242,36 @@ export class TreeStudioComponent implements OnInit {
                   text = text.substring(0, 75).concat('...');
                 }
                 return text;
-            }))
+            })
+          )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
-          $(go.Panel, 'Auto', {},
+          $(go.Panel, 'Auto', { fromLinkable: true, fromSpot: go.Spot.BottomCenter }, 
+            new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fromLinkable: true, fromSpot: go.Spot.BottomCenter, fill: '#9895953b',
+              { fill: '#9895953b',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
-            }, new go.Binding('portId', 'mPortId')),
+            }),
             $(go.TextBlock,
               { text: '1', height: 13, textAlign: 'center', width: 150, margin: 5,
                 font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
-              }),
+              }
+            ),
           )
         )
       )
     );
 
     // NUMERIC
-    this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.numeric,
+    this.diagram.nodeTemplateMap.add( TreeConfig.nodeTypes.numeric,
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
         $(go.Shape, 'Rectangle', {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
-          stroke: '#aaa', strokeWidth: 1, portId: '1', cursor: 'pointer',
+          stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toSpot: go.Spot.TopCenter
-        }),
+        }, new go.Binding('portId', 'toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Numeric', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
             font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
@@ -280,18 +286,21 @@ export class TreeStudioComponent implements OnInit {
                   text = text.substring(0, 75).concat('...');
                 }
                 return text;
-            }))
+            })
+          )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
-          $(go.Panel, 'Auto', {},
+          $(go.Panel, 'Auto', { fromLinkable: true, fromSpot: go.Spot.BottomCenter }, 
+            new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fromLinkable: true, fromSpot: go.Spot.BottomCenter, fill: '#9895953b',
+              { fill: '#9895953b',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
-            }, new go.Binding('portId', 'mPortId')),
+            }),
             $(go.TextBlock,
               { text: '1', height: 13, textAlign: 'center', width: 150, margin: 5,
                 font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
-              }),
+              }
+            ),
           )
         )
       )
@@ -303,10 +312,10 @@ export class TreeStudioComponent implements OnInit {
         // First Rectangle
         $(go.Shape, 'Rectangle', {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
-          stroke: '#aaa', strokeWidth: 1, portId: '', cursor: 'pointer',
+          stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toSpot: go.Spot.TopCenter
-        }),
+        }, new go.Binding('portId', 'toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Multiple Choice', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
             font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
@@ -323,71 +332,23 @@ export class TreeStudioComponent implements OnInit {
                 return text;
             }))
         ),
-        $(go.Panel, 'Horizontal', new go.Binding("itemArray", "bottomArray"), { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill,
-          itemTemplate: $(go.Panel,'Auto',{},
-            $(go.Shape, 'Rectangle',
-              { 
+        $(go.Panel, 'Horizontal',
+          new go.Binding("itemArray", "multiArray"),
+          { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill,
+          itemTemplate: $(go.Panel,{
+            fromLinkable: true, fromSpot: go.Spot.BottomCenter,_side: "bottom"
+          }, new go.Binding("portId", "multifromPortId"),
+            $(go.Shape, 'Rectangle',{ 
                 fill: '#9895953b', stretch: go.GraphObject.Fill, 
                 stroke: '#aaa', strokeWidth: 1,
-                cursor: "pointer",
-                toLinkable: true, toSpot: go.Spot.BottomCenter,
-                _side: "bottom",
-              }, new go.Binding("portId", "portId"),
+                cursor: "pointer", desiredSize: new go.Size(50,20)
+              }
             ),
             $(go.TextBlock, { height:20, font: '10px bold sans-serif',textAlign: 'center' }, new go.Binding('text','choice'))
           )
         }
       )
     ))
-  }
-
-  // ADD PORT
-  addPort(key: string,choice:string) {
-    this.diagram.startTransaction('addPort');
-    let node = this.diagram.findNodeForKey(key);
-    if (!(node instanceof go.Node)) { return; }
-    // compute the next available index number for the side
-    let i = 0;
-    console.log('Port node', node)
-    //while (node.findPort('choice' + i.toString()) !== node) { i++; }
-    // now this new port name is unique within the whole Node because of the side prefix
-    const name = key+i.toString();
-    // get the Array of port data to be modified
-    const arr = node.data['childArray'];
-    if (arr) {
-      // create a new port data object
-      const newportdata = {
-        portId: name,
-        choice: choice
-      };
-      // and add it to the Array of port data
-      this.diagram.model.insertArrayItem(arr, -1, newportdata);
-    }
-    this.diagram.commitTransaction('addPort');
-    console.log('Port Added ');
-  }
-
-  makePort(nodeKey:string, choicekey:string) {
-    let choices = this.currentNode.custom.choices;
-    let node = this.diagram.findNodeForKey(nodeKey);
-    node
-    let size = 150/ choices.length;
-    let panel: Array<go.Panel> = [];
-    choices.forEach((item,num)=>{
-      var newpanel = this.$(go.Panel,'Auto',{},
-        this.$(go.Shape, 'Rectangle',
-          { 
-            fill: '#9895953b', stretch: go.GraphObject.Fill, 
-            stroke: '#aaa', strokeWidth: 1, width:size,
-            portId: this.currentNode.key + num,
-            toLinkable: true, toSpot: go.Spot.BottomCenter
-          }),
-        this.$(go.TextBlock, { text: item.value, height:20, font: '10px bold sans-serif',textAlign: 'center', width:size }),
-      )
-      panel.push()
-    })
-    console.log(panel)
-    return panel;
   }
 
   generateNodeId() {
@@ -405,7 +366,7 @@ export class TreeStudioComponent implements OnInit {
     this.currentNode.isStartingNode = true;
   }
 
-  addMessage() {
+  private addMessage() {
     const newMessage: BlockNode = {
       type: TreeConfig.nodeTypes.message,
       key: this.generateNodeId(),
@@ -423,13 +384,17 @@ export class TreeStudioComponent implements OnInit {
       includeInSummary: false,
     };
 
-    const nodeBlock = { key: newMessage.key, mTitle: newMessage.custom.title, category: TreeConfig.nodeTypes.message };
+    const nodeBlock = { 
+      key: newMessage.key, mTitle: newMessage.custom.title, 
+      category: TreeConfig.nodeTypes.message,
+      toPortId:'top_' + newMessage.key, fromPortId:'bottom_' + newMessage.key
+    };
     if (this.isFirstNode) { this.tree.startingNodeKey = newMessage.key; }
     this.tree.nodes.push(newMessage);
     this.diagram.model.addNodeData(nodeBlock);
   }
 
-  addMultiChoice() {
+  private addMultiChoice() {
     const newMulti: BlockNode = {
       type: TreeConfig.nodeTypes.multichoice,
       key: this.generateNodeId(),
@@ -438,7 +403,7 @@ export class TreeStudioComponent implements OnInit {
         repeatKey: '2', // Key to press to repeat
         repeatDelay: '7',  // Seconds before repeat
         repeatMax: '3',
-        choices: [{key: 1, value: '' }],
+        choices: [{key: 1, value: '1'}],
         choiceKeypresses: {},
         branching: true,
         addExitForNoResponse : false
@@ -450,12 +415,61 @@ export class TreeStudioComponent implements OnInit {
       includeInSummary: false,
     };
 
-    const nodeBlock = { key: newMulti.key, mTitle: newMulti.custom.title, category: TreeConfig.nodeTypes.multichoice };
+    const nodeBlock = { 
+      key: newMulti.key, mTitle: newMulti.custom.title, category: TreeConfig.nodeTypes.multichoice,
+      toPortId:'top_' + newMulti.key, 
+      multiArray:[
+        
+      ]
+    };
+
     if (this.isFirstNode) { this.tree.startingNodeKey = newMulti.key; }
     this.tree.nodes.push(newMulti);
     this.diagram.model.addNodeData(nodeBlock);
-    // let newNode = this.diagram.findNodeForKey(newMulti.key)
-    this.addPort(newMulti.key, "1");
+  }
+
+  addChoice(i: number) {
+    const num: number = this.currentNode.custom.choices.length;
+    console.log(" I => ", i)
+    console.log(" NUM => ", num)
+    if (num === i ) {
+      this.currentNode.custom.choices.push({ key: num + 1, value : '' }); 
+      const name: number = num + 1;
+      this.addPort(this.currentNode.key, this.currentNode.custom.choices[num-1]);
+    }else{
+      // Check if this port exists
+      let curChoice = this.currentNode.custom.choices[i];
+      let node = this.diagram.findNodeForKey(this.currentNode.key);
+      console.log("Choice Node =>", node)
+      const portId = 'bottom_' + this.currentNode.key + '_' + curChoice.key;
+      console.log("ReconstructedPortId =>", portId)
+      const arr = node.data.multiArray.filter(x => x.multifromPortId === portId)[0];
+      
+    }
+  }
+   // ADD PORT
+  private addPort(key: string,choice:Choice) {
+    this.diagram.startTransaction('addPort');
+    let node = this.diagram.findNodeForKey(key);
+    if (!(node instanceof go.Node)) { return; }
+    console.log('Port node', node)
+    const portId = 'bottom_' + key + '_' + choice.key;
+    // get the Array of port data to be modified
+    const arr = node.data.multiArray;
+
+    console.log('TEST', arr.filter(x => x.multifromPortId === portId) != [])
+    console.log("Arr =>", arr);
+    if (arr) {
+      // create a new port data object
+      const newportdata = {
+        multifromPortId: portId,
+        choice: choice.value
+      };
+      // and add it to the Array of port data
+      this.diagram.model.insertArrayItem(arr, -1, newportdata);
+    }
+    this.diagram.commitTransaction('addPort');
+    console.log('Port Added ');
   }
 
   addNumeric() {
@@ -475,7 +489,10 @@ export class TreeStudioComponent implements OnInit {
       includeInSummary: false,
     };
 
-    const nodeBlock = { key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.numeric };
+    const nodeBlock = { 
+      key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.numeric,
+      toPortId:'top_' + newNumeric.key, fromPortId:'bottom_' + newNumeric.key 
+    };
     if (this.isFirstNode) { this.tree.startingNodeKey = newNumeric.key; }
     this.tree.nodes.push(newNumeric);
     this.diagram.model.addNodeData(nodeBlock);
@@ -499,7 +516,10 @@ export class TreeStudioComponent implements OnInit {
       includeInSummary: false,
     };
 
-    const nodeBlock = { key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.open };
+    const nodeBlock = { 
+      key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.open,
+      toPortId:'top_' + newNumeric.key, fromPortId:'bottom_' + newNumeric.key
+    };
     if (this.isFirstNode) { this.tree.startingNodeKey = newNumeric.key; }
     this.tree.nodes.push(newNumeric);
     this.diagram.model.addNodeData(nodeBlock);
@@ -518,15 +538,6 @@ export class TreeStudioComponent implements OnInit {
     const nodedata = this.diagram.model.findNodeDataForKey(this.currentNode.key);
     if (nodedata) {
       this.diagram.model.setDataProperty(nodedata, 'mTitle', this.currentNode.custom.title);
-    }
-  }
-
-  addChoice(i: number) {
-    const num: number = this.currentNode.custom.choices.length;
-    if (num === i ) {
-      this.currentNode.custom.choices.push({ key: num + 1, value : '' }); 
-      const name: number = num + 1;
-      this.addPort(this.currentNode.key, name.toString());
     }
   }
 
