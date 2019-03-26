@@ -182,7 +182,7 @@ export class TreeStudioComponent implements OnInit {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
-          toLinkable: true, toSpot: go.Spot.TopCenter
+          toLinkable: true, toLinkableDuplicates:false, toSpot: go.Spot.TopCenter
         }, new go.Binding('portId','toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Message', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
@@ -202,7 +202,7 @@ export class TreeStudioComponent implements OnInit {
           )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
-          $(go.Panel, 'Auto', { fromLinkable: true, fromSpot: go.Spot.BottomCenter }, 
+          $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates:false, fromSpot: go.Spot.BottomCenter }, 
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
               { fill: '#9895953b',
@@ -226,7 +226,7 @@ export class TreeStudioComponent implements OnInit {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
-          toLinkable: true, toSpot: go.Spot.TopCenter
+          toLinkable: true, toLinkableDuplicates:false, toSpot: go.Spot.TopCenter
         }, new go.Binding('portId', 'toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Open-Ended', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
@@ -246,7 +246,7 @@ export class TreeStudioComponent implements OnInit {
           )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
-          $(go.Panel, 'Auto', { fromLinkable: true, fromSpot: go.Spot.BottomCenter }, 
+          $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates:false, fromSpot: go.Spot.BottomCenter }, 
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
               { fill: '#9895953b',
@@ -270,7 +270,7 @@ export class TreeStudioComponent implements OnInit {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
-          toLinkable: true, toSpot: go.Spot.TopCenter
+          toLinkable: true, toLinkableDuplicates:false, toSpot: go.Spot.TopCenter
         }, new go.Binding('portId', 'toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Numeric', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
@@ -290,7 +290,7 @@ export class TreeStudioComponent implements OnInit {
           )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
-          $(go.Panel, 'Auto', { fromLinkable: true, fromSpot: go.Spot.BottomCenter }, 
+          $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates:false, fromSpot: go.Spot.BottomCenter }, 
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
               { fill: '#9895953b',
@@ -314,7 +314,7 @@ export class TreeStudioComponent implements OnInit {
           fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
-          toLinkable: true, toSpot: go.Spot.TopCenter
+          toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
         }, new go.Binding('portId', 'toPortId')),
         $(go.TextBlock,
           { margin: 4, text: 'Multiple Choice', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
@@ -336,7 +336,7 @@ export class TreeStudioComponent implements OnInit {
           new go.Binding("itemArray", "multiArray"),
           { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill,
           itemTemplate: $(go.Panel,{
-            fromLinkable: true, fromSpot: go.Spot.BottomCenter,_side: "bottom"
+            fromLinkable: true, fromLinkableDuplicates:false, fromSpot: go.Spot.BottomCenter,_side: "bottom"
           }, new go.Binding("portId", "multifromPortId"),
             $(go.Shape, 'Rectangle',{ 
                 fill: '#9895953b', stretch: go.GraphObject.Fill, 
@@ -344,7 +344,8 @@ export class TreeStudioComponent implements OnInit {
                 cursor: "pointer", desiredSize: new go.Size(50,20)
               }
             ),
-            $(go.TextBlock, { height:20, font: '10px bold sans-serif',textAlign: 'center' }, new go.Binding('text','choice'))
+            $(go.TextBlock, { height: 13, textAlign: 'center', margin: 5,
+            font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'}, new go.Binding('text','choice'))
           )
         }
       )
