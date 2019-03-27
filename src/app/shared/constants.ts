@@ -36,8 +36,8 @@ export class RouteNames {
 
     /** Tree Builder Routes */
     static treeStudio = 'trees/studio';
+    static treeStudioForm = 'trees/studio/:id';
     static treeStudioEdit = 'trees/studio/edit/:id';
-    static treeStudiox = 'trees/studio/:id';
 
     static campaign = 'campaign';
     static outbound = 'outbound';
