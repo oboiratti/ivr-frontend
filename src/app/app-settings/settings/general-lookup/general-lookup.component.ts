@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { LookUps, SettingsService } from '../settings.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MessageDialog } from '../../../shared/message_helper';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Lookup } from 'src/app/shared/common-entities.model';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-general-lookup',
   templateUrl: './general-lookup.component.html',
   styleUrls: ['./general-lookup.component.css']
 })
-export class GeneralLookupComponent implements OnInit {
+export class GeneralLookupComponent implements OnInit, OnDestroy {
 
   title: string;
   modelName: string;
@@ -28,6 +29,7 @@ export class GeneralLookupComponent implements OnInit {
   subscriberTypes$: Observable<Lookup[]>
   regions$: Observable<Lookup[]>
   pillars$: Observable<Lookup[]>
+  unsubscribe$ = new Subject<void>()
 
   constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private settingsService: SettingsService) {
     this.formGroup = this.formBuilder.group({
@@ -51,6 +53,10 @@ export class GeneralLookupComponent implements OnInit {
     if (this.modelName === 'commodity') { this.loadSubscriberType() }
     if (this.modelName === 'district') { this.loadRegions() }
     if (this.modelName === 'topic') { this.loadPillars() }
+  }
+  ngOnDestroy() {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   openForm() {
@@ -76,7 +82,9 @@ export class GeneralLookupComponent implements OnInit {
   save() {
     this.record = this.formGroup.value;
     this.blockForm.start('Saving...');
-    this.settingsService.save(this.modelName, this.record).subscribe((res) => {
+    this.settingsService.save(this.modelName, this.record)
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((res) => {
       this.blockForm.stop();
       if (res.success) {
         this.closeForm()
@@ -92,7 +100,9 @@ export class GeneralLookupComponent implements OnInit {
     MessageDialog.confirm('Delete Item', 'Are you sure you want to delete this item').then((confirm) => {
       if (confirm.value) {
         this.blockForm.start('Deleting...')
-        this.settingsService.destroy(this.modelName, id).subscribe((res) => {
+        this.settingsService.destroy(this.modelName, id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((res) => {
           this.blockForm.stop()
           if (res.success) {
             this.closeForm()
@@ -108,7 +118,9 @@ export class GeneralLookupComponent implements OnInit {
 
   private fetchRecords() {
     this.blockForm.start('Loading')
-    this.settingsService.fetch(this.model.name).subscribe((res) => {
+    this.settingsService.fetch(this.model.name)
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((res) => {
       this.blockForm.stop()
       if (res.success) {
         this.records = res.data;
