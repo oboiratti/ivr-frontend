@@ -15,8 +15,27 @@ export interface Tree {
     hasVoice: boolean;
     hasSms: boolean;
     startingNodeKey: string;
-    nodes: Array<BlockNode>;
+    nodes: any;
     connections: Array<Connection>;
+    treeModel:any;
+}
+
+export interface ServerTree {
+    id: number;
+    code: string;
+    title: string;
+    blocks: string;
+    description: string;
+    tags: string;
+    status: string;
+    languageId: number;
+    language: Lookup;
+    length: string;
+    hasVoice: boolean;
+    hasSms: boolean;
+    startingNodeKey: string;
+    nodes: string;
+    connections: string;
     treeModel:any;
 }
 

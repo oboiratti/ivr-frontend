@@ -631,8 +631,6 @@ export class TreeStudioComponent implements OnInit {
     }, () => this.blockUi.stop());
   }
 
-
-
   private loadTree(id: number) {
     this.blockUi.start('Loading...');
     this.findSubscription = this.treeService.findTree(id).subscribe(res => {
@@ -682,5 +680,4 @@ export class TreeStudioComponent implements OnInit {
   ngOnDestroy() {
     if (this.findSubscription) { this.findSubscription.unsubscribe(); }
   }
-
 }
