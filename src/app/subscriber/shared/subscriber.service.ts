@@ -10,6 +10,8 @@ import { map } from 'rxjs/operators';
 })
 export class SubscriberService {
 
+  totalSubscribers = 0
+
   constructor(private http: HttpClient) { }
 
   fetchDistrictsByRegion(regionId: number) {
@@ -34,7 +36,10 @@ export class SubscriberService {
     return this.http.post<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber/query`, params)
       .pipe(
         map(res => {
-          if (res.success) { return res.data }
+          if (res.success) {
+            this.totalSubscribers = res.total
+            return res.data
+          }
         })
       )
   }
