@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
-import { Tree, TreeQuery} from './tree.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, TreeQuery, Choice } from '../shared/tree.model';
+
 
 @Injectable({
   providedIn: 'root'

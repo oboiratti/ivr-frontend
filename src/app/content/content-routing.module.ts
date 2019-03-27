@@ -43,11 +43,6 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.treeStudiox,
-        component: TreeListComponent,
-        canActivate: [AuthGuard]
-      },
-      {
         path: RouteNames.mediaLibrary,
         component: MediaLibraryComponent,
         canActivate: [AuthGuard]
@@ -68,7 +63,12 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.treeStudio,
+        path: RouteNames.treeStudioForm,
+        component: TreeStudioComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeStudioEdit,
         component: TreeStudioComponent,
         canActivate: [AuthGuard]
       }
