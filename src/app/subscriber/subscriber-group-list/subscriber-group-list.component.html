@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Group</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New
+      Group</button>
   </div>
 </div>
 <hr>
@@ -15,7 +16,7 @@
               <th>#</th>
               <th>Name</th>
               <th>Description</th>
-              <th>Date Updated</th>
+              <th>Subscribers</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -24,7 +25,7 @@
               <td>{{i + 1}}</td>
               <td>{{group.name}}</td>
               <td>{{group.notes}}</td>
-              <td>{{group.modifiedAt | date:'medium'}}</td>
+              <td>{{group.subscriberCount}}</td>
               <td>
                 <a class="pointer" (click)="editForm(group.id)"><i class="fa fa-edit"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(group.id)"><i class="fa fa-trash"></i></a>
@@ -34,5 +35,22 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-4">
+    <div class="input-group mb-3 float-left">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Records per page</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="size" (ngModelChange)="pageSizeChangeEvent()">
+        <option *ngFor="let size of pageSizes" [ngValue]="size">{{size}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col">
+    <ngb-pagination class="float-right" [(page)]="currentPage" [pageSize]="size" [collectionSize]="totalRecords"
+      [maxSize]="5" (pageChange)="pageChanged($event)"></ngb-pagination>
   </div>
 </div>

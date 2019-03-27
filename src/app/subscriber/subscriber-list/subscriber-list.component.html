@@ -66,6 +66,6 @@
   </div>
   <div class="col">
     <ngb-pagination class="float-right" [(page)]="currentPage" [pageSize]="size" [collectionSize]="totalRecords"
-      (pageChange)="pageChanged($event)"></ngb-pagination>
+     [maxSize]="5"  (pageChange)="pageChanged($event)"></ngb-pagination>
   </div>
 </div>

@@ -15,7 +15,7 @@ export interface Tree {
     hasVoice: boolean;
     hasSms: boolean;
     startingNodeKey: string;
-    nodes: Array<BlockNode> | any;
+    nodes: Array<BlockNode>;
     connections: Array<Connection>;
     treeModel:any;
 }

@@ -30,6 +30,10 @@ export interface SubscriberQuery extends ModelQuery {
     location: string
 }
 
+export interface SubscriberGroupQuery extends ModelQuery {
+    name: string
+}
+
 export interface SubscriberUploadModel {
     CODE: string
     NAME: string
