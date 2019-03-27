@@ -47,6 +47,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     this.districtValueChangeListener()
     this.subscriberTypeValueChangeListener()
     this.otherCommoditiesChangeListener()
+    this.primaryCommodityChangeListener()
     const id = +this.activatedRoute.snapshot.paramMap.get('id')
     if (id) { this.findSubscriber(id) }
     this.disableControls()
@@ -67,11 +68,11 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
     if (params.otherCommodities) {
       params.subscriberCommodities = params.otherCommodities.map(elm => {
-        return { commodityId: elm, isPrimaryCommodity: false }
+        return { commodityId: elm.id, isPrimaryCommodity: false }
       })
     }
 
-    params.subscriberCommodities.push({commodityId: params.primaryCommodity, isPrimaryCommodity: true})
+    params.subscriberCommodities.push({ commodityId: params.primaryCommodity, isPrimaryCommodity: true })
 
     this.blockUi.start('Saving...')
     this.saveSubscription = this.subscriberService.saveSubscriber(formData).subscribe(res => {
@@ -107,16 +108,27 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   otherCommoditiesChangeListener() {
     this.otherCommodities.valueChanges.subscribe((value: []) => {
-      if (value) {
-        if (this.primaryCommodity.value) {
-          const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue({otherCommodities: [{id: 1}]}, {emitEvent: false})
-            console.log(this.otherCommodities.value);
-          }
+      if (value && this.primaryCommodity.value) {
+        const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
+        if (index >= 0) {
+          const obj = this.otherCommodities.value[index]
+          MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
+          this.otherCommodities.value.splice(index, 1)
+          this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+        }
+      }
+    })
+  }
+
+  primaryCommodityChangeListener() {
+    this.primaryCommodity.valueChanges.subscribe((value: any) => {
+      if (value && this.otherCommodities.value) {
+        const index: any = this.otherCommodities.value.findIndex((elm: any) => elm.id === value)
+        if (index >= 0) {
+          const obj = this.otherCommodities.value[index]
+          MessageDialog.warning(`${obj.name} has been removed from other commodities`)
+          this.otherCommodities.value.splice(index, 1)
+          this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
         }
       }
     })
@@ -223,7 +235,9 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
             .find(elm => elm.isPricipalCommodity === true).commodityId : null,
           otherCommodities: data.subscriberCommodities ? data.subscriberCommodities
             .filter(elm => elm.isPricipalCommodity === false)
-            .map(elm => elm.commodity) : null
+            .map(elm => {
+              return {id: elm.commodityId, name: elm.commodity}
+            }) : null
         })
       }
     }, () => this.blockUi.stop())
