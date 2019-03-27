@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SubscriberGroup, SubscriberGroupQuery, SubscriberQuery } from '../shared/subscriber.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, Subject } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { SubscriberService } from '../shared/subscriber.service';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { Router } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
@@ -17,7 +17,7 @@ export class SubscriberGroupListComponent implements OnInit, OnDestroy {
 
   subscriberGroups$: Observable<SubscriberGroup[]>
   @BlockUI() blockUi: NgBlockUI
-  deleteSubscription: Subscription
+  unsubscribe$ = new Subject<void>()
   filter = <SubscriberGroupQuery>{}
   lastFilter: SubscriberGroupQuery;
   pageSizes = [10, 20, 50, 100]
@@ -33,7 +33,8 @@ export class SubscriberGroupListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.deleteSubscription.unsubscribe()
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   editForm(id: number) {
@@ -44,7 +45,9 @@ export class SubscriberGroupListComponent implements OnInit, OnDestroy {
     MessageDialog.confirm('Delete Group', 'Are you sure you want to delete this group?').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Deleting...')
-        this.deleteSubscription = this.subscriberService.deleteSubscriberGroup(id).subscribe(res => {
+        this.subscriberService.deleteSubscriberGroup(id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(res => {
           this.blockUi.stop()
           this.getSubscriberGroups(<SubscriberGroupQuery>{})
         }, () => this.blockUi.stop())

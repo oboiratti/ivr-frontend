@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
@@ -15,7 +15,7 @@ import * as XLSX from 'xlsx';
   templateUrl: './subscriber-import.component.html',
   styleUrls: ['./subscriber-import.component.scss']
 })
-export class SubscriberImportComponent implements OnInit {
+export class SubscriberImportComponent implements OnInit, OnDestroy {
   tempFile: any;
   @BlockUI() blockUi: NgBlockUI;
   form: FormGroup
@@ -23,6 +23,7 @@ export class SubscriberImportComponent implements OnInit {
   imports$: Observable<any>
   rows: any[]
   data: any[]
+  unsubscribe$ = new Subject<void>()
 
   constructor(private fb: FormBuilder, private subscriberService: SubscriberService) { }
 
@@ -30,6 +31,11 @@ export class SubscriberImportComponent implements OnInit {
     this.form = this.fb.group({
       file: new FormControl('', Validators.required)
     })
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   /*selectFile(event) {
@@ -106,28 +112,32 @@ export class SubscriberImportComponent implements OnInit {
 
   downloadTemplate() {
     this.blockUi.start('Downloading...');
-    this.subscriberService.downloadTemplate().subscribe((res: any) => {
-      this.blockUi.stop();
-      if (res.success) {
-        const data = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + res.data;
-        window.open(data, '_blank', '')
-      }
-    }, err => {
-      this.blockUi.stop();
-      console.log('Error -> ' + err.message);
-    });
+    this.subscriberService.downloadTemplate()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res: any) => {
+        this.blockUi.stop();
+        if (res.success) {
+          const data = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + res.data;
+          window.open(data, '_blank', '')
+        }
+      }, err => {
+        this.blockUi.stop();
+        console.log('Error -> ' + err.message);
+      });
   }
 
   saveUploadData() {
     this.blockUi.start('Saving...');
-    this.subscriberService.saveUploadData(this.data).subscribe((res: any) => {
-      this.blockUi.stop();
-      if (res.success) {
-        this.data = null
-      }
-    }, err => {
-      this.blockUi.stop();
-      console.log('Error -> ' + err.message);
-    });
+    this.subscriberService.saveUploadData(this.data)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res: any) => {
+        this.blockUi.stop();
+        if (res.success) {
+          this.data = null
+        }
+      }, err => {
+        this.blockUi.stop();
+        console.log('Error -> ' + err.message);
+      });
   }
 }
