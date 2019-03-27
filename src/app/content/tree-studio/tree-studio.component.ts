@@ -437,13 +437,12 @@ export class TreeStudioComponent implements OnInit {
       this.addPort(this.currentNode.key, this.currentNode.custom.choices[num-1]);
     }else{
       // Check if this port exists
-      let curChoice = this.currentNode.custom.choices[i];
+      let curChoice = this.currentNode.custom.choices[(i-1)];
       let node = this.diagram.findNodeForKey(this.currentNode.key);
-      console.log("Choice Node =>", node)
       const portId = 'bottom_' + this.currentNode.key + '_' + curChoice.key;
-      console.log("ReconstructedPortId =>", portId)
-      const arr = node.data.multiArray.filter(x => x.multifromPortId === portId)[0];
-      
+      const index = node.data.multiArray.findIndex(x => x.multifromPortId === portId);
+      let nodedata = this.diagram.findNodeForKey(this.currentNode.key).data.multiArray[index];
+      this.diagram.model.setDataProperty(nodedata, 'choice',  curChoice.value);
     }
   }
    // ADD PORT
@@ -451,13 +450,9 @@ export class TreeStudioComponent implements OnInit {
     this.diagram.startTransaction('addPort');
     let node = this.diagram.findNodeForKey(key);
     if (!(node instanceof go.Node)) { return; }
-    console.log('Port node', node)
     const portId = 'bottom_' + key + '_' + choice.key;
     // get the Array of port data to be modified
     const arr = node.data.multiArray;
-
-    console.log('TEST', arr.filter(x => x.multifromPortId === portId) != [])
-    console.log("Arr =>", arr);
     if (arr) {
       // create a new port data object
       const newportdata = {
