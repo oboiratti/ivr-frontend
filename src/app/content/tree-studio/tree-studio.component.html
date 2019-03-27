@@ -208,7 +208,6 @@
                                                 <h5>{{tree.language.name}}</h5>
                                                 <p style="font-size: 14px;">Voice Content</p>
                                             </div>
-
                                             <div class="card-body inner-card" style="max-height: 250px;">
                                                 <div *ngIf="currentNode.audio != null" class="card-header inner-card" style="margin-bottom: 30px;">
                                                     <label>{{currentNode.audio.title}}</label>
@@ -218,7 +217,7 @@
                                                 </div>
                                                 <h6 class="card-title">Select Audio</h6>
                                                 <div class="form-group">
-                                                    <ng-select [items]="audios | async" bindLabel="name" bindValue="" placeholder="Search audio files" [clearable]="true" [multiple]="false" [(ngModel)]="currentNode.audio" name="currentNode.audio"></ng-select>
+                                                    <ng-select [items]="audios" bindLabel="title" placeholder="Search audio files" [clearable]="true" [multiple]="false" [(ngModel)]="currentNode.audio" name="currentNode.audio"></ng-select>
                                                 </div>
                                             </div>
                                         </div>

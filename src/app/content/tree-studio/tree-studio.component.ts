@@ -44,8 +44,7 @@ export class TreeStudioComponent implements OnInit {
   private repeatNumber: Array<string>;
   languages: Observable<Lookup[]>;
   tags: Observable<Lookup[]>;
-
-  private audios: Array<Media>;
+  audios: Array<Media>;
 
   private currentNode: BlockNode;
   private multiNode: Multichoice;
@@ -88,7 +87,6 @@ export class TreeStudioComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private treeService: TreeService, private mediaService: MediaService ) {
 
-    window.tree = this.tree;
     // Form init
     this.phoneKeys = TreeConfig.phoneKeys;
     this.repeatDelay = TreeConfig.repeatDelaySeconds;
@@ -643,7 +641,6 @@ export class TreeStudioComponent implements OnInit {
         let tree = res.data;
         tree.nodes =  this.processNewTree(res.data.nodes);
         this.tree = tree;
-        console.log('Tree => ', this.tree)
         this.loadAudios();
       }
     }, () => this.blockUi.stop());
@@ -657,8 +654,9 @@ export class TreeStudioComponent implements OnInit {
   }
 
   private loadAudios() {
-    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
-        this.audios = res;
+    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {      
+      this.audios = res;
+      console.log('AUdio',this.audios)
     });
   }
 
