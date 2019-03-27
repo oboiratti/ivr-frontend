@@ -46,6 +46,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     this.regionValueChangeListener()
     this.districtValueChangeListener()
     this.subscriberTypeValueChangeListener()
+    this.otherCommoditiesChangeListener()
     const id = +this.activatedRoute.snapshot.paramMap.get('id')
     if (id) { this.findSubscriber(id) }
     this.disableControls()
@@ -104,6 +105,23 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     })
   }
 
+  otherCommoditiesChangeListener() {
+    this.otherCommodities.valueChanges.subscribe((value: []) => {
+      if (value) {
+        if (this.primaryCommodity.value) {
+          const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
+          if (index >= 0) {
+            const obj = this.otherCommodities.value[index]
+            MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
+            this.otherCommodities.value.splice(index, 1)
+            this.otherCommodities.patchValue({otherCommodities: [{id: 1}]}, {emitEvent: false})
+            console.log(this.otherCommodities.value);
+          }
+        }
+      }
+    })
+  }
+
   get id() { return this.form.get('id') }
   get phoneNumber() { return this.form.get('phoneNumber') }
   get name() { return this.form.get('name') }
@@ -148,7 +166,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       dateOfBirth: new FormControl(null),
       subscriberTypeId: new FormControl(null, Validators.required),
       primaryCommodity: new FormControl(null, Validators.required),
-      otherCommodities: new FormControl(null),
+      otherCommodities: new FormControl([]),
       landSize: new FormControl(null),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -205,7 +223,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
             .find(elm => elm.isPricipalCommodity === true).commodityId : null,
           otherCommodities: data.subscriberCommodities ? data.subscriberCommodities
             .filter(elm => elm.isPricipalCommodity === false)
-            .map(elm => elm.commodityId) : null
+            .map(elm => elm.commodity) : null
         })
       }
     }, () => this.blockUi.stop())

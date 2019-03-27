@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Outbound Campaign</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Campaign Schedule</button>
   </div>
 </div>
 <hr>
@@ -13,10 +13,9 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Title</th>
-              <th>Campaign Area</th>
-              <th>Start Date</th>
-              <th>End Date</th>
+              <th>Name</th>
+              <th>Recipient Type</th>
+              <th>Schedule Type</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -26,10 +25,10 @@
               <td>{{outbound.name}}</td>
               <td>{{outbound.campaignRecipientType.name}}</td>
               <td>{{outbound.scheduleType.name}}</td>
-              <td>{{outbound.scheduleType.name}}</td>
               <td>
                 <a class="pointer" (click)="editForm(outbound.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="gotoSchedule(outbound.id)" title="Schedule"><i class="fa fa-clock-o"></i></a> &nbsp;
+                <a class="pointer" (click)="gotoSchedule(outbound.id)" title="Schedule"><i
+                    class="fa fa-clock-o"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(outbound.id)" title="Delete"><i class="fa fa-trash"></i></a>
               </td>
             </tr>

@@ -8,9 +8,11 @@ import { OutboundListComponent } from './outbound-list/outbound-list.component';
 import { OutboundFormComponent } from './outbound-form/outbound-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ScheduleListComponent } from './schedule-list/schedule-list.component';
+import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 
 @NgModule({
-  declarations: [CampaignComponent, OutboundListComponent, OutboundFormComponent],
+  declarations: [CampaignComponent, OutboundListComponent, OutboundFormComponent, ScheduleListComponent, ScheduleFormComponent],
   imports: [
     CommonModule,
     SharedModule,

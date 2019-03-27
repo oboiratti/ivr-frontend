@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { CampaignService } from '../shared/campaign.service';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { finalize } from 'rxjs/operators';
+import { CampaignQuery } from '../shared/campaign.models';
 import { Router } from '@angular/router';
+import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
-import { CampaignQuery } from '../shared/campaign.models';
+import { finalize } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-outbound',
-  templateUrl: './outbound-list.component.html',
-  styleUrls: ['./outbound-list.component.scss']
+  selector: 'app-schedule-list',
+  templateUrl: './schedule-list.component.html',
+  styleUrls: ['./schedule-list.component.scss']
 })
-export class OutboundListComponent implements OnInit {
+export class ScheduleListComponent implements OnInit {
 
   campaigns$: Observable<any>
   @BlockUI() blockUi: NgBlockUI
