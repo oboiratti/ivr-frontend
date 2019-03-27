@@ -22,8 +22,8 @@
                         <div class="dropdown-divider" role="presentation"></div>
                     </div>
                 </div>
-                <div class="btn-group btn-group-sm float-right" role="group">
-                    <button class="btn btn-primary btn-lg" type="button" (click)="saveTree()">Save</button>
+                <div class="btn-group btn-group-lg float-right" role="group">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="saveTree()"> <i class="fa fa-save"></i> Save</button>
                     <!-- <button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button> -->
                 </div>
             </div>
@@ -48,14 +48,9 @@
                                             <textarea class="border rounded form-control" [(ngModel)]="tree.description" name="tree.description"></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <label class="d-block"><strong>Default Language</strong></label>
-                                            <select class="form-control" [(ngModel)]="tree.language" name="tree.language">
-												<option *ngFor="let language of languages | async" [ngValue]="language.id">
-													{{language.name}}
-												</option>
-											</select>
+                                            <ng-select [items]="languages | async" bindLabel="name" [clearable]="false" [multiple]="false" [(ngModel)]="tree.language" name="tree.language"></ng-select>
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="custom-control custom-checkbox custom-control-inline">
                                                 <input class="custom-control-input" [(ngModel)]="tree.hasVoice" formcontrolname="tree.hasVoice" id="tree.hasVoice" name="tree.hasVoice" type="checkbox">
                                                 <label class="custom-control-label" for="tree.hasVoice"><strong>Has Voice</strong></label>
@@ -66,7 +61,7 @@
                                                 <input class="custom-control-input" [(ngModel)]="tree.hasSms" formcontrolname="tree.hasSms" id="tree.hasSms" name="tree.hasSms" type="checkbox">
                                                 <label class="custom-control-label" for="tree.hasSms"><strong>Has SMS</strong></label>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
 
                                     <!-- Message -->

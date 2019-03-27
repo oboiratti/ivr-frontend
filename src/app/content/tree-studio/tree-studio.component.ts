@@ -37,14 +37,14 @@ export class TreeStudioComponent implements OnInit {
   private diagram: go.Diagram = new go.Diagram();
   private palette: go.Palette = new go.Palette();
   private $: any;
-  private tree: Tree;
-
+  
   private phoneKeys: Array<string>;
   private repeatDelay: Array<string>;
   private repeatNumber: Array<string>;
   languages: Observable<Lookup[]>;
   tags: Observable<Lookup[]>;
   audios: Array<Media>;
+  tree: Tree;
 
   private currentNode: BlockNode;
   private multiNode: Multichoice;
@@ -620,13 +620,18 @@ export class TreeStudioComponent implements OnInit {
 
   saveTree() {
     this.blockUi.start('Loading...');
-    this.findSubscription = this.treeService.saveTree(this.tree).subscribe(res => {
+    let tosave = this.tree;
+    tosave.nodes = JSON.stringify(tosave.nodes);
+    tosave.treeModel = this.diagram.model.toJson();
+    this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
       this.blockUi.stop();
       if (res.success) {
-        this.tree = res.data;
+         // this.tree = res.data;
       }
     }, () => this.blockUi.stop());
   }
+
+
 
   private loadTree(id: number) {
     this.blockUi.start('Loading...');
@@ -635,7 +640,11 @@ export class TreeStudioComponent implements OnInit {
       if (res.success) {
         let tree = res.data;
         tree.nodes =  this.processNewTree(res.data.nodes);
+        if(res.data.treeModel != null) {
+          this.diagram.model =go.Model.fromJson(res.data.treeModel)
+        }
         this.tree = tree;
+        console.log('TREE => ',this.tree)
         this.loadAudios();
       }
     }, () => this.blockUi.stop());
@@ -650,8 +659,7 @@ export class TreeStudioComponent implements OnInit {
 
   private loadAudios() {
     this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {      
-      this.audios = res;
-      console.log('AUdio',this.audios)
+      this.audios = res; 
     });
   }
 

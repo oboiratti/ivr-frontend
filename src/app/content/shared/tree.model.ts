@@ -17,6 +17,7 @@ export interface Tree {
     startingNodeKey: string;
     nodes: Array<BlockNode>;
     connections: Array<Connection>;
+    treeModel:any;
 }
 
 export interface Connection {
