@@ -365,7 +365,7 @@ export class TreeStudioComponent implements OnInit {
     this.currentNode.isStartingNode = true;
   }
 
-  private addMessage() {
+  addMessage() {
     const newMessage: BlockNode = {
       type: TreeConfig.nodeTypes.message,
       key: this.generateNodeId(),
@@ -393,7 +393,7 @@ export class TreeStudioComponent implements OnInit {
     this.diagram.model.addNodeData(nodeBlock);
   }
 
-  private addMultiChoice() {
+  addMultiChoice() {
     const newMulti: BlockNode = {
       type: TreeConfig.nodeTypes.multichoice,
       key: this.generateNodeId(),
