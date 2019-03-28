@@ -11,12 +11,27 @@
       <div class="card">
         <div class="card-body">
           <div class="form-row">
-            <div class="form-group col-12">
-              <label>Campaign Name</label>
-              <input type="text" class="form-control" formControlName="name"
-                [class.is-invalid]="name.dirty && name.invalid">
-              <div class="invalid-feedback" *ngIf="name.dirty && name.invalid">
-                <div *ngIf="name.errors.required">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Pillar</label>
+              <ng-select [items]="pillars$ | async" bindLabel="label" bindValue="value"
+                placeholder="Select Pillar" [clearable]="false" formControlName="pillarId"
+                [class.invalid-input]="pillarId.dirty && pillarId.invalid">
+              </ng-select>
+              <div class="invalid-feedback" *ngIf="pillarId.dirty && pillarId.invalid">
+                <div *ngIf="pillarId.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Topic</label>
+              <ng-select [items]="topics$ | async" bindLabel="label" bindValue="value"
+                placeholder="Select Topic" [clearable]="false" formControlName="topicId"
+                [class.invalid-input]="topicId.dirty && topicId.invalid">
+              </ng-select>
+              <div class="invalid-feedback" *ngIf="topicId.dirty && topicId.invalid">
+                <div *ngIf="topicId.errors.required">
                   This field is required
                 </div>
               </div>

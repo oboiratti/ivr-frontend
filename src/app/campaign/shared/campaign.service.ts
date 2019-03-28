@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ResponseObject } from 'src/app/shared/common-entities.model';
+import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { CampaignQuery } from './campaign.models';
@@ -13,7 +13,7 @@ export class CampaignService {
   constructor(private http: HttpClient) { }
 
   saveCampaign(params: any) {
-    if (params.id) return this.http.put<ResponseObject<any>>(`${environment.baseUrl}/campaign`, params)
+    if (params.id) { return this.http.put<ResponseObject<any>>(`${environment.baseUrl}/campaign`, params) }
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/campaign`, params)
   }
 
@@ -64,5 +64,14 @@ export class CampaignService {
 
   deleteCampaign(id: number) {
     return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/campaign/delete/${id}`)
+  }
+
+  fetchTopicsByPillar(pillarId: number) {
+    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/topic/gettopics?pillarId=${pillarId}`)
+    .pipe(
+      map(res => {
+        if (res.success) { return res.data }
+      })
+    )
   }
 }

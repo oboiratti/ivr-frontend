@@ -88,65 +88,6 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`${RouteNames.subscriber}/${RouteNames.subscriberList}`)
   }
 
-  regionValueChangeListener() {
-    this.regionId.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(value => {
-        this.loadDistrictsInRegion(value)
-        this.districtId.enable()
-      })
-  }
-
-  districtValueChangeListener() {
-    this.districtId.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(value => {
-        if (value) { this.location.enable() }
-      })
-  }
-
-  subscriberTypeValueChangeListener() {
-    this.subscriberTypeId.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(value => {
-        this.loadSubscriberTypeCommodities(value)
-        this.primaryCommodity.enable()
-        this.otherCommodities.enable()
-      })
-  }
-
-  otherCommoditiesChangeListener() {
-    this.otherCommodities.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((value: []) => {
-        if (value && this.primaryCommodity.value) {
-          const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
-          }
-        }
-      })
-  }
-
-  primaryCommodityChangeListener() {
-    this.primaryCommodity.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((value: any) => {
-        if (value && this.otherCommodities.value) {
-          const index: any = this.otherCommodities.value.findIndex((elm: any) => elm.id === value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.warning(`${obj.name} has been removed from other commodities`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
-          }
-        }
-      })
-  }
-
   get id() { return this.form.get('id') }
   get phoneNumber() { return this.form.get('phoneNumber') }
   get name() { return this.form.get('name') }
@@ -265,5 +206,64 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       this.primaryCommodity.disable()
       this.otherCommodities.disable()
     }
+  }
+
+  private regionValueChangeListener() {
+    this.regionId.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(value => {
+        this.loadDistrictsInRegion(value)
+        this.districtId.enable()
+      })
+  }
+
+  private districtValueChangeListener() {
+    this.districtId.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(value => {
+        if (value) { this.location.enable() }
+      })
+  }
+
+  private subscriberTypeValueChangeListener() {
+    this.subscriberTypeId.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(value => {
+        this.loadSubscriberTypeCommodities(value)
+        this.primaryCommodity.enable()
+        this.otherCommodities.enable()
+      })
+  }
+
+  private otherCommoditiesChangeListener() {
+    this.otherCommodities.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((value: []) => {
+        if (value && this.primaryCommodity.value) {
+          const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
+          if (index >= 0) {
+            const obj = this.otherCommodities.value[index]
+            MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
+            this.otherCommodities.value.splice(index, 1)
+            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+          }
+        }
+      })
+  }
+
+  private primaryCommodityChangeListener() {
+    this.primaryCommodity.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((value: any) => {
+        if (value && this.otherCommodities.value) {
+          const index: any = this.otherCommodities.value.findIndex((elm: any) => elm.id === value)
+          if (index >= 0) {
+            const obj = this.otherCommodities.value[index]
+            MessageDialog.warning(`${obj.name} has been removed from other commodities`)
+            this.otherCommodities.value.splice(index, 1)
+            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+          }
+        }
+      })
   }
 }

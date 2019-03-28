@@ -7,6 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { SubscriberService } from 'src/app/subscriber/shared/subscriber.service';
 import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
+import { SettingsService } from 'src/app/app-settings/settings/settings.service';
+import { Lookup } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-schedule-form',
@@ -16,22 +18,24 @@ import { RouteNames } from 'src/app/shared/constants';
 export class ScheduleFormComponent implements OnInit {
 
   subscriberTypes = [
-    {label: 'All Subscribers', value: 3},
-    {label: 'Selected Groups', value: 2},
-    {label: 'Selected Subscribers', value: 1}]
+    { label: 'All Subscribers', value: 3 },
+    { label: 'Selected Groups', value: 2 },
+    { label: 'Selected Subscribers', value: 1 }]
   scheduleTypes = [
-    {label: 'Now', value: 1},
-    {label: 'Fixed Date', value: 2},
-    {label: 'Routine', value: 3},
-    {label: 'Repeating', value: 4}]
+    { label: 'Now', value: 1 },
+    { label: 'Fixed Date', value: 2 },
+    { label: 'Routine', value: 3 },
+    { label: 'Repeating', value: 4 }]
   periods = [
-      {label: 'Days', value: 0},
-      {label: 'Weeks', value: 1},
-      {label: 'Months', value: 2},
-      {label: 'Years', value: 3}]
+    { label: 'Days', value: 0 },
+    { label: 'Weeks', value: 1 },
+    { label: 'Months', value: 2 },
+    { label: 'Years', value: 3 }]
   form: FormGroup
   groups$: Observable<SubscriberGroup[]>
   subscribers$: Observable<Subscriber[]>
+  pillars$: Observable<Lookup[]>
+  topics$: Observable<Lookup[]>
   toggleIcon = 'fa fa-chevron-right'
   toggle = false
   id: number
@@ -41,14 +45,18 @@ export class ScheduleFormComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private subscriberService: SubscriberService,
-    private campaignService: CampaignService) { }
+    private campaignService: CampaignService,
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.setupForm()
     this.loadGroups()
     this.loadSubscribers()
+    this.loadPillars()
+    this.disableControls()
+    this.pillarChangeListener()
     this.id = +this.activatedRoute.snapshot.paramMap.get('id')
-    if (this.id) {  this.findCampaign(this.id) }
+    if (this.id) { this.findCampaign(this.id) }
   }
 
   doToggle() {
@@ -70,19 +78,21 @@ export class ScheduleFormComponent implements OnInit {
     this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.id}/${RouteNames.schedules}`)
   }
 
-  get name() {return this.form.get('name')}
-  get campaignRecipientType() {return this.form.get('campaignRecipientType')}
-  get scheduleType() {return this.form.get('scheduleType')}
-  get selectedSubscribers() {return this.form.get('selectedSubscribers')}
-  get subscriberGroups() {return this.form.get('subscriberGroups')}
-  get repeatEnds() {return this.form.get('repeatEnds')}
-  get treeVersion() {return this.form.get('treeVersion')}
-  get voiceSenderId() {return this.form.get('voiceSenderId')}
+  get pillarId() { return this.form.get('pillarId') }
+  get topicId() { return this.form.get('topicId') }
+  get campaignRecipientType() { return this.form.get('campaignRecipientType') }
+  get scheduleType() { return this.form.get('scheduleType') }
+  get selectedSubscribers() { return this.form.get('selectedSubscribers') }
+  get subscriberGroups() { return this.form.get('subscriberGroups') }
+  get repeatEnds() { return this.form.get('repeatEnds') }
+  get treeVersion() { return this.form.get('treeVersion') }
+  get voiceSenderId() { return this.form.get('voiceSenderId') }
 
   private setupForm() {
     this.form = this.fb.group({
       id: new FormControl(null),
-      name: new FormControl('', Validators.required),
+      pillarId: new FormControl(null, Validators.required),
+      topicId: new FormControl(null, Validators.required),
       campaignRecipientType: new FormControl(null, Validators.required),
       scheduleType: new FormControl(null, Validators.required),
       selectedSubscribers: new FormControl(null),
@@ -121,6 +131,27 @@ export class ScheduleFormComponent implements OnInit {
     this.subscribers$ = this.subscriberService.fetchSubscribers()
   }
 
+  private loadPillars() {
+    this.pillars$ = this.settingsService.fetch2('pillar')
+  }
+
+  private loadTopicsInPillar(pillarId: number) {
+    this.topics$ = this.campaignService.fetchTopicsByPillar(pillarId)
+  }
+
+  private disableControls() {
+    if (!this.pillarId.value) { this.topicId.disable() }
+  }
+
+  private pillarChangeListener() {
+    this.pillarId.valueChanges.subscribe(value => {
+      if (value) {
+        this.loadTopicsInPillar(value)
+        this.topicId.enable()
+      }
+    })
+  }
+
   private buildJsonRequest(formData: any) {
     return {
       id: formData.id,
@@ -141,7 +172,7 @@ export class ScheduleFormComponent implements OnInit {
         repeatPeriod: formData.scheduleType === 4 ? formData.repeatPeriod : null,
         repeatStartDate: formData.scheduleType === 4 ? formData.repeatStartDate : null,
         repeatEnds: formData.scheduleType === 4 ? formData.repeatEnds : null,
-        repeatEndsDetails: formData.repeatEnds !== 'Never' ?  {
+        repeatEndsDetails: formData.repeatEnds !== 'Never' ? {
           repeatEndsAfterOccurances: formData.repeatEnds === 'AfterOccurances' ? formData.repeatEndsAfterOccurances : null,
           repeatEndsDate: formData.repeatEnds === 'On' ? formData.repeatEndsDate : null,
           repeatEndsTime: formData.repeatEndsTime
@@ -187,8 +218,8 @@ export class ScheduleFormComponent implements OnInit {
           repeatPeriod: data.scheduleDetails.repeatPeriod,
           repeatStartDate: data.scheduleDetails.repeatStartDate,
           repeatEnds: data.scheduleDetails.repeatEnds,
-          repeatEndsAfterOccurances: data.scheduleDetails.repeatEndsDetails.repeatEndsAfterOccurances ,
-          repeatEndsDate: data.scheduleDetails.repeatEndsDetails.repeatEndsDate ,
+          repeatEndsAfterOccurances: data.scheduleDetails.repeatEndsDetails.repeatEndsAfterOccurances,
+          repeatEndsDate: data.scheduleDetails.repeatEndsDetails.repeatEndsDate,
           repeatEndsTime: data.scheduleDetails.repeatEndsDetails.repeatEndsTime,
           dontCallBefore: data.advancedOptions.voiceOptions.dontCallBefore,
           dontCallAfter: data.advancedOptions.voiceOptions.dontCallAfter,
