@@ -12,20 +12,11 @@ export class SubscriberService {
 
   constructor(private http: HttpClient) { }
 
-  fetchLanguages() {
-    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/language`)
+  fetchDistrictsByRegion(regionId: number) {
+    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/district/getdistricts?regionId=${regionId}`)
     .pipe(
       map(res => {
-        if (res.success) return res.data
-      })
-    )
-  }
-
-  fetchDistricts() {
-    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/district`)
-    .pipe(
-      map(res => {
-        if (res.success) return res.data
+        if (res.success) { return res.data }
       })
     )
   }
@@ -34,7 +25,7 @@ export class SubscriberService {
     return this.http.get<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber`)
       .pipe(
         map(res => {
-          if (res.success) return res.data
+          if (res.success) { return res.data }
         })
       )
   }
@@ -43,7 +34,7 @@ export class SubscriberService {
     return this.http.post<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber/query`, params)
       .pipe(
         map(res => {
-          if (res.success) return res.data
+          if (res.success) { return res.data }
         })
       )
   }
@@ -53,11 +44,11 @@ export class SubscriberService {
   }
 
   deleteSubscriber(id: number) {
-    return this.http.delete<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/${id}`)
+    return this.http.delete<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/delete/${id}`)
   }
 
   saveSubscriber(params: Subscriber) {
-    if (params.id) return this.http.put<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber`, params)
+    if (params.id) { return this.http.put<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber`, params) }
     return this.http.post<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber`, params)
   }
 
@@ -65,7 +56,7 @@ export class SubscriberService {
     return this.http.get<ResponseObject<SubscriberGroup[]>>(`${environment.baseUrl}/group`)
       .pipe(
         map(res => {
-          if (res.success) return res.data
+          if (res.success) { return res.data }
         })
       )
   }
@@ -75,11 +66,33 @@ export class SubscriberService {
   }
 
   saveSubscriberGroup(params: SubscriberGroup) {
-    if (params.id) return this.http.put<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group`, params)
+    if (params.id) { return this.http.put<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group`, params) }
     return this.http.post<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group`, params)
   }
 
   findSubscriberGroup(id: number) {
     return this.http.get<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group/get/${id}`)
+  }
+
+  fetchCommoditiesBySubscriberType(subscriberTypeId: number) {
+    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/commodity/getcommodities?subscriberTypeId=${subscriberTypeId}`)
+    .pipe(
+      map(res => {
+        if (res.success) { return res.data }
+      })
+    )
+  }
+
+  downloadTemplate() {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/subscriber/downloaduploadtemplate`)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      )
+  }
+
+  saveUploadData(params: any[]) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/subscriber/saveuploaddata`, params)
   }
 }

@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
 import { SubscriberService } from '../shared/subscriber.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, Subject } from 'rxjs';
 import { Subscriber, SubscriberQuery } from '../shared/subscriber.model';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { MessageDialog } from 'src/app/shared/message_helper';
 
 @Component({
@@ -17,8 +17,9 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   
   subscribers$: Observable<Subscriber[]>;
   @BlockUI() blockUi: NgBlockUI;
-  deleteSubscription: Subscription;
-  filter = {};
+  unsubscribe$ = new Subject<void>();
+  filter = <SubscriberQuery>{};
+  name = ''
   lastFilter: SubscriberQuery;
   totalRecords = 0;
 	currentPage = 1;
@@ -34,7 +35,8 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.deleteSubscription.unsubscribe()
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   openForm() {
@@ -49,7 +51,9 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
     MessageDialog.confirm('Delete Subscriber', 'Are you sure you want to delete this subscriber?').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Deleting...');
-        this.deleteSubscription = this.subscriberService.deleteSubscriber(id).subscribe(res => {
+        this.subscriberService.deleteSubscriber(id)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(res => {
           this.blockUi.stop();
           this.getSubscribers(<SubscriberQuery>{});
         }, () => this.blockUi.stop());
@@ -66,9 +70,7 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getSubscribers(filter: SubscriberQuery) {
-    console.log(filter);
-    
+  getSubscribers(filter: SubscriberQuery) {
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...');

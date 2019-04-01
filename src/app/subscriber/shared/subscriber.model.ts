@@ -1,4 +1,4 @@
-import { Lookup, District, ModelQuery } from "src/app/shared/common-entities.model";
+import { Lookup, District, ModelQuery, Region } from 'src/app/shared/common-entities.model';
 
 export interface Subscriber {
     id: number
@@ -6,12 +6,17 @@ export interface Subscriber {
     name: string
     language: Lookup
     startDate: Date
+    dateOfBirth: Date
     gender: string
     location: string
     comments: string
+    region: Region
     district: District
+    educationalLevel: any
+    subscriberType: any
+    subscriberCommodities: any[],
     subscriberGroups: SubscriberGroup[]
-} 
+}
 
 export interface SubscriberGroup extends Lookup {
     groupId: number
@@ -20,5 +25,13 @@ export interface SubscriberGroup extends Lookup {
 }
 
 export interface SubscriberQuery extends ModelQuery {
+    name: string
+    phone: string
+    location: string
+}
 
+export interface SubscriberUploadModel {
+    CODE: string
+    NAME: string
+    PHONE_NUMBER: string
 }

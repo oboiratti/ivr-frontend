@@ -1,41 +1,77 @@
-<page-header title="Tree Builder"></page-header>
-<div class="page-content">
-  <div class="row mb-4">
-      <div class="col-sm-12">
-          <button type="button" class="btn btn-primary-custom" routerLink="studio">
-              <i class="fa fa-plus left"></i> New Questionnaire</button>
-      </div>
-  </div>
-  <div class="col-sm-12">
-    <div class="card">
-        <div class="table-responsive-sm">
-            <table class="table table-hover">
-                <thead class="thead-light">
-                    <tr>
-                        <th class="table-index">#</th>
-                        <th>Title</th>
-                        <th></th>
-                        <th>Campaign</th>
-                        <th>User</th>
-                        <th>Last Modified</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let user of users$ | async; let i = index" class="pointer" (click)="selectRow(tree)">
-                        <td class="table-index">{{i + 1}}.</td>
-                        <td>{{tree.title}}</td>
-                        <td></td>
-                        <td>{{tree.campaign}}</td>
-                        <td>{{tree.user.name}}</td>
-                        <td>{{tree.modifiedDate}}</td>
-                        <td>
-                          
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+<div class="row">
+    <div class="col-sm-8"><button type="button" class="btn btn-primary-custom border border-dark" routerLink="form"><i class="fa fa-plus"></i> New Tree</button></div>
+    <div class="col-sm-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getMedia(lastFilter)">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary" (click)="getMedia(lastFilter)" style="margin-right: 0px;"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0px;">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+                <div class="dropdown-menu" style="padding: 10px" (click)="$event.stopPropagation()">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Code" [(ngModel)]="lastFilter.code">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="lastFilter.languageId" placeholder="Language">
+              <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
+            </select>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" [(ngModel)]="lastFilter.type" placeholder="Type">
+              <option *ngFor="let t of types" [ngValue]="t">{{t}}</option>
+            </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Description" [(ngModel)]="lastFilter.description">
+                    </div>
+                    <div>
+                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm" (click)="getMedia(lastFilter)">
+              Search
+            </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
+</div>
+<div class="row" style="margin-top:10px;">
+    <div class="col">
+        <div class="card">
+            <div class="table-responsive-sm">
+                <table class="table  table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Title</th>
+                            <th>Language</th>
+                            <th>Blocks</th>
+                            <th>Length</th>
+                            <th>Uploaded On</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of records$ | async; let i = index" scope="row">
+                            <td>{{i + 1}}</td>
+                            <td>{{x.code}}</td>
+                            <td>
+                                {{x.title}} <br/>
+                                <span class="badge badge-info" style="font-size: inherit">{{x.tags}}</span>
+                            </td>
+                            <td>{{x.language}}</td>
+                            <td>{{x.blocks}}</td>
+                            <td>{{x.length}}</td>
+                            <td>{{x.createdAt | date:'mediumDate'}}</td>
+                            <td>
+                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye fa-lg  color-light-blue"></i></a> &nbsp;
+                                <a class="pointer" (click)="openTree(x.id)"><i class="fa fa-sitemap fa-lg  color-purple"></i></a> &nbsp;
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

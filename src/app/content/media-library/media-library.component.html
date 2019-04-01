@@ -10,11 +10,11 @@
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getMedia(lastFilter)">
             <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary" (click)="getMedia(lastFilter)"><i class="fa fa-search"></i></button>
-                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-outline-secondary" (click)="getMedia(lastFilter)" style="margin-right: 0px;"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0px;">
                                 <span class="sr-only">Toggle Dropdown</span>
                               </button>
-                <div class="dropdown-menu" style="padding: 10px">
+                <div class="dropdown-menu" style="padding: 10px" (click)="$event.stopPropagation()">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Code" [(ngModel)]="lastFilter.code">
                     </div>
@@ -80,10 +80,6 @@
                             <td><span class="badge" [class.badge-primary]="x.type === 'Message'" [class.badge-secondary]="x.type === 'Survey'" style="font-size: inherit">{{x.type}}</span></td>
                             <td>{{x.length}}</td>
                             <td>{{x.createdAt | date:'mediumDate'}}</td>
-                            <!--<td>
-                                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
-                                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
-                            </td>-->
                             <td>
                                 <a class="pointer"><i class="fa fa-play fa-lg color-green" (click)="play(x)" *ngIf="x.showPlay"></i><i class="fa fa-stop fa-lg color-red" (click)="stop(x)" *ngIf="x.showStop"></i></a> &nbsp;
                                 <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye fa-lg  color-light-blue"></i></a> &nbsp;

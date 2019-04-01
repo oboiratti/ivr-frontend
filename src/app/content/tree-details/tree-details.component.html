@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-12">
-        <div class="p-2 text-uppercase form-header-text">Media File Details</div>
+        <div class="p-2 text-uppercase form-header-text">Tree Details</div>
     </div>
 </div>
 <hr>
@@ -8,22 +8,14 @@
     <div class="col-sm-12 col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header">
-                <div class="p-2 text-uppercase form-header-text">File Details</div>
+                <div class="p-2 text-uppercase form-header-text">Tree Details</div>
             </div>
             <div class="card-body">
                 <div class="form-row">
-                    <div class="form-group col-sm-12 col-md-5">
+                    <div class="form-group col-sm-12 col-md-12">
                         <label>Code:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.code" disabled>
                     </div>
-                    <div class="form-group col-sm-12 col-md-7">
-                        <audio controls [attr.id]="data.id" *ngIf="data.filePath" class="pull-right">
-                            <source src="{{data.filePath}}">
-                            Your browser does not support the audio element.
-                        </audio>
-
-                    </div>
-
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-12 col-md-8">
@@ -38,11 +30,7 @@
                         <label>Description</label>
                         <textarea class="form-control" [(ngModel)]="data.description" rows="3" disabled></textarea>
                     </div>
-                    <div class="form-group col-sm-12 col-md-4">
-                        <label>Type:</label>
-                        <input type="text" class="form-control" [(ngModel)]="data.type" disabled>
-                    </div>
-                    <div class="form-group col-sm-12 col-md-8">
+                    <div class="form-group col-sm-12 col-md-12">
                         <label>Tags:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.tags" disabled>
                     </div>
@@ -56,6 +44,9 @@
                                 <i class="fa fa-ban"></i> Deactivate
                               </button>
                 <span>
+                        <button class="btn btn-primary border border-dark float-right" (click)="openStudio()"  *ngIf="data.status == 'Active'">
+                                <i class="fa fa-tree"></i> Edit Nodes
+                              </button>
                 <button class="btn btn-success border border-dark float-right" (click)="editForm()"  *ngIf="data.status == 'Active'">
                                 <i class="fa fa-edit"></i> Update
                               </button>

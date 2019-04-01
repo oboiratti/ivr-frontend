@@ -1,5 +1,5 @@
 <div class="input-group">
-  <input type="text" class="form-control" placeholder="{{placeholder}}" name="{{name}}" [(ngModel)]="model" (keyup.enter)="btnSearch.click()">
+  <input type="text" class="form-control" placeholder="{{placeholder}}" name="{{label}}" [(ngModel)]="model" (keyup.enter)="btnSearch.click()">
   <div class="input-group-append">
     <button #btnSearch type="button" class="btn btn-outline-secondary" (click)="doSearch()"><i class="fa fa-search"></i></button>
     <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"

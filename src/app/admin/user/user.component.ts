@@ -9,7 +9,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'app-user',
@@ -31,20 +31,20 @@ export class UserComponent implements OnInit {
   params: UserQuery;
   totalRecords: number;
   selectedFilter: any;
-  title = "Add New User";
+  title = 'Add New User';
   @BlockUI() blockForm: NgBlockUI;
 
   filter = [
-    { label: "Name", value: { value: "name", type: "text" } },
-    { label: "Email", value: { value: "email", type: "text" } },
-    { label: "Username", value: { value: "username", type: "text" } }
+    { label: 'Name', value: { value: 'name', type: 'text' } },
+    { label: 'Email', value: { value: 'email', type: 'text' } },
+    { label: 'Username', value: { value: 'username', type: 'text' } }
   ]
 
   operation = [
-    { label: "=", value: "=" },
-    { label: ">", value: ">" },
-    { label: "<", value: "<" },
-    { label: ":", value: ":" }
+    { label: '=', value: '=' },
+    { label: '>', value: '>' },
+    { label: '<', value: '<' },
+    { label: ':', value: ':' }
   ]
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private roleService: RoleService) {
@@ -75,24 +75,24 @@ export class UserComponent implements OnInit {
   openForm() {
     this.showForm = true;
     // this.userForm.reset();
-    this.userForm.get("userName").enable();
+    this.userForm.get('userName').enable();
   }
 
   closeForm() {
-    this.title = "Add New User";
+    this.title = 'Add New User';
     this.showForm = false;
     // this.closeBtn.nativeElement.click();
     this.userForm.reset();
   }
 
   checkPasswords(formGroup: FormGroup) {
-    if (!formGroup.controls) return null;
+    if (!formGroup.controls) { return null; }
     return formGroup.controls['password'].value === formGroup.controls['passwordConfirmation'].value ? null : { passwordMismatch: true }
   }
 
   selectRow(user: User) {
     this.userForm.patchValue(user);
-    this.userForm.get("userName").disable();
+    this.userForm.get('userName').disable();
     this.userForm.get('password').setValidators(null)
     this.userForm.get('passwordConfirmation').setValidators(null)
     this.userForm.updateValueAndValidity()
@@ -102,14 +102,12 @@ export class UserComponent implements OnInit {
   save() {
     this.user = this.userForm.getRawValue();
     console.log(this.user);
-    
-
     if (this.user.id) {
       delete this.user.password;
       delete this.user.passwordConfirmation;
     }
 
-    this.blockForm.start("Saving...");
+    this.blockForm.start('Saving...');
     this.saving = true;
     this.userService.save(this.user).subscribe((res) => {
       this.saving = false;
@@ -120,14 +118,14 @@ export class UserComponent implements OnInit {
       }
     }, err => {
       this.blockForm.stop();
-      console.log("Error -> " + err.message);
+      console.log('Error -> ' + err.message);
     });
   }
 
   remove(id: number) {
-    MessageDialog.confirm("Delete User", "Are you sure you want to delete this user").then((confirm) => {
+    MessageDialog.confirm('Delete User', 'Are you sure you want to delete this user').then((confirm) => {
       if (confirm.value) {
-        this.blockForm.start("Deleting...");
+        this.blockForm.start('Deleting...');
         this.deleting = true;
         this.userService.destroy(id).subscribe((res) => {
           this.blockForm.stop();
@@ -138,7 +136,7 @@ export class UserComponent implements OnInit {
           }
         }, err => {
           this.blockForm.stop();
-          console.log("Error -> " + err.message);
+          console.log('Error -> ' + err.message);
         });
       }
     }).catch((err) => {
@@ -147,7 +145,7 @@ export class UserComponent implements OnInit {
   }
 
   fetchUsers() {
-    this.blockForm.start("Loading...")
+    this.blockForm.start('Loading...')
     this.users$ = this.userService.fetch().pipe(
       finalize(() => this.blockForm.stop())
     )

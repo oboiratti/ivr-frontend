@@ -1,299 +1,244 @@
-	<page-header title="Tree Studio">
-	Tree Builder
-	</page-header>
-	<div class="">
-	<div class="container-fluid" style="padding:0px;">
-		<div class="card">
-			<div class="card-header">
-				<div class="btn-group float-left" role="group">
-					<button class="btn btn-light active btn-sm text-dark border rounded" type="button" style="margin-right: 3px;">Tree View</button>
-					<!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
-				</div>
-				
-				<button class="btn btn-light btn-sm text-dark border rounded float-left" type="button" style="margin-right: 5px;">Duplicate</button>
-				<button class="btn btn-light btn-sm text-dark border rounded float-left" type="button" style="margin-right: 3px;">Delete</button>
+<div class="">
+    <div class="container-fluid" style="padding:0px;">
+        <div class="card">
+            <div class="card-header">
+                <div class="btn-group float-left" role="group">
+                    <button class="btn btn-light active btn-sm text-dark border rounded" type="button" style="margin-right: 3px;">Tree View</button>
+                    <!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
+                </div>
 
-				<button class="btn btn-light btn-sm text-dark border rounded float-left" type="button" style="margin-right: 5px;">Edit Tree</button>
-				<div class="dropdown">
-					<button class="btn btn-secondary btn-lg dropdown-toggle border rounded float-left" data-toggle="dropdown" aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
-					<div class="dropdown-menu multi-level" role="menu">
-						<a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
-						<div class="dropdown-divider" role="presentation"></div>
-						<a class="dropdown-item" role="presentation"  (click)="addMultiChoice()">Multiple Choice Question</a>
-						<a class="dropdown-item" role="presentation"  (click)="addNumeric()">Numeric Question</a>
-						<a class="dropdown-item dropdown-submenu" role="presentation"  (click)="addOpenEnded()">Open-ended Question</a>
-						<div class="dropdown-divider" role="presentation"></div>
-					</div>
-				</div>
-				<div class="btn-group btn-group-sm float-right" role="group">
-					<button class="btn btn-primary btn-sm" type="button" (click)="saveTree()">Save</button>
-					<button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button>
-				</div>
-			</div>
-			<div class="card-body">
-				<div class="row">
-					<div #diagramDiv class="col-9 diagramDiv border"></div>
-					<div #sidebar class="col-3 tree-sidebar border">
-						<!--Main Form-->
-						<div class="card" style="padding: 10px; margin-bottom: 20px; margin-top: -30px">
-							<form>
-								<div class="d-block">
-									<!-- NODE SPECIFIC PROPERTIES -->
-									<!-- Tree Form -->
-									<div id="tree" *ngIf="treeForm">
-										<h5 class="d-flex">Tree Details</h5>
-										<div class="form-group" style="margin-top: 25px;">
-											<label><strong>Title</strong></label>
-											<input class="form-control" type="text" [(ngModel)]="tree.title" name="tree.name" >
-										</div>
-										<div class="form-group" style="margin-top: 25px;">
-											<label><strong>Description</strong></label>
-											<textarea class="border rounded form-control" [(ngModel)]="tree.description" name="tree.description" ></textarea>
-										</div>
-										<div class="form-group" >
-											<label class="d-block"><strong>Default Language</strong></label>
-											<select class="form-control" 
-												[(ngModel)] = "tree.language" name="tree.language">
-												<option *ngFor="let language of languages" value={{language}}>
-														{{language.name}}
-												</option>
-											</select>
-										</div>
-										<div class="form-group">
-											<div class="custom-control custom-checkbox custom-control-inline">
-												<input class="custom-control-input" 
-													[(ngModel)]="tree.hasVoice" 
-													formcontrolname="tree.hasVoice" id="tree.hasVoice" name="tree.hasVoice"
-													type="checkbox" >
-												<label class="custom-control-label" for="tree.hasVoice"><strong>Has Voice</strong></label>
-											</div>
-										</div>
-										<div class="form-group">
-											<div class="custom-control custom-checkbox custom-control-inline">
-												<input class="custom-control-input" 
-													[(ngModel)]="tree.hasSms" 
-													formcontrolname="tree.hasSms" id="tree.hasSms" name="tree.hasSms"
-													type="checkbox">
-												<label class="custom-control-label" for="tree.hasSms"><strong>Has SMS</strong></label>
-											</div>
-										</div>
-									</div>
+                <button class="btn btn-light btn-sm text-dark border rounded float-left" type="button" style="margin-right: 5px;">Duplicate</button>
+                <button class="btn btn-light btn-sm text-dark border rounded float-left" type="button" style="margin-right: 3px;">Delete</button>
 
-									<!-- Message -->
-									<div id="message" *ngIf="messageForm">
-										<h5 class="d-flex">Edit Message</h5>
-										<div class="form-group" style="margin-top: 25px;">
-											<label><strong>Message Title</strong></label>
-											<textarea class="border rounded form-control"  
-												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
-												(ngModelChange)="updateMessageTitle()"></textarea>
-										</div>
-										<div class="form-group">
-											<div class="custom-control custom-checkbox custom-control-inline">
-												<input class="custom-control-input" 
-													[(ngModel)]="currentNode.custom.repeat" 
-													formcontrolname="currentNode.custom.repeat" id="currentNode.custom.repeat" name="currentNode.custom.repeat" type="checkbox">
-												<label class="custom-control-label" for="currentNode.custom.repeat"><strong>Let users repeat this message</strong></label>
-											</div>
-										</div>
-										<div *ngIf="currentNode.custom.repeat">
-											<a class="text-muted" href="">
-												<br>For the best user experience, please provide an audio prompt that says,&nbsp;
-												<em>"If you'd like to repeat this message, please press 2 now."</em>
-											</a>
-											<div class="form-group" ><label class="d-block"><strong>Default Repeat Key</strong></label>
-												<select style="width: 50px;" class="form-control" 
-													[(ngModel)] = "currentNode.custom.repeatKey"
-													name="currentNode.custom.repeatKey">
+                <button class="btn btn-light btn-sm text-dark border rounded float-left" type="button" style="margin-right: 5px;">Edit Tree</button>
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-lg dropdown-toggle border rounded float-left" data-toggle="dropdown" aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
+                    <div class="dropdown-menu multi-level" role="menu">
+                        <a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
+                        <div class="dropdown-divider" role="presentation"></div>
+                        <a class="dropdown-item" role="presentation" (click)="addMultiChoice()">Multiple Choice Question</a>
+                        <a class="dropdown-item" role="presentation" (click)="addNumeric()">Numeric Question</a>
+                        <a class="dropdown-item dropdown-submenu" role="presentation" (click)="addOpenEnded()">Open-ended Question</a>
+                        <div class="dropdown-divider" role="presentation"></div>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-lg float-right" role="group">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="saveTree()"> <i class="fa fa-save"></i> Save</button>
+                    <!-- <button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button> -->
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div #diagramDiv class="col-9 diagramDiv border"></div>
+                    <div #sidebar class="col-3 tree-sidebar border">
+                        <!--Main Form-->
+                        <div class="card" style="padding: 10px; margin-bottom: 20px; margin-top: -30px">
+                            <form>
+                                <div class="d-block">
+                                    <!-- NODE SPECIFIC PROPERTIES -->
+                                    <!-- Tree Form -->
+                                    <div id="tree" *ngIf="treeForm">
+                                        <h5 class="d-flex">Tree Details</h5>
+                                        <div class="form-group" style="margin-top: 25px;">
+                                            <label><strong>Title</strong></label>
+                                            <input class="form-control" type="text" [(ngModel)]="tree.title" name="tree.name">
+                                        </div>
+                                        <div class="form-group" style="margin-top: 25px;">
+                                            <label><strong>Description</strong></label>
+                                            <textarea class="border rounded form-control" [(ngModel)]="tree.description" name="tree.description"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <ng-select [items]="languages | async" bindLabel="name" [clearable]="false" [multiple]="false" [(ngModel)]="tree.language" name="tree.language"></ng-select>
+                                        </div>
+                                        <!-- <div class="form-group">
+                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                <input class="custom-control-input" [(ngModel)]="tree.hasVoice" formcontrolname="tree.hasVoice" id="tree.hasVoice" name="tree.hasVoice" type="checkbox">
+                                                <label class="custom-control-label" for="tree.hasVoice"><strong>Has Voice</strong></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                <input class="custom-control-input" [(ngModel)]="tree.hasSms" formcontrolname="tree.hasSms" id="tree.hasSms" name="tree.hasSms" type="checkbox">
+                                                <label class="custom-control-label" for="tree.hasSms"><strong>Has SMS</strong></label>
+                                            </div>
+                                        </div> -->
+                                    </div>
+
+                                    <!-- Message -->
+                                    <div id="message" *ngIf="messageForm">
+                                        <h5 class="d-flex">Edit Message</h5>
+                                        <div class="form-group" style="margin-top: 25px;">
+                                            <label><strong>Message Title</strong></label>
+                                            <textarea class="border rounded form-control" [(ngModel)]="currentNode.custom.title" name="currentNode.custom.title" (ngModelChange)="updateMessageTitle()"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                <input class="custom-control-input" [(ngModel)]="currentNode.custom.repeat" formcontrolname="currentNode.custom.repeat" id="currentNode.custom.repeat" name="currentNode.custom.repeat" type="checkbox">
+                                                <label class="custom-control-label" for="currentNode.custom.repeat"><strong>Let users repeat this message</strong></label>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="currentNode.custom.repeat">
+                                            <a class="text-muted" href="">
+                                                <br>For the best user experience, please provide an audio prompt that says,&nbsp;
+                                                <em>"If you'd like to repeat this message, please press 2 now."</em>
+                                            </a>
+                                            <div class="form-group"><label class="d-block"><strong>Default Repeat Key</strong></label>
+                                                <select style="width: 100px;" class="form-control" [(ngModel)]="currentNode.custom.repeatKey" name="currentNode.custom.repeatKey">
 													<option *ngFor="let key of phoneKeys" value={{key}}>
 															{{key}}
 													</option>
 												</select>
-											</div>
-											<div class="form-group">
-												<label class="d-block"><strong>Delay To Enter Repeat Key</strong></label>
-												<select style="width: 50px;" class="form-control" 
-													[(ngModel)] = "currentNode.custom.repeatDelay"
-													name="currentNode.custom.repeatDelay">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="d-block"><strong>Delay To Enter Repeat Key</strong></label>
+                                                <select style="width: 100px;" class="form-control" [(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay">
 													<option *ngFor="let key of repeatDelay" value={{key}}>
 															{{key}}
 													</option>
 												</select>
-												<label style="margin-left: 5px;">seconds</label>
-											</div>
-											<div class="form-group">
-												<label class="d-block"><strong>Maximum Number of Repeats</strong></label>
-												<select style="width: 50px;" class="form-control" 
-													[(ngModel)] = "currentNode.custom.repeatMax"
-													name="currentNode.custom.repeatMax">
+                                                <label style="margin-left: 5px;">seconds</label>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="d-block"><strong>Maximum Number of Repeats</strong></label>
+                                                <select style="width: 100px;" class="form-control" [(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax">
 													<option *ngFor="let key of repeatNumber" value={{key}}>
 															{{key}}
 													</option>
 												</select>
-											</div>
-										</div>
-									</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-									<!-- MultiChoice -->
-									<div id="multichoice" *ngIf="multiForm"> 
-										<h5 class="d-flex">Edit multiple-choice question</h5>
-										<div class="form-group"><label><strong>Question Title</strong></label>
-											<textarea class="border rounded form-control"  
-												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
-												(ngModelChange)="updateMessageTitle()"></textarea>
-										</div>
-										<div class="form-group">
-											<label><strong>Choices</strong></label>
-											<div class="input-group" *ngFor="let choice of currentNode.custom.choices; let i = index;"
-												style="margin-bottom: 5px;">
-												<div class="input-group-prepend"><span class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
-												<input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value" name="currentNode.custom.choices[{{i}}]" (ngModelChange)="addChoice(i+1)">
-											</div>
-										</div>
+                                    <!-- MultiChoice -->
+                                    <div id="multichoice" *ngIf="multiForm">
+                                        <h5 class="d-flex">Edit multiple-choice question</h5>
+                                        <div class="form-group"><label><strong>Question Title</strong></label>
+                                            <textarea class="border rounded form-control" [(ngModel)]="currentNode.custom.title" name="currentNode.custom.title" (ngModelChange)="updateMessageTitle()"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Choices</strong></label>
+                                            <div class="input-group" *ngFor="let choice of currentNode.custom.choices; let i = index;" style="margin-bottom: 5px;">
+                                                <div class="input-group-prepend"><span class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
+                                                <input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value" name="currentNode.custom.choices[{{i}}]" (ngModelChange)="addChoice(i+1)">
+                                            </div>
+                                        </div>
 
-											<!-- <div class="form-group">
+                                        <!-- <div class="form-group">
 												<label class="d-block"><strong>Choices Options</strong></label>
 												<button class="btn btn-info btn-block btn-sm" type="button">Set choice options</button>
 											</div> -->
-											<!-- <div class="form-group">
+                                        <!-- <div class="form-group">
 												<label class="d-block"><strong>Output Branching</strong></label>
 												<div class="btn-group" role="group">
 													<button class="btn btn-secondary" type="button"><i class="fas fa-sitemap"></i></button><button class="btn btn-secondary" type="button" style="min-width: 46px;"><i class="fas fa-code-branch"></i></button>
 												</div>
 											</div> -->
-											<div class="form-group">
-												<label class="d-block"><strong>When no valid response is received</strong></label>
-												<div class="custom-control custom-radio">
-													<input class="custom-control-input" type="radio" id="addExitForNoResponse1" [(ngModel)]="currentNode.custom.addExitForNoResponse" name="currentNode.custom.addExitForNoResponse" value=true>
-													<label class="custom-control-label"  for="addExitForNoResponse1">End the call/session</label>
-												</div>
-												<div class="custom-control custom-radio">
-													<input class="custom-control-input" type="radio" name="currentNode.custom.addExitForNoResponse" id="addExitForNoResponse2" [(ngModel)]="currentNode.custom.addExitForNoResponse" value=false>
-													<label class="custom-control-label"  for="addExitForNoResponse2">Continue through Exit</label>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="d-block"><strong>Repeat Questions</strong></label>
-												<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" 
-													[(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax"> times for incorrect responses
-											</div>
-											<div class="form-group">
-												<label class="d-block"><strong>Repeat Timeout</strong></label>
-												<label style="margin-right: 5px;">Wait</label>
-												<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
-													[(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
-											</div>
-									</div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>When no valid response is received</strong></label>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" id="addExitForNoResponse1" [(ngModel)]="currentNode.custom.addExitForNoResponse" name="currentNode.custom.addExitForNoResponse" value=true>
+                                                <label class="custom-control-label" for="addExitForNoResponse1">End the call/session</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input class="custom-control-input" type="radio" name="currentNode.custom.addExitForNoResponse" id="addExitForNoResponse2" [(ngModel)]="currentNode.custom.addExitForNoResponse" value=false>
+                                                <label class="custom-control-label" for="addExitForNoResponse2">Continue through Exit</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>Repeat Questions</strong></label>
+                                            <input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" [(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax"> times for incorrect responses
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>Repeat Timeout</strong></label>
+                                            <label style="margin-right: 5px;">Wait</label>
+                                            <input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" [(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
+                                        </div>
+                                    </div>
 
-									<!-- Numeric -->
-									<div id="Numeric" *ngIf="numericForm"> 
-										<h5 class="d-flex">Edit numeric question</h5>
-										<div class="form-group"><label><strong>Question Title</strong></label>
-											<textarea class="border rounded form-control"  
-												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
-												(ngModelChange)="updateMessageTitle()"></textarea>
-										</div>
-										<div class="form-group">
-											<label class="d-block"><strong>Maximum Number of Response Digits</strong></label>
-											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
-												[(ngModel)]="currentNode.custom.maxDigitNumber" name="currentNode.custom.maxDigitNumber">
-										</div>
-										<div class="form-group">
-											<label class="d-block"><strong>Repeat Questions</strong></label>
-											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" 
-												[(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax"> times for incorrect responses
-										</div>
-										<div class="form-group">
-											<label class="d-block"><strong>Repeat Timeout</strong></label>
-											<label style="margin-right: 5px;">Wait</label>
-											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
-												[(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
-										</div>
-									</div>
+                                    <!-- Numeric -->
+                                    <div id="Numeric" *ngIf="numericForm">
+                                        <h5 class="d-flex">Edit numeric question</h5>
+                                        <div class="form-group"><label><strong>Question Title</strong></label>
+                                            <textarea class="border rounded form-control" [(ngModel)]="currentNode.custom.title" name="currentNode.custom.title" (ngModelChange)="updateMessageTitle()"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>Maximum Number of Response Digits</strong></label>
+                                            <input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" [(ngModel)]="currentNode.custom.maxDigitNumber" name="currentNode.custom.maxDigitNumber">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>Repeat Questions</strong></label>
+                                            <input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" [(ngModel)]="currentNode.custom.repeatMax" name="currentNode.custom.repeatMax"> times for incorrect responses
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>Repeat Timeout</strong></label>
+                                            <label style="margin-right: 5px;">Wait</label>
+                                            <input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" [(ngModel)]="currentNode.custom.repeatDelay" name="currentNode.custom.repeatDelay"> seconds for a response
+                                        </div>
+                                    </div>
 
-									<!-- Openended -->
-									<div id="Numeric" *ngIf="openForm"> 
-										<h5 class="d-flex">Edit Open-Ended Question</h5>
-										<div class="form-group"><label><strong>Question Title</strong></label>
-											<textarea class="border rounded form-control"  
-												[(ngModel)]="currentNode.custom.title" name="currentNode.custom.title"
-												(ngModelChange)="updateMessageTitle()"></textarea>
-										</div>
-										<div class="form-group">
-											<label class="d-block"><strong>Maximum Record Duration</strong></label>
-											<input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;"
-												[(ngModel)]="currentNode.custom.maxOpenLength" name="currentNode.custom.maxOpenLength">
-												minutes
-										</div>
-										<div class="form-group" >
-											<label class="d-block"><strong>End record by pressing</strong></label>
-												<select style="width: 50px;" class="form-control" 
-													[(ngModel)] = "currentNode.custom.endRecordingDigits"
-													name="currentNode.custom.endRecordingDigits">
+                                    <!-- Openended -->
+                                    <div id="Numeric" *ngIf="openForm">
+                                        <h5 class="d-flex">Edit Open-Ended Question</h5>
+                                        <div class="form-group"><label><strong>Question Title</strong></label>
+                                            <textarea class="border rounded form-control" [(ngModel)]="currentNode.custom.title" name="currentNode.custom.title" (ngModelChange)="updateMessageTitle()"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>Maximum Record Duration</strong></label>
+                                            <input class="form-control form-control-sm d-inline" type="number" style="max-width: 70px;" [(ngModel)]="currentNode.custom.maxOpenLength" name="currentNode.custom.maxOpenLength"> minutes
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="d-block"><strong>End record by pressing</strong></label>
+                                            <select style="width: 100px;" class="form-control" [(ngModel)]="currentNode.custom.endRecordingDigits" name="currentNode.custom.endRecordingDigits">
 													<option *ngFor="let key of phoneKeys" value={{key}}>
 															{{key}}
 													</option>
 												</select>
-											</div>
-									</div>
+                                        </div>
+                                    </div>
 
-									<!-- STANDAR BLOCK PROPERTIES -->
-									<div id="STANDARD" *ngIf="!treeForm">
-										<div class="card inner-card" style="margin-bottom: 10px;">
-											<div class="card-header inner-card">
-												<h5>{{tree.language.name}}</h5>
-												<p style="font-size: 14px;">Voice Content</p>
-											</div>
-											
-											<div class="card-body inner-card" style="max-height: 250px;">
-												<div *ngIf="currentNode.audio != null" class="card-header inner-card" style="margin-bottom: 30px;">
-													<label>{{currentNode.audio.name}}</label>
-													<audio controls>
-														<source src="{{currentNode.audio.url}}">
-													</audio>	
-												</div>
-												<h6 class="card-title">Select Audio</h6>
-												<div class="form-group">
-													<ng-select [items]="audios" bindLabel="name" bindValue="" placeholder="Search audio files"
-														[clearable]="true" [multiple]="false" [(ngModel)]="currentNode.audio" name="currentNode.audio"></ng-select>
-												</div>
-												<!-- <div class="form-group" style="margin-top: 20px;">
-													<label style="font-size: 14px;">SMS Content</label>
-													<textarea class="border rounded form-control"></textarea>
-													<label style="font-size: 12px;">39 characters</label>
-													<button class="btn btn-success active btn-sm float-right d-xl-flex" type="button" style="max-height: 30px;font-size: 12px;margin-top: 5px;" data-toggle="button">
-														<i class="fa fa-exchange" style="font-size: 16px;margin-right: 5px;"></i>Auto
-													</button>
-												</div> -->
-											</div>
-										</div>
-										<div class="form-group">
-											<label><strong>Tags</strong></label>
-											<ng-select [items]="tags" bindLabel="name" bindValue="id" placeholder="Set tags"
-												[clearable]="true" [multiple]="true" [(ngModel)]="currentNode.tags" name="currentNode.tags"></ng-select>
-										</div>
-										<div class="form-group">
-											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Options</strong></p>
-											<button class="btn btn-secondary btn-sm" type="button" [disabled]="currentNode.isStartingNode" (click)="makeStartNode()">Set as starting block</button>
-										</div>
-										<div class="form-group">
-											<p style="margin-bottom: 5px;margin-top: 15px;"><strong>Summary</strong></p>
-											<div class="custom-control custom-checkbox custom-control-inline">
-												<input class="custom-control-input" 
-													[(ngModel)]="currentNode.includeInSummary" 
-													formcontrolname="currentNode.includeInSummary" id="currentNode.includeInSummary" name="currentNode.includeInSummary"
-													type="checkbox" >
-												<label class="custom-control-label" for="currentNode.includeInSummary">Include in summary</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</form>
-						</div>
-						<!-- Message -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	</div>
+                                    <!-- STANDAR BLOCK PROPERTIES -->
+                                    <div id="STANDARD" *ngIf="!treeForm">
+                                        <div class="card inner-card" style="margin-bottom: 10px;">
+                                            <div class="card-header inner-card">
+                                                <h5>{{tree.language.name}}</h5>
+                                                <p style="font-size: 14px;">Voice Content</p>
+                                            </div>
+                                            <div class="card-body inner-card" style="max-height: 250px;">
+                                                <div *ngIf="currentNode.audio != null" class="card-header inner-card" style="margin-bottom: 30px;">
+                                                    <label>{{currentNode.audio.title}}</label>
+                                                    <audio controls>
+																								<source src="{{currentNode.audio.fileUrl}}">
+																							</audio>
+                                                </div>
+                                                <h6 class="card-title">Select Audio</h6>
+                                                <div class="form-group">
+                                                    <ng-select [items]="audios" bindLabel="title" placeholder="Search audio files" [clearable]="true" [multiple]="false" [(ngModel)]="currentNode.audio" name="currentNode.audio"></ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Tags</strong></label>
+                                            <ng-select [items]="tags | async" bindLabel="name" bindValue="id" placeholder="Set tags" [clearable]="true" [multiple]="true" [(ngModel)]="currentNode.tags" name="currentNode.tags"></ng-select>
+                                        </div>
+                                        <div class="form-group">
+                                            <p style="margin-bottom: 5px;margin-top: 15px;"><strong>Options</strong></p>
+                                            <button class="btn btn-secondary btn-sm" type="button" [disabled]="currentNode.isStartingNode" (click)="makeStartNode()">Set as starting block</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <p style="margin-bottom: 5px;margin-top: 15px;"><strong>Summary</strong></p>
+                                            <div class="custom-control custom-checkbox custom-control-inline">
+                                                <input class="custom-control-input" [(ngModel)]="currentNode.includeInSummary" formcontrolname="currentNode.includeInSummary" id="currentNode.includeInSummary" name="currentNode.includeInSummary" type="checkbox">
+                                                <label class="custom-control-label" for="currentNode.includeInSummary">Include in summary</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Message -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

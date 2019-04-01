@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-12">
-    <filter class="float-left" placeholder="Search by name" name="name" [model]="name" (search)="getSubscribers($event)" [filter]="filter">
+    <filter class="float-left" placeholder="Search by name" label="name" [model]="name" (search)="getSubscribers($event)" [filter]="filter">
       <div class="form-group">
         <input type="text" class="form-control" name="phone" placeholder="Phone Number" [(ngModel)]="filter.phone">
       </div>
@@ -26,7 +26,7 @@
               <th>Phone</th>
               <th>Start Date</th>
               <th>Language</th>
-              <th>Content</th>
+              <th>Type</th>
               <!-- <th>Receive Outgoing Calls</th> -->
               <th>Actions</th>
             </tr>
@@ -38,10 +38,7 @@
               <td>{{subscriber.phoneNumber}}</td>
               <td>{{subscriber.startDate | date:'mediumDate'}}</td>
               <td>{{subscriber.language.name}}</td>
-              <td>
-                <i class="fa fa-volume-up" *ngIf="subscriber.voice"></i> &nbsp;
-                <i class="fa fa-envelope" *ngIf="subscriber.sms"></i>
-              </td>
+              <td>{{subscriber.subscriberType.name}}</td>
               <!-- <td>Yes</td> -->
               <td>
                 <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
