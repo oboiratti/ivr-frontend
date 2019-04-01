@@ -365,7 +365,7 @@ export class TreeStudioComponent implements OnInit {
     this.currentNode.isStartingNode = true;
   }
 
-  private addMessage() {
+  addMessage() {
     const newMessage: BlockNode = {
       type: TreeConfig.nodeTypes.message,
       key: this.generateNodeId(),
@@ -393,7 +393,7 @@ export class TreeStudioComponent implements OnInit {
     this.diagram.model.addNodeData(nodeBlock);
   }
 
-  private addMultiChoice() {
+  addMultiChoice() {
     const newMulti: BlockNode = {
       type: TreeConfig.nodeTypes.multichoice,
       key: this.generateNodeId(),
@@ -510,6 +510,7 @@ export class TreeStudioComponent implements OnInit {
       key: newNumeric.key, mTitle: newNumeric.custom.title, category: TreeConfig.nodeTypes.open,
       toPortId: 'top_' + newNumeric.key, fromPortId: 'bottom_' + newNumeric.key
     };
+
     if (this.isFirstNode) { this.tree.startingNodeKey = newNumeric.key; }
     this.tree.nodes.push(newNumeric);
     this.diagram.model.addNodeData(nodeBlock);
@@ -619,10 +620,18 @@ export class TreeStudioComponent implements OnInit {
     const tosave = this.tree;
     tosave.nodes = JSON.stringify(tosave.nodes);
     tosave.treeModel = this.diagram.model.toJson();
+    tosave.connections = this.getConnections(tosave.treeModel);
     this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
       this.blockUi.stop();
       if (res.success) { }
     }, () => this.blockUi.stop());
+  }
+
+  private getConnections(tree: any) {
+    const obj = JSON.parse(tree);
+    const arr = obj.linkDataArray;
+    console.log(arr);
+    return arr;
   }
 
   private loadTree(id: number) {
@@ -643,6 +652,7 @@ export class TreeStudioComponent implements OnInit {
   }
 
   private processNewTree(node: string): Array<BlockNode> {
+    node = JSON.parse(JSON.parse(unescape(node)));
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node) ;
     return nodes;
