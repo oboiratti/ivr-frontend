@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
 import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 import { Lookup } from 'src/app/shared/common-entities.model';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-outbound-form',
@@ -20,6 +21,7 @@ export class OutboundFormComponent implements OnInit {
   form: FormGroup
   areas$: Observable<Lookup>
   @BlockUI() blockUi: NgBlockUI
+  loadingAreas: boolean
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -71,11 +73,19 @@ export class OutboundFormComponent implements OnInit {
       this.blockUi.stop()
       if (res.success) {
         this.form.patchValue(res.data)
+        this.form.patchValue({
+          areaId: res.data.area.id,
+          startDate: res.data.startDate.substring(0, 10),
+          endDate: res.data.endDate.substring(0, 10)
+        })
       }
     }, () => this.blockUi.stop())
   }
 
   private loadAreas() {
-    this.areas$ = this.settingsService.fetch2('area')
+    this.loadingAreas = true
+    this.areas$ = this.settingsService.fetch2('area').pipe(
+      finalize(() => this.loadingAreas = false)
+    )
   }
 }

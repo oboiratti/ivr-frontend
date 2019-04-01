@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { CampaignQuery } from './campaign.models';
+import { CampaignQuery, Campaign, CampaignSchedule, CampaignScheduleQuery } from './campaign.models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class CampaignService {
 
   constructor(private http: HttpClient) { }
 
-  saveCampaign(params: any) {
+  saveCampaign(params: Campaign) {
     if (params.id) { return this.http.put<ResponseObject<any>>(`${environment.baseUrl}/campaign`, params) }
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/campaign`, params)
   }
@@ -38,11 +38,6 @@ export class CampaignService {
       .pipe(
         map(res => {
           if (res.success) {
-            res.data = res.data.map(data => {
-              data.scheduleDetails = JSON.parse(data.scheduleDetails)
-              data.advancedOptions = JSON.parse(data.advancedOptions)
-              return data
-            });
             return res.data
           }
         })
@@ -51,15 +46,6 @@ export class CampaignService {
 
   findCampaign(id: number) {
     return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/campaign/get/${id}`)
-      .pipe(
-        map(res => {
-          if (res.success) {
-            res.data.scheduleDetails = JSON.parse(JSON.parse(res.data.scheduleDetails))
-            res.data.advancedOptions = JSON.parse(JSON.parse(res.data.advancedOptions))
-            return res
-          }
-        })
-      )
   }
 
   deleteCampaign(id: number) {
@@ -73,5 +59,25 @@ export class CampaignService {
         if (res.success) { return res.data }
       })
     )
+  }
+
+  saveCampaignSchedule(params: CampaignSchedule) {
+    if (params.id) { return this.http.put<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule`, params) }
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule`, params)
+  }
+
+  queryCampaignSchedules(params: CampaignScheduleQuery) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/query`, params)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            return res.data
+          }
+        })
+      )
+  }
+
+  findCampaignSchedule(id: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/get/${id}`)
   }
 }

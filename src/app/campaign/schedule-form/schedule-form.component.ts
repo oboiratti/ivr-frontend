@@ -9,6 +9,10 @@ import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 import { Lookup } from 'src/app/shared/common-entities.model';
+import { TreeService } from 'src/app/content/shared/tree.service';
+import { Tree } from 'src/app/content/shared/tree.model';
+import { finalize, shareReplay } from 'rxjs/operators';
+import { Campaign } from '../shared/campaign.models';
 
 @Component({
   selector: 'app-schedule-form',
@@ -17,36 +21,34 @@ import { Lookup } from 'src/app/shared/common-entities.model';
 })
 export class ScheduleFormComponent implements OnInit {
 
-  subscriberTypes = [
-    { label: 'All Subscribers', value: 3 },
-    { label: 'Selected Groups', value: 2 },
-    { label: 'Selected Subscribers', value: 1 }]
-  scheduleTypes = [
-    { label: 'Now', value: 1 },
-    { label: 'Fixed Date', value: 2 },
-    { label: 'Routine', value: 3 },
-    { label: 'Repeating', value: 4 }]
-  periods = [
-    { label: 'Days', value: 0 },
-    { label: 'Weeks', value: 1 },
-    { label: 'Months', value: 2 },
-    { label: 'Years', value: 3 }]
+  recipientTypes = ['AllSubscribers', 'SelectedGroups', 'SelectedSubscribers']
+  scheduleTypes = ['Now', 'FixedDate', 'Repeating']
+  periods = ['Days', 'Weeks', 'Months', 'Years']
   form: FormGroup
   groups$: Observable<SubscriberGroup[]>
   subscribers$: Observable<Subscriber[]>
   pillars$: Observable<Lookup[]>
   topics$: Observable<Lookup[]>
+  trees$: Observable<Tree[]>
   toggleIcon = 'fa fa-chevron-right'
   toggle = false
   id: number
+  sid: number
   @BlockUI() blockUi: NgBlockUI
+  loadingTrees: boolean
+  loadingPillars: boolean
+  loadingTopics: boolean
+  loadingGroups: boolean
+  loadingSubscribers: boolean
+  campaign: Campaign
 
   constructor(private fb: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private subscriberService: SubscriberService,
     private campaignService: CampaignService,
-    private settingsService: SettingsService) { }
+    private settingsService: SettingsService,
+    private treeService: TreeService) { }
 
   ngOnInit() {
     this.setupForm()
@@ -55,8 +57,11 @@ export class ScheduleFormComponent implements OnInit {
     this.loadPillars()
     this.disableControls()
     this.pillarChangeListener()
+    this.loadTrees()
     this.id = +this.activatedRoute.snapshot.paramMap.get('id')
+    this.sid = +this.activatedRoute.snapshot.paramMap.get('sid')
     if (this.id) { this.findCampaign(this.id) }
+    if (this.sid) { this.findCampaignSchedule(this.sid) }
   }
 
   doToggle() {
@@ -68,7 +73,7 @@ export class ScheduleFormComponent implements OnInit {
     const params = this.buildJsonRequest(formData)
     console.log(params);
     this.blockUi.start('Saving...')
-    this.campaignService.saveCampaign(params).subscribe(res => {
+    this.campaignService.saveCampaignSchedule(params).subscribe(res => {
       this.blockUi.stop()
       if (res.success) { this.closeForm() }
     }, () => this.blockUi.stop())
@@ -80,42 +85,33 @@ export class ScheduleFormComponent implements OnInit {
 
   get pillarId() { return this.form.get('pillarId') }
   get topicId() { return this.form.get('topicId') }
-  get campaignRecipientType() { return this.form.get('campaignRecipientType') }
+  get recipientType() { return this.form.get('recipientType') }
   get scheduleType() { return this.form.get('scheduleType') }
-  get selectedSubscribers() { return this.form.get('selectedSubscribers') }
-  get subscriberGroups() { return this.form.get('subscriberGroups') }
-  get repeatEnds() { return this.form.get('repeatEnds') }
-  get treeVersion() { return this.form.get('treeVersion') }
-  get voiceSenderId() { return this.form.get('voiceSenderId') }
+  get subscriberIds() { return this.form.get('subscriberIds') }
+  get groupIds() { return this.form.get('groupIds') }
+  get tree() { return this.form.get('tree') }
 
   private setupForm() {
     this.form = this.fb.group({
       id: new FormControl(null),
       pillarId: new FormControl(null, Validators.required),
       topicId: new FormControl(null, Validators.required),
-      campaignRecipientType: new FormControl(null, Validators.required),
+      recipientType: new FormControl(null, Validators.required),
       scheduleType: new FormControl(null, Validators.required),
-      selectedSubscribers: new FormControl(null),
-      subscriberGroups: new FormControl(null),
-      sendDate: new FormControl(new Date().toISOString().substring(0, 10)),
+      subscriberIds: new FormControl(null),
+      groupIds: new FormControl(null),
+      startDate: new FormControl(new Date().toISOString().substring(0, 10)),
       sendTime: new FormControl(new Date().toISOString().substring(11, 16)),
-      routineDays: new FormControl(null),
-      routineTime: new FormControl(new Date().toISOString().substring(11, 16)),
-      repeatNumber: new FormControl(null),
-      repeatPeriod: new FormControl(null),
-      repeatStartDate: new FormControl(new Date().toISOString().substring(0, 10)),
-      repeatEnds: new FormControl('Never'),
-      repeatEndsAfterOccurances: new FormControl(null),
-      repeatEndsDate: new FormControl(new Date().toISOString().substring(0, 10)),
-      repeatEndsTime: new FormControl(new Date().toISOString().substring(11, 16)),
-      tree: new FormControl(null),
+      endDate: new FormControl(new Date().toISOString().substring(0, 10)),
+      frequency: new FormControl(null),
+      period: new FormControl(null),
+      tree: new FormControl(null, Validators.required),
       treeVersion: new FormControl(null),
       dontCallBefore: new FormControl(null),
       dontCallAfter: new FormControl(null),
       retryTime: new FormControl(null),
       minutesApart: new FormControl(null),
       detectVoicemail: new FormControl(false),
-      voiceSenderId: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
       modifiedAt: new FormControl(null),
@@ -124,19 +120,33 @@ export class ScheduleFormComponent implements OnInit {
   }
 
   private loadGroups() {
-    this.groups$ = this.subscriberService.fetchSubscriberGroups()
+    this.loadingGroups = true
+    this.groups$ = this.subscriberService.fetchSubscriberGroups().pipe(
+      shareReplay(1),
+      finalize(() => this.loadingGroups = false)
+    )
   }
 
   private loadSubscribers() {
-    this.subscribers$ = this.subscriberService.fetchSubscribers()
+    this.loadingSubscribers = true
+    this.subscribers$ = this.subscriberService.fetchSubscribers().pipe(
+      shareReplay(1),
+      finalize(() => this.loadingSubscribers = false)
+    )
   }
 
   private loadPillars() {
-    this.pillars$ = this.settingsService.fetch2('pillar')
+    this.loadingPillars = true
+    this.pillars$ = this.settingsService.fetch2('pillar').pipe(
+      finalize(() => this.loadingPillars = false)
+    )
   }
 
   private loadTopicsInPillar(pillarId: number) {
-    this.topics$ = this.campaignService.fetchTopicsByPillar(pillarId)
+    this.loadingTopics = true
+    this.topics$ = this.campaignService.fetchTopicsByPillar(pillarId).pipe(
+      finalize(() => this.loadingTopics = false)
+    )
   }
 
   private disableControls() {
@@ -152,32 +162,29 @@ export class ScheduleFormComponent implements OnInit {
     })
   }
 
+  private loadTrees() {
+    this.loadingTrees = true
+    this.trees$ = this.treeService.fetchTree().pipe(
+      finalize(() => this.loadingTrees = false)
+    )
+  }
+
   private buildJsonRequest(formData: any) {
     return {
       id: formData.id,
-      name: formData.name,
-      campaignType: 'Outbound',
-      campaignRecipientType: formData.campaignRecipientType,
-      campaignSubscribers: [{
-        selectedSubscribers: formData.campaignRecipientType === 1 ? formData.selectedSubscribers.join() : null,
-        subscriberGroups: formData.campaignRecipientType === 2 ? formData.subscriberGroups.join() : null
-      }],
+      campaignId: this.campaign.id,
+      pillarId: formData.pillarId,
+      topicId: formData.topicId,
+      recipientType: formData.recipientType,
       scheduleType: formData.scheduleType,
-      scheduleDetails: JSON.stringify({
-        sendDate: formData.scheduleType === 2 ? formData.sendDate : null,
-        sendTime: formData.scheduleType === 2 ? formData.sendTime : null,
-        routineDays: formData.scheduleType === 3 ? formData.routineDays : null,
-        routineTime: formData.scheduleType === 3 ? formData.routineTime : null,
-        repeatNumber: formData.scheduleType === 4 ? formData.repeatNumber : null,
-        repeatPeriod: formData.scheduleType === 4 ? formData.repeatPeriod : null,
-        repeatStartDate: formData.scheduleType === 4 ? formData.repeatStartDate : null,
-        repeatEnds: formData.scheduleType === 4 ? formData.repeatEnds : null,
-        repeatEndsDetails: formData.repeatEnds !== 'Never' ? {
-          repeatEndsAfterOccurances: formData.repeatEnds === 'AfterOccurances' ? formData.repeatEndsAfterOccurances : null,
-          repeatEndsDate: formData.repeatEnds === 'On' ? formData.repeatEndsDate : null,
-          repeatEndsTime: formData.repeatEndsTime
-        } : {}
-      }),
+      subscriberIds: formData.subscriberIds,
+      groupIds: formData.groupIds,
+      startDate: formData.startDate,
+      sendTime: formData.sendTime,
+      endDate: formData.endDate,
+      frequency: formData.frequency,
+      period: formData.period,
+      treeId: formData.tree.id,
       advancedOptions: JSON.stringify({
         voiceOptions: {
           dontCallBefore: formData.dontCallBefore,
@@ -202,35 +209,18 @@ export class ScheduleFormComponent implements OnInit {
     this.campaignService.findCampaign(id).subscribe(res => {
       this.blockUi.stop()
       if (res.success) {
-        const data = res.data
-        this.doToggle()
-        console.log(data);
-
-        this.form.patchValue(data)
-        this.form.patchValue({
-          campaignRecipientType: data.campaignRecipientType.id,
-          scheduleType: data.scheduleType.id,
-          sendDate: data.scheduleDetails.sendDate,
-          sendTime: data.scheduleDetails.sendTime,
-          routineDays: data.scheduleDetails.routineDays,
-          routineTime: data.scheduleDetails.routineTime,
-          repeatNumber: data.scheduleDetails.repeatNumber,
-          repeatPeriod: data.scheduleDetails.repeatPeriod,
-          repeatStartDate: data.scheduleDetails.repeatStartDate,
-          repeatEnds: data.scheduleDetails.repeatEnds,
-          repeatEndsAfterOccurances: data.scheduleDetails.repeatEndsDetails.repeatEndsAfterOccurances,
-          repeatEndsDate: data.scheduleDetails.repeatEndsDetails.repeatEndsDate,
-          repeatEndsTime: data.scheduleDetails.repeatEndsDetails.repeatEndsTime,
-          dontCallBefore: data.advancedOptions.voiceOptions.dontCallBefore,
-          dontCallAfter: data.advancedOptions.voiceOptions.dontCallAfter,
-          retryTime: data.advancedOptions.callRetryOptions.retryTime,
-          minutesApart: data.advancedOptions.callRetryOptions.minutesApart,
-          detectVoicemail: data.advancedOptions.detectVoicemail,
-          voiceSenderId: data.advancedOptions.voiceSenderId,
-          selectedSubscribers: data.campaignSubscribers[0].selectedSubscribers ? data.campaignSubscribers[0].selectedSubscribers.split(',').map(Number) : [],
-          subscriberGroups: data.campaignSubscribers[0].subscriberGroups ? data.campaignSubscribers[0].subscriberGroups.split(',').map(Number) : []
-        })
+        this.campaign = res.data
       }
     }, () => this.blockUi.stop())
+  }
+
+  private findCampaignSchedule(id: number) {
+    this.blockUi.start('Loading...')
+    this.campaignService.findCampaignSchedule(id).subscribe(res => {
+      this.blockUi.stop()
+      if (res.success) {
+        this.form.patchValue(res.data)
+      }
+    })
   }
 }

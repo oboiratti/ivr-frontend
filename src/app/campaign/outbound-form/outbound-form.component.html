@@ -23,8 +23,8 @@
 
             <div class="form-group col-sm-12 col-md-6">
               <label>Campaign Area</label>
-              <ng-select [items]="areas$ | async" bindLabel="label" bindValue="value"
-                placeholder="Select Campaign Area" [clearable]="false" formControlName="areaId"
+              <ng-select [items]="areas$ | async" bindLabel="name" bindValue="id"
+                placeholder="Select Campaign Area" [clearable]="false" [loading]="loadingAreas" formControlName="areaId"
                 [class.invalid-input]="areaId.dirty && areaId.invalid">
               </ng-select>
               <div class="invalid-msg" *ngIf="areaId.dirty && areaId.invalid">

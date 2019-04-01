@@ -49,6 +49,6 @@ export class SettingsService {
   }
 
   destroy(name: string, id: number) {
-    return this.httpClient.delete<ResponseObject<any>>(`${this.baseApi}/${name}/${id}`);
+    return this.httpClient.delete<ResponseObject<any>>(`${this.baseApi}/${name}/delete/${id}`);
   }
 }

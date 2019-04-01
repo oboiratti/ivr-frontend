@@ -43,6 +43,11 @@ const routes: Routes = [
         path: RouteNames.scheduleForm,
         component: ScheduleFormComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.scheduleFormEdit,
+        component: ScheduleFormComponent,
+        canActivate: [AuthGuard]
       }
     ]
   }

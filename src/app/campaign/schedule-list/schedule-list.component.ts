@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { CampaignQuery } from '../shared/campaign.models';
-import { Router } from '@angular/router';
+import { CampaignQuery, CampaignScheduleQuery } from '../shared/campaign.models';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
@@ -15,9 +15,10 @@ import { finalize } from 'rxjs/operators';
 })
 export class ScheduleListComponent implements OnInit {
 
-  campaigns$: Observable<any>
+  campaignSchedules$: Observable<any>
   @BlockUI() blockUi: NgBlockUI
-  lastFilter: CampaignQuery
+  lastFilter: CampaignScheduleQuery
+  id: number
   totalRecords = 0
   currentPage = 1
   recordSize = 20
@@ -25,14 +26,16 @@ export class ScheduleListComponent implements OnInit {
   pageNumber = 1
 
   constructor(private router: Router,
+    private activatedRoute: ActivatedRoute,
     private campaignService: CampaignService) { }
 
   ngOnInit() {
-    this.getCampaigns(<CampaignQuery>{})
+    this.getCampaignSchedules(<CampaignScheduleQuery>{})
+    this.id = +this.activatedRoute.snapshot.paramMap.get('id')
   }
 
   editForm(id: number) {
-    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outboundForm}/${id}`)
+    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.id}/${RouteNames.schedules}/${RouteNames.sform}/${id}`)
   }
 
   delete(id: number) {
@@ -41,7 +44,7 @@ export class ScheduleListComponent implements OnInit {
         this.blockUi.start('Deleting...')
         this.campaignService.deleteCampaign(id).subscribe(res => {
           this.blockUi.stop()
-          if (res.success) { this.getCampaigns(<CampaignQuery>{}) }
+          if (res.success) { this.getCampaignSchedules(<CampaignScheduleQuery>{}) }
         }, () => this.blockUi.stop())
       }
     })
@@ -55,17 +58,19 @@ export class ScheduleListComponent implements OnInit {
     this.currentPage = page;
     this.lastFilter.pager.page = page;
     this.blockUi.start('Loading...')
-    this.campaigns$ = this.campaignService.fetchCampaigns().pipe(
-      finalize(() => this.blockUi.stop())
-    )
+    this.campaignSchedules$ = this.campaignService.queryCampaignSchedules(this.lastFilter)
+      .pipe(
+        finalize(() => this.blockUi.stop())
+      )
   }
 
-  private getCampaigns(filter: CampaignQuery) {
+  private getCampaignSchedules(filter: CampaignScheduleQuery) {
     filter.pager = filter.pager || { page: 1, size: this.recordSize };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...')
-    this.campaigns$ = this.campaignService.queryCampaigns(filter).pipe(
-      finalize(() => this.blockUi.stop())
-    )
+    this.campaignSchedules$ = this.campaignService.queryCampaignSchedules(filter)
+      .pipe(
+        finalize(() => this.blockUi.stop())
+      )
   }
 }

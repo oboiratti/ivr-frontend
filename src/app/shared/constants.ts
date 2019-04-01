@@ -44,8 +44,10 @@ export class RouteNames {
     static outboundForm = 'outbound/form';
     static outboundFormEdit = 'outbound/form/:id';
     static schedules = 'schedules'
+    static sform = 'form'
     static schedulesWithId = 'outbound/:id/schedules'
     static scheduleForm = 'outbound/:id/schedules/form'
+    static scheduleFormEdit = 'outbound/:id/schedules/form/:sid'
 
     static profile = 'profile';
     static profileForm = 'profile-form';
