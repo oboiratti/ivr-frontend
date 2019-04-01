@@ -1,5 +1,5 @@
-import { ModelQuery, Lookup } from "src/app/shared/common-entities.model";
-import { Tree } from "src/app/content/shared/tree.model";
+import { ModelQuery, Lookup } from 'src/app/shared/common-entities.model';
+import { Tree } from 'src/app/content/shared/tree.model';
 
 export interface CampaignQuery extends ModelQuery {
     title: string

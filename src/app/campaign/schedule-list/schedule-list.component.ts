@@ -19,20 +19,20 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   unsubscribe$ = new Subject<void>()
   @BlockUI() blockUi: NgBlockUI
   lastFilter: CampaignScheduleQuery
-  id: number
-  totalRecords = 0
-  currentPage = 1
-  recordSize = 20
-  totalPages = 1
-  pageNumber = 1
+  filter = <CampaignScheduleQuery>{}
+  campaignId: number
+  pageSizes = [10, 20, 50, 100]
+  totalRecords = 0;
+  currentPage = 1;
+  size = this.pageSizes[1];
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private campaignService: CampaignService) { }
 
   ngOnInit() {
-    this.getCampaignSchedules(<CampaignScheduleQuery>{})
-    this.id = +this.activatedRoute.snapshot.paramMap.get('id')
+    this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
+    if (this.campaignId) { this.getCampaignSchedules(<CampaignScheduleQuery>{campaignId: this.campaignId}) }
   }
 
   ngOnDestroy() {
@@ -41,7 +41,7 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   }
 
   editForm(id: number) {
-    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.id}/${RouteNames.schedules}/${RouteNames.sform}/${id}`)
+    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.campaignId}/${RouteNames.schedules}/${RouteNames.sform}/${id}`)
   }
 
   delete(id: number) {
@@ -72,13 +72,21 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
       )
   }
 
-  private getCampaignSchedules(filter: CampaignScheduleQuery) {
-    filter.pager = filter.pager || { page: 1, size: this.recordSize };
+  getCampaignSchedules(filter: CampaignScheduleQuery) {
+    filter.pager = filter.pager || { page: 1, size: this.size };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...')
     this.campaignSchedules$ = this.campaignService.queryCampaignSchedules(filter)
       .pipe(
-        finalize(() => this.blockUi.stop())
+        finalize(() => {
+          this.totalRecords = this.campaignService.totalCampaignSchedules
+          this.blockUi.stop()
+        })
       )
+  }
+
+  pageSizeChangeEvent() {
+    this.filter.pager = { page: 1, size: this.size }
+    this.getCampaignSchedules(this.filter)
   }
 }

@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Outbound Campaign</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Outbound
+      Campaign</button>
   </div>
 </div>
 <hr>
@@ -29,7 +30,8 @@
               <td>{{campaign.endDate | date:'mediumDate'}}</td>
               <td>
                 <a class="pointer" (click)="editForm(campaign.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="gotoSchedule(campaign.id)" title="Schedule"><i class="fa fa-clock-o"></i></a> &nbsp;
+                <a class="pointer" (click)="gotoSchedule(campaign.id)" title="Schedule"><i
+                    class="fa fa-clock-o"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(campaign.id)" title="Delete"><i class="fa fa-trash"></i></a>
               </td>
             </tr>
@@ -37,5 +39,22 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-3">
+    <div class="input-group mb-3 float-left">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Records per page</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="size" (ngModelChange)="pageSizeChangeEvent()">
+        <option *ngFor="let size of pageSizes" [ngValue]="size">{{size}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col">
+    <ngb-pagination class="float-right" [(page)]="currentPage" [pageSize]="size" [collectionSize]="totalRecords"
+      [maxSize]="5" (pageChange)="pageChanged($event)"></ngb-pagination>
   </div>
 </div>

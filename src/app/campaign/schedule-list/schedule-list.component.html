@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Campaign Schedule</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Campaign
+      Schedule</button>
   </div>
 </div>
 <hr>
@@ -42,5 +43,22 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-3">
+    <div class="input-group mb-3 float-left">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Records per page</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="size" (ngModelChange)="pageSizeChangeEvent()">
+        <option *ngFor="let size of pageSizes" [ngValue]="size">{{size}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col">
+    <ngb-pagination class="float-right" [(page)]="currentPage" [pageSize]="size" [collectionSize]="totalRecords"
+      [maxSize]="5" (pageChange)="pageChanged($event)"></ngb-pagination>
   </div>
 </div>

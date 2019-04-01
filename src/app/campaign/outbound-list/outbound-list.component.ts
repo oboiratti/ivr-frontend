@@ -20,11 +20,11 @@ export class OutboundListComponent implements OnInit {
   @BlockUI() blockUi: NgBlockUI
   unsubscribe$ = new Subject<void>()
   lastFilter: CampaignQuery
-  totalRecords = 0
-  currentPage = 1
-  recordSize = 20
-  totalPages = 1
-  pageNumber = 1
+  filter = <CampaignQuery>{}
+  pageSizes = [10, 20, 50, 100]
+  totalRecords = 0;
+  currentPage = 1;
+  size = this.pageSizes[1];
 
   constructor(private router: Router,
     private campaignService: CampaignService) { }
@@ -64,12 +64,20 @@ export class OutboundListComponent implements OnInit {
     )
   }
 
-  private getCampaigns(filter: CampaignQuery) {
-    filter.pager = filter.pager || { page: 1, size: this.recordSize };
+  getCampaigns(filter: CampaignQuery) {
+    filter.pager = filter.pager || { page: 1, size: this.size };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...')
     this.campaigns$ = this.campaignService.queryCampaigns(filter).pipe(
-      finalize(() => this.blockUi.stop())
+      finalize(() => {
+        this.totalRecords = this.campaignService.totalCampaigns
+        this.blockUi.stop()
+      })
     )
+  }
+
+  pageSizeChangeEvent() {
+    this.filter.pager = { page: 1, size: this.size }
+    this.getCampaigns(this.filter)
   }
 }

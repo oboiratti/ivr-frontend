@@ -10,6 +10,9 @@ import { CampaignQuery, Campaign, CampaignSchedule, CampaignScheduleQuery } from
 })
 export class CampaignService {
 
+  totalCampaigns = 0
+  totalCampaignSchedules = 0
+
   constructor(private http: HttpClient) { }
 
   saveCampaign(params: Campaign) {
@@ -22,11 +25,6 @@ export class CampaignService {
       .pipe(
         map(res => {
           if (res.success) {
-            res.data = res.data.map(data => {
-              data.scheduleDetails = JSON.parse(JSON.parse(data.scheduleDetails))
-              data.advancedOptions = JSON.parse(JSON.parse(data.advancedOptions))
-              return data
-            });
             return res.data
           }
         })
@@ -38,6 +36,7 @@ export class CampaignService {
       .pipe(
         map(res => {
           if (res.success) {
+            this.totalCampaigns = res.total
             return res.data
           }
         })
@@ -71,6 +70,7 @@ export class CampaignService {
       .pipe(
         map(res => {
           if (res.success) {
+            this.totalCampaignSchedules = res.total
             return res.data
           }
         })
