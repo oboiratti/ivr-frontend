@@ -17,7 +17,7 @@ export interface Tree {
     startingNodeKey: string;
     nodes: any;
     connections: Array<Connection>;
-    treeModel:any;
+    treeModel: any;
 }
 
 export interface ServerTree {

@@ -630,8 +630,17 @@ export class TreeStudioComponent implements OnInit {
   private getConnections(tree: any) {
     const obj = JSON.parse(tree);
     const arr = obj.linkDataArray;
-    console.log(arr);
+    // this.processConnectionsForSave(arr);
     return arr;
+  }
+
+  private processConnectionsForSave(arr: Array<any>) {
+    const nodes = this.tree.nodes;
+    nodes.forEach((node: BlockNode) => {
+      if (arr.findIndex(x => x.to === node.key) === -1) {
+        console.log('First => ', node.custom.title);
+      }
+    });
   }
 
   private loadTree(id: number) {
@@ -652,7 +661,9 @@ export class TreeStudioComponent implements OnInit {
   }
 
   private processNewTree(node: string): Array<BlockNode> {
-    node = JSON.parse(JSON.parse(unescape(node)));
+    node = unescape(node);
+    console.log('unescape =>', node)
+    // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node) ;
     return nodes;
