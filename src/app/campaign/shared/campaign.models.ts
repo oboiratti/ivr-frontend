@@ -3,6 +3,9 @@ import { Tree } from 'src/app/content/shared/tree.model';
 
 export interface CampaignQuery extends ModelQuery {
     title: string
+    areaId: number
+    startDate: Date
+    endDate: Date
 }
 
 export interface Campaign {

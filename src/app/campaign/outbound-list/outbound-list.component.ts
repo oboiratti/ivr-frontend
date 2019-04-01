@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CampaignService } from '../shared/campaign.service';
 import { Observable, Subscriber, Subject } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
@@ -8,13 +8,15 @@ import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { CampaignQuery } from '../shared/campaign.models';
 import { pipe } from '@angular/core/src/render3';
+import { SettingsService } from 'src/app/app-settings/settings/settings.service';
+import { Lookup } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-outbound',
   templateUrl: './outbound-list.component.html',
   styleUrls: ['./outbound-list.component.scss']
 })
-export class OutboundListComponent implements OnInit {
+export class OutboundListComponent implements OnInit, OnDestroy {
 
   campaigns$: Observable<any>
   @BlockUI() blockUi: NgBlockUI
@@ -25,12 +27,20 @@ export class OutboundListComponent implements OnInit {
   totalRecords = 0;
   currentPage = 1;
   size = this.pageSizes[1];
+  areas$: Observable<Lookup>
 
   constructor(private router: Router,
-    private campaignService: CampaignService) { }
+    private campaignService: CampaignService,
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.getCampaigns(<CampaignQuery>{})
+    this.loadAreas()
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   editForm(id: number) {
@@ -79,5 +89,9 @@ export class OutboundListComponent implements OnInit {
   pageSizeChangeEvent() {
     this.filter.pager = { page: 1, size: this.size }
     this.getCampaigns(this.filter)
+  }
+
+  private loadAreas() {
+    this.areas$ = this.settingsService.fetch2('area')
   }
 }

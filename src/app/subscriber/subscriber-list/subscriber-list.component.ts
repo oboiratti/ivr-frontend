@@ -7,6 +7,8 @@ import { Subscriber, SubscriberQuery } from '../shared/subscriber.model';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { MessageDialog } from 'src/app/shared/message_helper';
+import { Lookup } from 'src/app/shared/common-entities.model';
+import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 
 @Component({
   selector: 'app-subscriber-list',
@@ -25,12 +27,15 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   totalRecords = 0;
   currentPage = 1;
   size = this.pageSizes[1];
+  subscriberTypes$: Observable<Lookup>
 
   constructor(private router: Router,
-    private subscriberService: SubscriberService) { }
+    private subscriberService: SubscriberService,
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.getSubscribers(<SubscriberQuery>{});
+    this.loadSubscriberTypes()
   }
 
   ngOnDestroy() {
@@ -84,5 +89,9 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   pageSizeChangeEvent() {
     this.filter.pager = { page: 1, size: this.size }
     this.getSubscribers(this.filter)
+  }
+
+  private loadSubscriberTypes() {
+    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
   }
 }
