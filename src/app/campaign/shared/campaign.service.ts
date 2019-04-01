@@ -80,4 +80,8 @@ export class CampaignService {
   findCampaignSchedule(id: number) {
     return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/get/${id}`)
   }
+
+  deleteCampaignSchedule(id: number) {
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/delete/${id}`)
+  }
 }

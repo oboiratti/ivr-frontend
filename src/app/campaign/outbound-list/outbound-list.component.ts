@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CampaignService } from '../shared/campaign.service';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, Subject } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { CampaignQuery } from '../shared/campaign.models';
+import { pipe } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-outbound',
@@ -17,6 +18,7 @@ export class OutboundListComponent implements OnInit {
 
   campaigns$: Observable<any>
   @BlockUI() blockUi: NgBlockUI
+  unsubscribe$ = new Subject<void>()
   lastFilter: CampaignQuery
   totalRecords = 0
   currentPage = 1
@@ -39,7 +41,9 @@ export class OutboundListComponent implements OnInit {
     MessageDialog.confirm('Delete Campaign', 'Are you sure you want to delete this campaign?').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Deleting...')
-        this.campaignService.deleteCampaign(id).subscribe(res => {
+        this.campaignService.deleteCampaign(id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(res => {
           this.blockUi.stop()
           if (res.success) { this.getCampaigns(<CampaignQuery>{}) }
         }, () => this.blockUi.stop())
@@ -55,7 +59,7 @@ export class OutboundListComponent implements OnInit {
     this.currentPage = page;
     this.lastFilter.pager.page = page;
     this.blockUi.start('Loading...')
-    this.campaigns$ = this.campaignService.fetchCampaigns().pipe(
+    this.campaigns$ = this.campaignService.queryCampaigns(this.lastFilter).pipe(
       finalize(() => this.blockUi.stop())
     )
   }

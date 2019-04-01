@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { CampaignQuery, CampaignScheduleQuery } from '../shared/campaign.models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-schedule-list',
   templateUrl: './schedule-list.component.html',
   styleUrls: ['./schedule-list.component.scss']
 })
-export class ScheduleListComponent implements OnInit {
+export class ScheduleListComponent implements OnInit, OnDestroy {
 
   campaignSchedules$: Observable<any>
+  unsubscribe$ = new Subject<void>()
   @BlockUI() blockUi: NgBlockUI
   lastFilter: CampaignScheduleQuery
   id: number
@@ -34,18 +35,25 @@ export class ScheduleListComponent implements OnInit {
     this.id = +this.activatedRoute.snapshot.paramMap.get('id')
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
+  }
+
   editForm(id: number) {
     this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.id}/${RouteNames.schedules}/${RouteNames.sform}/${id}`)
   }
 
   delete(id: number) {
-    MessageDialog.confirm('Delete Campaign', 'Are you sure you want to delete this campaign?').then(confirm => {
+    MessageDialog.confirm('Delete Campaign Schedule', 'Are you sure you want to delete this campaign schedule?').then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Deleting...')
-        this.campaignService.deleteCampaign(id).subscribe(res => {
-          this.blockUi.stop()
-          if (res.success) { this.getCampaignSchedules(<CampaignScheduleQuery>{}) }
-        }, () => this.blockUi.stop())
+        this.campaignService.deleteCampaignSchedule(id)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(res => {
+            this.blockUi.stop()
+            if (res.success) { this.getCampaignSchedules(<CampaignScheduleQuery>{}) }
+          }, () => this.blockUi.stop())
       }
     })
   }

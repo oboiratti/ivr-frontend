@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SubscriberGroup, Subscriber } from 'src/app/subscriber/shared/subscriber.model';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { SettingsService } from 'src/app/app-settings/settings/settings.service'
 import { Lookup } from 'src/app/shared/common-entities.model';
 import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
-import { finalize, shareReplay } from 'rxjs/operators';
+import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
 import { Campaign } from '../shared/campaign.models';
 
 @Component({
@@ -41,6 +41,7 @@ export class ScheduleFormComponent implements OnInit {
   loadingGroups: boolean
   loadingSubscribers: boolean
   campaign: Campaign
+  unsubscribe$ = new Subject<void>()
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -73,7 +74,9 @@ export class ScheduleFormComponent implements OnInit {
     const params = this.buildJsonRequest(formData)
     console.log(params);
     this.blockUi.start('Saving...')
-    this.campaignService.saveCampaignSchedule(params).subscribe(res => {
+    this.campaignService.saveCampaignSchedule(params)
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(res => {
       this.blockUi.stop()
       if (res.success) { this.closeForm() }
     }, () => this.blockUi.stop())
@@ -154,7 +157,9 @@ export class ScheduleFormComponent implements OnInit {
   }
 
   private pillarChangeListener() {
-    this.pillarId.valueChanges.subscribe(value => {
+    this.pillarId.valueChanges
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(value => {
       if (value) {
         this.loadTopicsInPillar(value)
         this.topicId.enable()
@@ -206,7 +211,9 @@ export class ScheduleFormComponent implements OnInit {
 
   private findCampaign(id: number) {
     this.blockUi.start('Loading...')
-    this.campaignService.findCampaign(id).subscribe(res => {
+    this.campaignService.findCampaign(id)
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(res => {
       this.blockUi.stop()
       if (res.success) {
         this.campaign = res.data
@@ -216,10 +223,30 @@ export class ScheduleFormComponent implements OnInit {
 
   private findCampaignSchedule(id: number) {
     this.blockUi.start('Loading...')
-    this.campaignService.findCampaignSchedule(id).subscribe(res => {
+    this.campaignService.findCampaignSchedule(id)
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe(res => {
       this.blockUi.stop()
       if (res.success) {
-        this.form.patchValue(res.data)
+        this.doToggle()
+        const data = res.data
+        data.advancedOptions = JSON.parse(data.advancedOptions)
+        console.log(data);
+
+        this.form.patchValue(data)
+        this.form.patchValue({
+          pillarId: data.pillar.id,
+          topicId: data.topic.id,
+          groupIds: data.groups ? data.groups.map(group => group.id) : null,
+          subscriberIds: data.subscribers ? data.subscribers.map(sub => sub.id) : null,
+          startDate: data.startDate.substring(0, 10),
+          endDate: data.endDate.substring(0, 10),
+          dontCallBefore: data.advancedOptions.voiceOptions.dontCallBefore,
+          dontCallAfter: data.advancedOptions.voiceOptions.dontCallAfter,
+          retryTime: data.advancedOptions.callRetryOptions.retryTime,
+          minutesApart: data.advancedOptions.callRetryOptions.minutesApart,
+          detectVoicemail: data.advancedOptions.detectVoicemail
+        })
       }
     })
   }
