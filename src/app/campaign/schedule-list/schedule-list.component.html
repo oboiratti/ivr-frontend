@@ -1,5 +1,21 @@
 <div class="row">
   <div class="col-sm-12">
+    <filter class="float-left" placeholder="Search by title" label="title" [model]="title"
+      (search)="getCampaignSchedules($event)" [filter]="filter">
+      <div class="form-group">
+        <ng-select [items]="topics$ | async" bindLabel="name" bindValue="id" placeholder="Select Topic"
+          [clearable]="true" [(ngModel)]="filter.topicId">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <ng-select [items]="recipientTypes" placeholder="Select Recipient Type" [clearable]="true" [(ngModel)]="filter.receipientType">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <ng-select [items]="scheduleTypes" placeholder="Select Schedule Type" [clearable]="true" [(ngModel)]="filter.scheduleType">
+        </ng-select>
+      </div>
+    </filter>
     <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Campaign
       Schedule</button>
   </div>

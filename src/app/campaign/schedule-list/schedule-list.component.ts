@@ -7,6 +7,8 @@ import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { Lookup } from 'src/app/shared/common-entities.model';
+import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 
 @Component({
   selector: 'app-schedule-list',
@@ -25,14 +27,19 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   totalRecords = 0;
   currentPage = 1;
   size = this.pageSizes[1];
+  topics$: Observable<Lookup>
+  recipientTypes = ['AllSubscribers', 'SelectedGroups', 'SelectedSubscribers']
+  scheduleTypes = ['Now', 'FixedDate', 'Repeating']
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
-    private campaignService: CampaignService) { }
+    private campaignService: CampaignService,
+    private settingsService: SettingsService) { }
 
   ngOnInit() {
     this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
-    if (this.campaignId) { this.getCampaignSchedules(<CampaignScheduleQuery>{campaignId: this.campaignId}) }
+    if (this.campaignId) { this.getCampaignSchedules(<CampaignScheduleQuery>{}) }
+    this.loadTopics()
   }
 
   ngOnDestroy() {
@@ -73,6 +80,7 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   }
 
   getCampaignSchedules(filter: CampaignScheduleQuery) {
+    filter.campaignId = this.campaignId
     filter.pager = filter.pager || { page: 1, size: this.size };
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading...')
@@ -88,5 +96,9 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   pageSizeChangeEvent() {
     this.filter.pager = { page: 1, size: this.size }
     this.getCampaignSchedules(this.filter)
+  }
+
+  private loadTopics() {
+    this.topics$ = this.settingsService.fetch2('pillar')
   }
 }

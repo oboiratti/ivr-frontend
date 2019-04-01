@@ -3,10 +3,9 @@
     <filter class="float-left" placeholder="Search by title" label="title" [model]="title"
       (search)="getCampaigns($event)" [filter]="filter">
       <div class="form-group">
-        <select class="form-control" name="areaId" [(ngModel)]="filter.areaId">
-          <option selected disabled value="">Select Subscriber Type</option>
-          <option *ngFor="let type of areas$ | async" [ngValue]="type.id">{{type.name}}</option>
-        </select>
+        <ng-select [items]="areas$ | async" bindLabel="name" bindValue="id" placeholder="Select Area"
+          [clearable]="true" [(ngModel)]="filter.areaId">
+        </ng-select>
       </div>
       <div class="form-group">
         <input type="text" class="form-control" name="startDate" placeholder="Start Date" onfocus="(this.type='date')"
