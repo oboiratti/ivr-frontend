@@ -663,6 +663,7 @@ export class TreeStudioComponent implements OnInit {
       if (res.success) {
         const tree = res.data;
         tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
+        tree.connections = (tree.connections === null) ? tree.connections = [] : this.processNewConnections(res.data.connections);
         if ( res.data.treeModel != null) {
           this.diagram.model = go.Model.fromJson(res.data.treeModel)
         }
@@ -675,11 +676,16 @@ export class TreeStudioComponent implements OnInit {
 
   private processNewTree(node: string): Array<BlockNode> {
     node = unescape(node);
-    // console.log('unescape =>', node)
-    // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node);
     return nodes;
+  }
+
+  private processNewConnections(connection: string): Array<Connection> {
+    connection = unescape(connection);
+    let connections: Array<Connection>;
+    connections = (connection == null) ? [] : JSON.parse(connection);
+    return connections;
   }
 
   private loadAudios() {
