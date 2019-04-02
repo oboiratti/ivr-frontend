@@ -650,7 +650,7 @@ export class TreeStudioComponent implements OnInit {
       this.blockUi.stop();
       if (res.success) {
         const tree = res.data;
-        tree.nodes =  this.processNewTree(res.data.nodes);
+        tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
         if ( res.data.treeModel != null) {
           this.diagram.model = go.Model.fromJson(res.data.treeModel)
         }
@@ -666,8 +666,7 @@ export class TreeStudioComponent implements OnInit {
     console.log('unescape =>', node)
     // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
-    nodes = (node == null) ? [] : JSON.parse(node) ;
-    if (typeof nodes === 'string') { nodes = []}
+    nodes = (node == null) ? [] : JSON.parse(node);
     return nodes;
   }
 
