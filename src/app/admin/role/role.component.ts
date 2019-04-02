@@ -15,7 +15,7 @@ export class RoleComponent implements OnInit, OnDestroy {
 
   roles$: Observable<Role[]>;
   showForm: boolean;
-  permissions: any[] = [];
+  privileges: any[] = [];
   role = <Role>{};
   checkAll: boolean;
   title = 'Add New Role';
@@ -43,61 +43,26 @@ export class RoleComponent implements OnInit, OnDestroy {
     this.title = 'Add New Role';
     this.showForm = false;
     this.role = <Role>{};
-    // this.permissions.forEach((perm) => {
-    //   perm.checked = false;
-    // });
-    // this.checkAll = false
   }
 
   selectRow(role: Role) {
     this.title = 'Edit Role';
     this.role = role;
-    const perms = role.permissions.split(', ');
-    this.permissions.forEach((perm) => {
-      perm.checked = false;
-      perm.checked = perms.includes(perm.name)
-    });
-
-    this.checkAll = perms.length === this.permissions.length
+    this.role.privileges = (role.privileges as string).split(',');
     this.showForm = true;
-    console.log(perms.length, this.permissions.length);
-  }
-
-  selectOne(perm, event) {
-    let cnt = 0;
-    this.permissions.find(obj => obj.name === perm.name).checked = event.target.checked;
-
-    this.permissions.map((p) => {
-      if (p.checked) { cnt++; }
-    });
-
-    this.checkAll = cnt === this.permissions.length
-  }
-
-  selectAll(event) {
-    this.permissions.map((perm) => {
-      perm.checked = event.target.checked
-    });
-    this.checkAll = true;
   }
 
   save() {
-    let permString = '';
-    this.permissions.map((perm) => {
-      if (perm.checked) {
-        permString += perm.name;
-        permString += ', ';
-      }
-    });
-    permString = permString.substring(0, permString.length - 2);
-    this.role.permissions = permString;
+    this.role.privileges = (this.role.privileges as string[]).reduce((acc, elm, index, array) => {
+        return (index < array.length - 1) ? acc += `${elm},` : acc += `${elm}`
+      }, '')
 
     if (!this.role.name) {
       MessageDialog.error('Please enter the name of the role to be created');
       return;
     }
 
-    if (this.role.permissions === '') {
+    if (this.role.privileges === '') {
       MessageDialog.error('Role must have at least one permission');
       return;
     }
@@ -153,7 +118,7 @@ export class RoleComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((res) => {
         if (res.success) {
-          this.permissions = res.data;
+          this.privileges = res.data;
         }
       }, err => {
         console.log('Error -> ' + err.message);

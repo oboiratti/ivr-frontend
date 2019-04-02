@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="p-2 text-uppercase form-header-text" *ngIf="showForm">Role Form</div>
-        <button type="button" class="btn btn-primary-custom border border-dark float-right" *ngIf="!showForm" (click)="openForm()"> Add
+        <button type="button" class="btn btn-primary-custom border border-dark float-right" *ngIf="!showForm"
+            (click)="openForm()"> Add
             Role</button>
     </div>
 </div>
@@ -19,9 +20,9 @@
                             <input type="text" class="form-control" name="name" [(ngModel)]="role.name" required>
                         </div>
                         <div class="form-group">
-                            <label>Permissions</label>
-                            <ng-select name="permissions" multiple="true" [items]="permissions"
-                                placeholder="Select Permissions" [clearable]="false" [(ngModel)]="role.permissions">
+                            <label>Privileges</label>
+                            <ng-select name="privileges" multiple="true" [items]="privileges" [hideSelected]="true"
+                                placeholder="Select Privileges" [clearable]="false" [(ngModel)]="role.privileges">
                             </ng-select>
                         </div>
                         <div class="form-group">
@@ -33,35 +34,13 @@
                                 <i class="fa fa-save"></i> Save</button>
                             <button type="button" class="btn float-right" (click)="closeForm()">
                                 <i class="fa fa-close"></i> Cancel</button>
-                            <!-- <button type="button" class="btn btn-danger float-right" (click)="remove(role.id)"
+                            <button type="button" class="btn btn-danger float-left" (click)="remove(role.id)"
                                     *ngIf="role.id">
-                                    <i class="fa fa-trash"></i> Delete</button> -->
+                                    <i class="fa fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-sm-12 col-md-6">
-                <div class="card fixed-height">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item bg-light">
-                            <strong>Permissions</strong>
-                            <div class="form-check float-right">
-                                <input class="form-check-input" type="checkbox" id="all" name="checkAll"
-                                    [checked]="checkAll" (change)="selectAll($event)">
-                                <label class="form-check-label" for="all"></label>
-                            </div>
-                        </li>
-                        <li class="list-group-item" *ngFor="let perm of permissions">
-                            <div class="float-left">{{perm.name}}</div>
-                            <div class="form-check float-right">
-                                <input type="checkbox" id="{{perm.name}}" class="form-check-input" name="checked"
-                                    [checked]="perm.checked" (change)="selectOne(perm, $event)">
-                                <label class="form-check-label" for="all"></label>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
         </div>
     </form>
 </div>
@@ -77,16 +56,16 @@
                             <th class="table-index">#</th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Permissions</th>
+                            <th>Privileges</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let role of roles$ | async; let i = index" class="pointer"
                             (click)="selectRow(role)">
                             <td class="table-index">{{i + 1}}.</td>
-                            <td>{{role}}</td>
+                            <td>{{role.name}}</td>
                             <td>{{role.notes}}</td>
-                            <td>{{role.permissions}}</td>
+                            <td>{{role.privileges.split(',').length}}</td>
                         </tr>
                     </tbody>
                 </table>

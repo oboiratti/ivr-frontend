@@ -35,19 +35,6 @@ export class UserComponent implements OnInit, OnDestroy {
   @BlockUI() blockForm: NgBlockUI;
   unsubscribe$ = new Subject<void>()
 
-  filter = [
-    { label: 'Name', value: { value: 'name', type: 'text' } },
-    { label: 'Email', value: { value: 'email', type: 'text' } },
-    { label: 'Username', value: { value: 'username', type: 'text' } }
-  ]
-
-  operation = [
-    { label: '=', value: '=' },
-    { label: '>', value: '>' },
-    { label: '<', value: '<' },
-    { label: ':', value: ':' }
-  ]
-
   constructor(private formBuilder: FormBuilder, private userService: UserService, private roleService: RoleService) {
     this.userForm = this.formBuilder.group({
       id: new FormControl(''),
@@ -62,8 +49,8 @@ export class UserComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.minLength(6)
       ])),
-      passwordConfirmation: new FormControl('', Validators.required),
-      role: new FormControl('', Validators.required)
+      confirmPassword: new FormControl('', Validators.required),
+      roleId: new FormControl('', Validators.required)
     }, { validator: this.checkPasswords });
   }
 
@@ -93,14 +80,14 @@ export class UserComponent implements OnInit, OnDestroy {
 
   checkPasswords(formGroup: FormGroup) {
     if (!formGroup.controls) { return null; }
-    return formGroup.controls['password'].value === formGroup.controls['passwordConfirmation'].value ? null : { passwordMismatch: true }
+    return formGroup.controls['password'].value === formGroup.controls['confirmPassword'].value ? null : { passwordMismatch: true }
   }
 
   selectRow(user: User) {
     this.userForm.patchValue(user);
     this.userForm.get('userName').disable();
     this.userForm.get('password').setValidators(null)
-    this.userForm.get('passwordConfirmation').setValidators(null)
+    this.userForm.get('confirmPassword').setValidators(null)
     this.userForm.updateValueAndValidity()
     this.showForm = true;
   }
@@ -110,7 +97,7 @@ export class UserComponent implements OnInit, OnDestroy {
     console.log(this.user);
     if (this.user.id) {
       delete this.user.password;
-      delete this.user.passwordConfirmation;
+      delete this.user.confirmPassword;
     }
 
     this.blockForm.start('Saving...');
