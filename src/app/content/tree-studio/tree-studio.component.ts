@@ -442,7 +442,12 @@ export class TreeStudioComponent implements OnInit {
       this.diagram.model.setDataProperty(nodedata, 'choice',  curChoice.value);
     }
   }
-   // ADD PORT
+
+  removeChoice(index: number) {
+
+  }
+
+  // ADD PORT
   private addPort(key: string, choice: Choice) {
     this.diagram.startTransaction('addPort');
     const node = this.diagram.findNodeForKey(key);
@@ -521,6 +526,7 @@ export class TreeStudioComponent implements OnInit {
     if (!node) { return; }
     const selectedNodeData = node.data;
     if (!selectedNodeData.key) { return ; }
+    console.log('asdfsaf=>', this.tree.nodes);
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
     this.showForm(this.currentNode.key);
     console.log('Current Node', this.currentNode);
@@ -534,11 +540,13 @@ export class TreeStudioComponent implements OnInit {
   }
 
   deleteNode() {
-
+    // TODO :add delete code
+    console.log('delete node');
   }
 
   copyNode() {
-
+    // TODO :add copy code
+    console.log('copy node')
   }
 
   private loadLanguages() {
@@ -618,8 +626,8 @@ export class TreeStudioComponent implements OnInit {
 
   saveTree() {
     this.blockUi.start('Loading...');
-    const tosave = this.tree;
-    tosave.nodes = JSON.stringify(tosave.nodes);
+    const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
+    tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
     tosave.treeModel = this.diagram.model.toJson();
     tosave.connections = this.getConnections(tosave.treeModel);
     this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
