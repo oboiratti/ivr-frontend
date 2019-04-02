@@ -144,12 +144,14 @@ export class TreeStudioComponent implements OnInit {
       txn.changes.each((e: go.ChangedEvent) => {
         // ignore any kind of change other than adding/removing a node
         if (e.modelChange !== 'nodeDataArray') { return; }
-
         // record node insertions and removals
         if (e.change === go.ChangedEvent.Insert) {
-          console.log(evt.propertyName + ' added node with key: ' + e.newValue.key);
-        } else if (e.change === go.ChangedEvent.Remove) {
+          console.log(evt.propertyName + ' added node with key: ' + e.newValue);
+        }
+
+        if (e.change === go.ChangedEvent.Remove) {
           console.log(evt.propertyName + ' removed node with key: ' + e.oldValue.key);
+          this.removeNode(e.oldValue.key);
         }
         console.log(this.tree);
       });
@@ -526,10 +528,9 @@ export class TreeStudioComponent implements OnInit {
     if (!node) { return; }
     const selectedNodeData = node.data;
     if (!selectedNodeData.key) { return ; }
-    console.log('asdfsaf=>', this.tree.nodes);
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
     this.showForm(this.currentNode.key);
-    console.log('Current Node', this.currentNode);
+    // console.log('Current Node', this.currentNode);
   }
 
   updateMessageTitle() {
@@ -539,9 +540,9 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  deleteNode() {
-    // TODO :add delete code
-    console.log('delete node');
+  removeNode(key: string) {
+    const index = this.tree.nodes.findIndex(x => x.key === key)
+    this.tree.nodes.splice(index, 1)
   }
 
   copyNode() {
@@ -671,7 +672,7 @@ export class TreeStudioComponent implements OnInit {
 
   private processNewTree(node: string): Array<BlockNode> {
     node = unescape(node);
-    console.log('unescape =>', node)
+    // console.log('unescape =>', node)
     // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node);
