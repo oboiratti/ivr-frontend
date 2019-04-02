@@ -160,6 +160,15 @@ export class TreeStudioComponent implements OnInit {
       });
     });
 
+    go.Shape.defineFigureGenerator('BottomLeftCorner', (shape, w, h) => {
+      return new go.Geometry()
+        .add(new go.PathFigure(0, 0, false)
+        .add(new go.PathSegment(go.PathSegment.Line, w, 0))
+        .add(new go.PathSegment(go.PathSegment.Line, 0, 0))
+        .add(new go.PathSegment(go.PathSegment.Line, 0, h))
+        .add(new go.PathSegment(go.PathSegment.Line, 0, h)));
+    });
+
     // LINK TEMPLATE
     this.diagram.linkTemplate = $(go.Link, {
         relinkableFrom: true,
@@ -211,7 +220,7 @@ export class TreeStudioComponent implements OnInit {
           $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter },
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fill: '#9895953b',
+              { fill: '#e7e7e7',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
@@ -257,7 +266,7 @@ export class TreeStudioComponent implements OnInit {
           $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter },
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fill: '#9895953b',
+              { fill: '#e7e7e7',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
@@ -303,7 +312,7 @@ export class TreeStudioComponent implements OnInit {
           $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter },
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fill: '#9895953b',
+              { fill: '#e7e7e7',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
@@ -352,17 +361,17 @@ export class TreeStudioComponent implements OnInit {
             itemTemplate: $(go.Panel, 'TableColumn', {
                 fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter, _side: 'bottom'
               }, new go.Binding('portId', 'multifromPortId'),
-                $(go.Shape, 'Rectangle', {
+                $(go.Shape, 'Rectangle', { // BottomLeftCorner
                     fill: '#e7e7e7', stretch: go.GraphObject.Fill,
                     stroke: '#aaa', strokeWidth: 1,
                     cursor: 'pointer', height: 20, width: 50
                   }
                 ),
                 $(go.TextBlock, { height: 13, textAlign: 'center', margin: 5,
-                font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'}, new go.Binding('text', 'choice'))
+                font: 'bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'}, new go.Binding('text', 'choice'))
               )
-        }
-      )
+          }
+        )
     ))
   }
 
