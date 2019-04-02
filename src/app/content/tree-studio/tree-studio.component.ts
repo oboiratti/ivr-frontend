@@ -21,6 +21,7 @@ import { RouteNames } from 'src/app/shared/constants';
 import { TreeConfig } from '../tree-config';
 import { TreeService } from '../shared/tree.service';
 import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
+import { stringify } from 'querystring';
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -356,7 +357,7 @@ export class TreeStudioComponent implements OnInit {
   }
 
   isFirstNode() {
-    return (this.tree.nodes.length > 0) ? false : true;
+    return (this.tree.nodes.length > 0 || this.tree.nodes != null) ? false : true;
   }
 
   makeStartNode() {
@@ -649,7 +650,7 @@ export class TreeStudioComponent implements OnInit {
       this.blockUi.stop();
       if (res.success) {
         const tree = res.data;
-        tree.nodes =  this.processNewTree(res.data.nodes);
+        tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
         if ( res.data.treeModel != null) {
           this.diagram.model = go.Model.fromJson(res.data.treeModel)
         }
@@ -665,7 +666,7 @@ export class TreeStudioComponent implements OnInit {
     console.log('unescape =>', node)
     // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
-    nodes = (node == null) ? [] : JSON.parse(node) ;
+    nodes = (node == null) ? [] : JSON.parse(node);
     return nodes;
   }
 
