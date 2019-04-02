@@ -146,7 +146,10 @@ export class TreeStudioComponent implements OnInit {
         if (e.modelChange !== 'nodeDataArray') { return; }
         // record node insertions and removals
         if (e.change === go.ChangedEvent.Insert) {
+          // TODO :Change event to before copy
           console.log(evt.propertyName + ' added node with key: ' + e.newValue);
+          // let copied = e.newValue;
+          // copied.key = this.generateNodeId();
         }
 
         if (e.change === go.ChangedEvent.Remove) {
@@ -641,7 +644,7 @@ export class TreeStudioComponent implements OnInit {
     const obj = JSON.parse(tree);
     const arr = obj.linkDataArray;
     // this.processConnectionsForSave(arr);
-    return arr;
+    return JSON.stringify(arr);
   }
 
   private processConnectionsForSave(arr: Array<any>) {
