@@ -144,12 +144,17 @@ export class TreeStudioComponent implements OnInit {
       txn.changes.each((e: go.ChangedEvent) => {
         // ignore any kind of change other than adding/removing a node
         if (e.modelChange !== 'nodeDataArray') { return; }
-
         // record node insertions and removals
         if (e.change === go.ChangedEvent.Insert) {
-          console.log(evt.propertyName + ' added node with key: ' + e.newValue.key);
-        } else if (e.change === go.ChangedEvent.Remove) {
+          // TODO :Change event to before copy
+          console.log(evt.propertyName + ' added node with key: ' + e.newValue);
+          // let copied = e.newValue;
+          // copied.key = this.generateNodeId();
+        }
+
+        if (e.change === go.ChangedEvent.Remove) {
           console.log(evt.propertyName + ' removed node with key: ' + e.oldValue.key);
+          this.removeNode(e.oldValue.key);
         }
         console.log(this.tree);
       });
@@ -442,7 +447,12 @@ export class TreeStudioComponent implements OnInit {
       this.diagram.model.setDataProperty(nodedata, 'choice',  curChoice.value);
     }
   }
-   // ADD PORT
+
+  removeChoice(index: number) {
+
+  }
+
+  // ADD PORT
   private addPort(key: string, choice: Choice) {
     this.diagram.startTransaction('addPort');
     const node = this.diagram.findNodeForKey(key);
@@ -523,7 +533,7 @@ export class TreeStudioComponent implements OnInit {
     if (!selectedNodeData.key) { return ; }
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
     this.showForm(this.currentNode.key);
-    console.log('Current Node', this.currentNode);
+    // console.log('Current Node', this.currentNode);
   }
 
   updateMessageTitle() {
@@ -533,12 +543,14 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  deleteNode() {
-
+  removeNode(key: string) {
+    const index = this.tree.nodes.findIndex(x => x.key === key)
+    this.tree.nodes.splice(index, 1)
   }
 
   copyNode() {
-
+    // TODO :add copy code
+    console.log('copy node')
   }
 
   private loadLanguages() {
@@ -618,8 +630,8 @@ export class TreeStudioComponent implements OnInit {
 
   saveTree() {
     this.blockUi.start('Loading...');
-    const tosave = this.tree;
-    tosave.nodes = JSON.stringify(tosave.nodes);
+    const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
+    tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
     tosave.treeModel = this.diagram.model.toJson();
     tosave.connections = this.getConnections(tosave.treeModel);
     this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
@@ -632,7 +644,7 @@ export class TreeStudioComponent implements OnInit {
     const obj = JSON.parse(tree);
     const arr = obj.linkDataArray;
     // this.processConnectionsForSave(arr);
-    return arr;
+    return JSON.stringify(arr);
   }
 
   private processConnectionsForSave(arr: Array<any>) {
@@ -663,7 +675,7 @@ export class TreeStudioComponent implements OnInit {
 
   private processNewTree(node: string): Array<BlockNode> {
     node = unescape(node);
-    console.log('unescape =>', node)
+    // console.log('unescape =>', node)
     // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node);
