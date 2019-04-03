@@ -494,13 +494,13 @@ export class TreeStudioComponent implements OnInit {
     const length = this.currentNode.custom.choices.length;
     this.currentNode.custom.choices.forEach((item, i, array) => {
       item.key = i + 1;
-      /*if (item.key !== length) {
+      if (item.key !== length) {
         const portId = 'bottom_' + this.currentNode.key + '_' + item.key;
         const index = node.data.multiArray.findIndex(x => x.multifromPortId === portId);
         const nodedata = this.diagram.findNodeForKey(this.currentNode.key).data.multiArray[index];
         this.diagram.model.setDataProperty(nodedata, 'multifromPortId',  item.key);
         this.diagram.model.setDataProperty(nodedata, 'choice',  item.value);
-      }*/
+      }
       newChoices.push(item);
       console.log(item);
     });
@@ -688,6 +688,7 @@ export class TreeStudioComponent implements OnInit {
   saveTree() {
     this.blockUi.start('Loading...');
     const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
+    tosave.nodes = this.removeExtraChoices(tosave.nodes)
     tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
     tosave.treeModel = this.diagram.model.toJson();
     tosave.connections = this.getConnections(tosave.treeModel);
@@ -697,6 +698,27 @@ export class TreeStudioComponent implements OnInit {
     }, () => this.blockUi.stop());
   }
 
+  private addExtraChoices(nodes: Array<BlockNode>) {
+    const newNodes: Array<BlockNode> = [];
+    nodes.forEach((node, index, array) => {
+      if ( node.type === TreeConfig.nodeTypes.multichoice) {
+        node.custom.choices.push({key: node.custom.choices.length + 1, value: '', weight: 0 })
+      }
+      newNodes.push(node);
+    });
+    return newNodes;
+  }
+
+  private removeExtraChoices(nodes: Array<BlockNode>) {
+    const newNodes: Array<BlockNode> = [];
+    nodes.forEach((node, index, array) => {
+      if ( node.type === TreeConfig.nodeTypes.multichoice) {
+        node.custom.choices.splice(node.custom.choices.length - 1, 1)
+      }
+      newNodes.push(node);
+    });
+    return newNodes;
+  }
   private getConnections(tree: any) {
     const obj = JSON.parse(tree);
     const arr = obj.linkDataArray;
@@ -735,7 +757,7 @@ export class TreeStudioComponent implements OnInit {
     node = unescape(node);
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node);
-    return nodes;
+    return this.addExtraChoices(nodes);
   }
 
   private processNewConnections(connection: string): Array<Connection> {
