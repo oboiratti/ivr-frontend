@@ -121,9 +121,9 @@
                                                 <div class="input-group-prepend"><span class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
                                                 <input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value" name="currentNode.custom.choices[{{i}}].value" (ngModelChange)="addChoice(i+1)">
                                                 <div class="input-group-prepend"><span class="input-group-text">Score</span></div>
-                                                <input class="form-control" type="number" [(ngModel)]="currentNode.custom.choices[i].weight" name="currentNode.custom.choices[{{i}}].weight" (ngModelChange)="addChoice(i+1)">
+                                                <input class="form-control" type="number" [(ngModel)]="currentNode.custom.choices[i].weight" name="currentNode.custom.choices[{{i}}].weight" (ngModelChange)="addChoice(i+1)" [disabled]="(i + 1 === currentNode.custom.choices.length)">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-secondary" type="button" (click)="removeChoice(i)">X</button>
+                                                    <button class="btn btn-secondary" type="button" (click)="removeChoice(i)" [disabled]="(i + 1 === currentNode.custom.choices.length)">X</button>
                                                 </div>
                                             </div>
                                         </div>
