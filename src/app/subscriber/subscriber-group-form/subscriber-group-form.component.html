@@ -38,9 +38,19 @@
           <div class="form-row">
             <div class="form-group col-sm-12">
               <label>Subscribers</label>
-              <ng-select [items]="subscribers$ | async" bindLabel="phoneNumber" bindValue="id" placeholder="Select Subscribers"
-                [clearable]="false" [multiple]="true" formControlName="subscribers"
-                [class.is-invalid]="subscribers.dirty && subscribers.invalid"></ng-select>
+              <ng-select [items]="subscribers$ | async" bindLabel="phoneNumber" bindValue="id"
+                placeholder="Select Subscribers" [clearable]="false" [multiple]="true" [hideSelected]="true"
+                formControlName="subscribers" [class.is-invalid]="subscribers.dirty && subscribers.invalid">
+                <ng-template ng-option-tmp let-item="item">
+                  <span>{{ item.name  + ' - ' + item.phoneNumber}}</span>
+                </ng-template>
+                <ng-template ng-label-tmp let-item="item">
+                  <div class="ng-value-wrapper default">
+                    <span class="ng-value-icon left" (click)="removeSubscriber(item)" *ngIf="item.disabled !== true">×</span>
+                    <span class="ng-value-label">{{ item.name  + ' - ' + item.phoneNumber}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
             </div>
           </div>
 

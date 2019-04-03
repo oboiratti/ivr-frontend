@@ -9,7 +9,7 @@ import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { Subscriber, SubscriberGroup } from '../shared/subscriber.model';
 import { SettingsService } from 'src/app/app-settings/settings/settings.service';
-import { shareReplay, takeUntil } from 'rxjs/operators';
+import { shareReplay, takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-subscriber-form',
@@ -86,6 +86,48 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   closeForm() {
     this.router.navigateByUrl(`${RouteNames.subscriber}/${RouteNames.subscriberList}`)
+  }
+
+  removeFromGroup(group) {
+    MessageDialog.confirm('Remove Group', `Are you sure you want to remove this subscriber from '${group.name}'?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Group...')
+        this.subscriberService.removeSubscriberFromGroup(this.id.value, group.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              const groups = (this.subscriberGroups.value as []).filter((val: any) => val !== group.id)
+              this.subscriberGroups.patchValue(groups)
+            }
+          })
+
+      }
+    })
+  }
+
+  removeCommodity(commodity) {
+    MessageDialog.confirm('Remove Commodity', `Are you sure you want to remove '${commodity.name}' from other commodities?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Commodity...')
+        this.subscriberService.removeSubscriberCommodity(this.id.value, commodity.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              const commodities = (this.otherCommodities.value as []).filter((val: any) => val !== commodity.id)
+              this.subscriberGroups.patchValue(commodities)
+            }
+          })
+
+      }
+    })
   }
 
   get id() { return this.form.get('id') }
@@ -180,7 +222,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           this.form.patchValue(data)
           this.form.patchValue({
             startDate: new Date(data.startDate).toISOString().substring(0, 10),
-            // dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
+            dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
             languageId: data.language.id,
             regionId: data.region.id,
             districtId: data.district.id,

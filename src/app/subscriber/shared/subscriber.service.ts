@@ -113,4 +113,17 @@ export class SubscriberService {
   saveUploadData(params: any[]) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/subscriber/saveuploaddata`, params)
   }
+
+  removeSubscriberFromGroup(subscriberId: number, groupId: number) {
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/subscriber/removegroupbyid?subscriberId=${subscriberId}&groupId=${groupId}`)
+  }
+
+  removeSubscriberCommodity(subscriberId: number, commodityId: number) {
+// tslint:disable-next-line: max-line-length
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/subscriber/removecommoditybyid?subscriberId=${subscriberId}&commodityId=${commodityId}`)
+  }
+
+  removeGroupBySubscriberId(subscriberId: number, groupId: number) {
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/group/removesubscriberbyid?subscriberId=${subscriberId}&groupId=${groupId}`)
+  }
 }
