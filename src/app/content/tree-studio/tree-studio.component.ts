@@ -22,6 +22,7 @@ import { TreeConfig } from '../tree-config';
 import { TreeService } from '../shared/tree.service';
 import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
 import { stringify } from 'querystring';
+import { keyframes } from '@angular/animations';
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -478,11 +479,34 @@ export class TreeStudioComponent implements OnInit {
 
   removeChoice(i: number) {
     // const i = this.tree.nodes.findIndex(x => x.key === choice)
+    console.log('TO remove', i);
     this.currentNode.custom.choices.splice(i, 1);
     const node: go.Node = this.diagram.findNodeForKey(this.currentNode.key);
     const portId = 'bottom_' + this.currentNode.key + '_' + this.currentNode.custom.choices[i].key;
-    // const index = 
     this.diagram.model.removeArrayItem(node.data.multiArray, node.data.multiArray.findIndex(x => x.multifromPortId === portId));
+    this.resetChoiceKeys();
+  }
+
+  private resetChoiceKeys() {
+    const newChoices: Array<Choice> = [];
+    const node: any = this.diagram.findNodeForKey(this.currentNode.key);
+    // const newMultiArray: Array<any> = [];
+    const length = this.currentNode.custom.choices.length;
+    this.currentNode.custom.choices.forEach((item, i, array) => {
+      item.key = i + 1;
+      /*if (item.key !== length) {
+        const portId = 'bottom_' + this.currentNode.key + '_' + item.key;
+        const index = node.data.multiArray.findIndex(x => x.multifromPortId === portId);
+        const nodedata = this.diagram.findNodeForKey(this.currentNode.key).data.multiArray[index];
+        this.diagram.model.setDataProperty(nodedata, 'multifromPortId',  item.key);
+        this.diagram.model.setDataProperty(nodedata, 'choice',  item.value);
+      }*/
+      newChoices.push(item);
+      console.log(item);
+    });
+    console.log(newChoices);
+    this.currentNode.custom.choices = newChoices;
+    // this.diagram.model.insertArrayItem(arr, -1, newMultiArray);
   }
 
   // ADD PORT
