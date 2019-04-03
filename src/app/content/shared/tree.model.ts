@@ -16,7 +16,7 @@ export interface Tree {
     hasSms: boolean;
     startingNodeKey: string;
     nodes: any;
-    connections: Array<Connection>;
+    connections: any;
     treeModel: any;
 }
 
@@ -36,12 +36,14 @@ export interface ServerTree {
     startingNodeKey: string;
     nodes: string;
     connections: string;
-    treeModel:any;
+    treeModel: any;
 }
 
 export interface Connection {
     to: string;
     from: string;
+    fromPort: string;
+    toPort: string;
 }
 
 export interface BlockNode {

@@ -160,6 +160,15 @@ export class TreeStudioComponent implements OnInit {
       });
     });
 
+    go.Shape.defineFigureGenerator('BottomLeftCorner', (shape, w, h) => {
+      return new go.Geometry()
+        .add(new go.PathFigure(0, 0, false)
+        .add(new go.PathSegment(go.PathSegment.Line, w, 0))
+        .add(new go.PathSegment(go.PathSegment.Line, 0, 0))
+        .add(new go.PathSegment(go.PathSegment.Line, 0, h))
+        .add(new go.PathSegment(go.PathSegment.Line, 0, h)));
+    });
+
     // LINK TEMPLATE
     this.diagram.linkTemplate = $(go.Link, {
         relinkableFrom: true,
@@ -183,7 +192,9 @@ export class TreeStudioComponent implements OnInit {
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
         $(go.Shape, 'Rectangle', { // fill: '#f5f5f5'
-          fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
+        fill: $(go.Brush, 'Linear', {
+          0.0: '#fff', 0.80: '#e7e7e7', 0.90: '#f5f5f5'
+        }), desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
@@ -209,7 +220,7 @@ export class TreeStudioComponent implements OnInit {
           $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter },
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fill: '#9895953b',
+              { fill: '#e7e7e7',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
@@ -227,7 +238,9 @@ export class TreeStudioComponent implements OnInit {
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
         $(go.Shape, 'Rectangle', {
-          fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
+          fill: $(go.Brush, 'Linear', {
+            0.0: '#fff', 0.80: '#e7e7e7', 0.90: '#f5f5f5'
+          }), desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
@@ -253,7 +266,7 @@ export class TreeStudioComponent implements OnInit {
           $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter },
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fill: '#9895953b',
+              { fill: '#e7e7e7',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
@@ -271,7 +284,9 @@ export class TreeStudioComponent implements OnInit {
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
         $(go.Shape, 'Rectangle', {
-          fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
+          fill: $(go.Brush, 'Linear', {
+            0.0: '#fff', 0.80: '#e7e7e7', 0.90: '#f5f5f5'
+          }), desiredSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
@@ -297,7 +312,7 @@ export class TreeStudioComponent implements OnInit {
           $(go.Panel, 'Auto', { fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter },
             new go.Binding('portId', 'fromPortId'),
             $(go.Shape, 'Rectangle',
-              { fill: '#9895953b',
+              { fill: '#e7e7e7',
                 stretch: go.GraphObject.Fill, stroke: '#aaa', strokeWidth: 1, width: 150
             }),
             $(go.TextBlock,
@@ -315,7 +330,9 @@ export class TreeStudioComponent implements OnInit {
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
         // First Rectangle
         $(go.Shape, 'Rectangle', {
-          fill: '#f5f5f5', desiredSize: new go.Size(150, 100),
+          fill: $(go.Brush, 'Linear', {
+            0.0: '#fff', 0.80: '#e7e7e7', 0.90: '#f5f5f5'
+          }), minSize: new go.Size(150, 100),
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
@@ -336,23 +353,34 @@ export class TreeStudioComponent implements OnInit {
                 return text;
             }))
         ),
-        $(go.Panel, 'Horizontal',
+        $(go.Panel, 'Table',
           new go.Binding('itemArray', 'multiArray'),
-          { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill,
-          itemTemplate: $(go.Panel, {
-            fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter, _side: 'bottom'
-          }, new go.Binding('portId', 'multifromPortId'),
-            $(go.Shape, 'Rectangle', {
-                fill: '#9895953b', stretch: go.GraphObject.Fill,
-                stroke: '#aaa', strokeWidth: 1,
-                cursor: 'pointer', desiredSize: new go.Size(50, 20)
-              }
-            ),
-            $(go.TextBlock, { height: 13, textAlign: 'center', margin: 5,
-            font: '12px bold Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'}, new go.Binding('text', 'choice'))
-          )
-        }
-      )
+          { alignment: go.Spot.BottomLeft,
+            stretch: go.GraphObject.Fill,
+            // defaultColumnSeparatorStroke: '#aaa',
+            itemTemplate: $(go.Panel, 'TableColumn', {
+                fromLinkable: true, fromLinkableDuplicates: false, fromSpot: go.Spot.BottomCenter, _side: 'bottom'
+              }, new go.Binding('portId', 'multifromPortId'),
+                $(go.Shape, 'Rectangle', { // BottomLeftCorner
+                    fill: '#e7e7e7', stretch: go.GraphObject.Fill,
+                    stroke: '#aaa', strokeWidth: 1,
+                    cursor: 'pointer', height: 20, width: 50
+                  }
+                ),
+                $(go.TextBlock, {
+                  height: 13, textAlign: 'center', margin: 5,
+                  font: 'bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'},
+                  new go.Binding('text', 'choice', (e: string ) => {
+                      let text = e;
+                      if ( text.length > 7) {
+                        text = text.substring(0, 5).concat('..');
+                      }
+                      return text;
+                  })
+                )
+              )
+          }
+        )
     ))
   }
 
@@ -408,7 +436,7 @@ export class TreeStudioComponent implements OnInit {
         repeatKey: '2', // Key to press to repeat
         repeatDelay: '7',  // Seconds before repeat
         repeatMax: '3',
-        choices: [{key: 1, value: '1'}],
+        choices: [{key: 1, value: ''}],
         choiceKeypresses: {},
         branching: true,
         addExitForNoResponse : false
@@ -448,8 +476,13 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  removeChoice(index: number) {
-
+  removeChoice(i: number) {
+    // const i = this.tree.nodes.findIndex(x => x.key === choice)
+    this.currentNode.custom.choices.splice(i, 1);
+    const node: go.Node = this.diagram.findNodeForKey(this.currentNode.key);
+    const portId = 'bottom_' + this.currentNode.key + '_' + this.currentNode.custom.choices[i].key;
+    // const index = 
+    this.diagram.model.removeArrayItem(node.data.multiArray, node.data.multiArray.findIndex(x => x.multifromPortId === portId));
   }
 
   // ADD PORT
@@ -663,6 +696,7 @@ export class TreeStudioComponent implements OnInit {
       if (res.success) {
         const tree = res.data;
         tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
+        // tree.connections = (tree.connections === null) ? tree.connections = [] : this.processNewConnections(res.data.connections);
         if ( res.data.treeModel != null) {
           this.diagram.model = go.Model.fromJson(res.data.treeModel)
         }
@@ -675,11 +709,16 @@ export class TreeStudioComponent implements OnInit {
 
   private processNewTree(node: string): Array<BlockNode> {
     node = unescape(node);
-    // console.log('unescape =>', node)
-    // node = JSON.parse(node);
     let nodes: Array<BlockNode>;
     nodes = (node == null) ? [] : JSON.parse(node);
     return nodes;
+  }
+
+  private processNewConnections(connection: string): Array<Connection> {
+    connection = unescape(connection);
+    let connections: Array<Connection>;
+    connections = (connection == null) ? [] : JSON.parse(connection);
+    return connections;
   }
 
   private loadAudios() {
