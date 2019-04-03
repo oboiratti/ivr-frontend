@@ -28,8 +28,6 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   groups$: Observable<SubscriberGroup[]>
   unsubscribe$ = new Subject<void>();
   @BlockUI() blockUi: NgBlockUI
-  saveSubscription: Subscription
-  findSubscription: Subscription
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -76,7 +74,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     params.subscriberCommodities.push({ commodityId: params.primaryCommodity, isPrimaryCommodity: true })
 
     this.blockUi.start('Saving...')
-    this.saveSubscription = this.subscriberService.saveSubscriber(formData)
+    this.subscriberService.saveSubscriber(formData)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockUi.stop()
@@ -213,12 +211,10 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   private findSubscriber(id: number) {
     this.blockUi.start('Loading...')
-    this.findSubscription = this.subscriberService.findSubscriber(id)
+    this.subscriberService.findSubscriber(id)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(res => {
+      .subscribe(data => {
         this.blockUi.stop()
-        if (res.success) {
-          const data = res.data
           this.form.patchValue(data)
           this.form.patchValue({
             startDate: new Date(data.startDate).toISOString().substring(0, 10),
@@ -229,15 +225,12 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
             educationLevelId: data.educationalLevel.educationLevelId,
             subscriberTypeId: data.subscriberType.subscriberTypeId,
             subscriberGroups: data.subscriberGroups.map(grp => grp.groupId),
-            primaryCommodity: data.subscriberCommodities ? data.subscriberCommodities
-              .find(elm => elm.isPricipalCommodity === true).commodityId : null,
-            otherCommodities: data.subscriberCommodities ? data.subscriberCommodities
-              .filter(elm => elm.isPricipalCommodity === false)
+            primaryCommodity: data.primaryComodity.commodityId,
+            otherCommodities: data.otherCommodities ? data.otherCommodities
               .map(elm => {
                 return { id: elm.commodityId, name: elm.commodity }
               }) : null
           })
-        }
       }, () => this.blockUi.stop())
   }
 

@@ -65,6 +65,10 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
     });
   }
 
+  view(id: number) {
+    this.router.navigateByUrl(`${RouteNames.subscriber}/${RouteNames.subscriberDetails}/${id}`);
+  }
+
   pageChanged(page: number) {
     this.currentPage = page;
     this.lastFilter.pager.page = page;

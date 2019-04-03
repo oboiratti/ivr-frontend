@@ -14,6 +14,8 @@ export interface Subscriber {
     district: District
     educationalLevel: any
     subscriberType: any
+    primaryComodity: any
+    otherCommodities: any[]
     subscriberCommodities: any[],
     subscriberGroups: SubscriberGroup[]
 }

@@ -17,11 +17,11 @@ export class SubscriberService {
 
   fetchDistrictsByRegion(regionId: number) {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/district/getdistricts?regionId=${regionId}`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data }
-      })
-    )
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
   }
 
   fetchSubscribers() {
@@ -47,6 +47,13 @@ export class SubscriberService {
 
   findSubscriber(id: number) {
     return this.http.get<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/get/${id}`)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            return res.data
+          }
+        })
+      )
   }
 
   deleteSubscriber(id: number) {
@@ -94,11 +101,11 @@ export class SubscriberService {
 
   fetchCommoditiesBySubscriberType(subscriberTypeId: number) {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/commodity/getcommodities?subscriberTypeId=${subscriberTypeId}`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data }
-      })
-    )
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
   }
 
   downloadTemplate() {
@@ -119,7 +126,7 @@ export class SubscriberService {
   }
 
   removeSubscriberCommodity(subscriberId: number, commodityId: number) {
-// tslint:disable-next-line: max-line-length
+    // tslint:disable-next-line: max-line-length
     return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/subscriber/removecommoditybyid?subscriberId=${subscriberId}&commodityId=${commodityId}`)
   }
 

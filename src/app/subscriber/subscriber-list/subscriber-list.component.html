@@ -49,6 +49,7 @@
               <td>{{subscriber.subscriberType.name}}</td>
               <!-- <td>Yes</td> -->
               <td>
+                <a class="pointer" (click)="view(subscriber.id)"><i class="fa fa-eye"></i></a> &nbsp;
                 <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(subscriber.id)"><i class="fa fa-trash"></i></a>
               </td>

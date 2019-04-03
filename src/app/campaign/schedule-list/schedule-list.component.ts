@@ -21,6 +21,7 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   unsubscribe$ = new Subject<void>()
   @BlockUI() blockUi: NgBlockUI
   lastFilter: CampaignScheduleQuery
+  title = ''
   filter = <CampaignScheduleQuery>{}
   campaignId: number
   pageSizes = [10, 20, 50, 100]

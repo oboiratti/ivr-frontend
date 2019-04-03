@@ -44,4 +44,7 @@ export interface CampaignSchedule {
 
 export interface CampaignScheduleQuery extends ModelQuery {
     campaignId: number
+    topicId: number
+    receipientType: string
+    scheduleType: string
 }
