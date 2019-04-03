@@ -367,8 +367,17 @@ export class TreeStudioComponent implements OnInit {
                     cursor: 'pointer', height: 20, width: 50
                   }
                 ),
-                $(go.TextBlock, { height: 13, textAlign: 'center', margin: 5,
-                font: 'bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'}, new go.Binding('text', 'choice'))
+                $(go.TextBlock, {
+                  height: 13, textAlign: 'center', margin: 5,
+                  font: 'bold 11px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'},
+                  new go.Binding('text', 'choice', (e: string ) => {
+                      let text = e;
+                      if ( text.length > 7) {
+                        text = text.substring(0, 5).concat('..');
+                      }
+                      return text;
+                  })
+                )
               )
           }
         )
@@ -427,7 +436,7 @@ export class TreeStudioComponent implements OnInit {
         repeatKey: '2', // Key to press to repeat
         repeatDelay: '7',  // Seconds before repeat
         repeatMax: '3',
-        choices: [{key: 1, value: '1'}],
+        choices: [{key: 1, value: ''}],
         choiceKeypresses: {},
         branching: true,
         addExitForNoResponse : false
@@ -467,8 +476,13 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  removeChoice(index: number) {
-
+  removeChoice(i: number) {
+    // const i = this.tree.nodes.findIndex(x => x.key === choice)
+    this.currentNode.custom.choices.splice(i, 1);
+    const node: go.Node = this.diagram.findNodeForKey(this.currentNode.key);
+    const portId = 'bottom_' + this.currentNode.key + '_' + this.currentNode.custom.choices[i].key;
+    // const index = 
+    this.diagram.model.removeArrayItem(node.data.multiArray, node.data.multiArray.findIndex(x => x.multifromPortId === portId));
   }
 
   // ADD PORT

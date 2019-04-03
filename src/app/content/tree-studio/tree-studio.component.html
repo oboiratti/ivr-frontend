@@ -120,6 +120,9 @@
                                             <div class="input-group" *ngFor="let choice of currentNode.custom.choices; let i = index;" style="margin-bottom: 5px;">
                                                 <div class="input-group-prepend"><span class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
                                                 <input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value" name="currentNode.custom.choices[{{i}}]" (ngModelChange)="addChoice(i+1)">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-secondary" type="button" (click)="removeChoice(i)">X</button>
+                                                </div>
                                             </div>
                                         </div>
 
