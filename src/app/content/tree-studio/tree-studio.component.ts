@@ -437,7 +437,7 @@ export class TreeStudioComponent implements OnInit {
         repeatKey: '2', // Key to press to repeat
         repeatDelay: '7',  // Seconds before repeat
         repeatMax: '3',
-        choices: [{key: 1, value: ''}],
+        choices: [{key: 1, value: '', weight: 0 }],
         choiceKeypresses: {},
         branching: true,
         addExitForNoResponse : false
@@ -463,7 +463,7 @@ export class TreeStudioComponent implements OnInit {
   addChoice(i: number) {
     const num: number = this.currentNode.custom.choices.length;
     if (num === i ) {
-      this.currentNode.custom.choices.push({ key: num + 1, value : '' });
+      this.currentNode.custom.choices.push({ key: num + 1, value : '', weight: 0 });
       const name: number = num + 1;
       this.addPort(this.currentNode.key, this.currentNode.custom.choices[num - 1]);
     } else {

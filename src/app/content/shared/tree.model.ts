@@ -80,6 +80,7 @@ export interface Multichoice {
 export interface Choice {
     key: number;
     value: string;
+    weight: number;
 }
 
 export interface Openended {
