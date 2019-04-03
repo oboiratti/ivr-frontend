@@ -84,4 +84,13 @@ export class CampaignService {
   deleteCampaignSchedule(id: number) {
     return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/delete/${id}`)
   }
+
+  removeGroupFromSchedule(scheduleId: number, groupId: number) {
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/removegroupbyid?scheduleId=${scheduleId}&groupId=${groupId}`)
+  }
+
+  removeSubscriberFromSchedule(scheduleId: number, subscriberId: number) {
+// tslint:disable-next-line: max-line-length
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/removesubscriberbyid?scheduleId=${scheduleId}&subscriberId=${subscriberId}`)
+  }
 }

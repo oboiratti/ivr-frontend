@@ -13,6 +13,7 @@ import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
 import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
 import { Campaign } from '../shared/campaign.models';
+import { MessageDialog } from 'src/app/shared/message_helper';
 
 @Component({
   selector: 'app-schedule-form',
@@ -72,7 +73,6 @@ export class ScheduleFormComponent implements OnInit {
 
   save(formData: any) {
     const params = this.buildJsonRequest(formData)
-    console.log(params);
     this.blockUi.start('Saving...')
     this.campaignService.saveCampaignSchedule(params)
     .pipe(takeUntil(this.unsubscribe$))
@@ -86,6 +86,49 @@ export class ScheduleFormComponent implements OnInit {
     this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.id}/${RouteNames.schedules}`)
   }
 
+  removeGroup(group) {
+    MessageDialog.confirm('Remove Group', `Are you sure you want to remove '${group.name}' from this schedule?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Group...')
+        this.campaignService.removeGroupFromSchedule(this.idc.value, group.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              const groups = (this.groupIds.value as []).filter((val: any) => val !== group.id)
+              this.groupIds.patchValue(groups)
+            }
+          })
+
+      }
+    })
+  }
+
+  removeSubscriber(subscriber) {
+    MessageDialog.confirm('Remove Subscriber', `Are you sure you want to remove '${subscriber.name}' from this schedule?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Subscriber...')
+        this.campaignService.removeSubscriberFromSchedule(this.idc.value, subscriber.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              const subscribers = (this.subscriberIds.value as []).filter((val: any) => val !== subscriber.id)
+              this.subscriberIds.patchValue(subscribers)
+            }
+          })
+
+      }
+    })
+  }
+
+  get idc() { return this.form.get('id') }
   get pillarId() { return this.form.get('pillarId') }
   get topicId() { return this.form.get('topicId') }
   get recipientType() { return this.form.get('recipientType') }
@@ -231,8 +274,6 @@ export class ScheduleFormComponent implements OnInit {
         this.doToggle()
         const data = res.data
         data.advancedOptions = JSON.parse(data.advancedOptions)
-        console.log(data);
-
         this.form.patchValue(data)
         this.form.patchValue({
           pillarId: data.pillar.id,
