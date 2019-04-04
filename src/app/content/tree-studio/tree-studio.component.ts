@@ -48,6 +48,7 @@ export class TreeStudioComponent implements OnInit {
   audios: Array<Media>;
   tree: Tree;
   isEdit: boolean;
+  hasSelected: boolean;
 
   private currentNode: BlockNode;
   private multiNode: Multichoice;
@@ -123,7 +124,9 @@ export class TreeStudioComponent implements OnInit {
         this.loadNode(node);
         this.showForm(node.category);
         this.nodeSelected.emit(node instanceof go.Node ? node : null);
+        this.hasSelected = true;
       } else {
+        this.hasSelected = false;
         this.showTreeForm();
       }
     });
@@ -589,11 +592,20 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  removeNode(key: string) {
+  private removeNode(key: string) {
     const index = this.tree.nodes.findIndex(x => x.key === key)
     this.tree.nodes.splice(index, 1)
   }
 
+  deleteNode() {
+    if (this.currentNode == null) { return ; }
+    const node = this.diagram.findNodeForKey(this.currentNode.key);
+    if (node !== null) {
+      this.diagram.startTransaction('deleting node => ' + this.currentNode.key);
+      this.diagram.remove(node);
+      this.diagram.commitTransaction('deleted node => ' + this.currentNode.key);
+    }
+  }
   copyNode() {
     // TODO :add copy code
     console.log('copy node')

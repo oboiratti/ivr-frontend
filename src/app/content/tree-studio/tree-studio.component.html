@@ -12,9 +12,14 @@
           <!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
         </div>
 
-        <button class="btn btn-light btn text-dark border rounded float-left" type="button"
+				<button 
+					class="btn btn-light btn text-dark border rounded float-left" type="button"
+					[disabled] = "!hasSelected"
           style="margin-right: 5px;">Duplicate</button>
-        <button class="btn btn-light btn text-dark border rounded float-left" type="button"
+				<button 
+					class="btn btn-light btn text-dark border rounded float-left" type="button"
+					(click)="deleteNode()" 
+					[disabled] = "!hasSelected"
           style="margin-right: 3px;">Delete</button>
 
         <button class="btn btn-light btn text-dark border rounded float-left" type="button" style="margin-right: 5px;"
