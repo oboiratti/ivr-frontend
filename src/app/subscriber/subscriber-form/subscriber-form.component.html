@@ -96,7 +96,7 @@
             <div class="form-group col-sm-12 col-md-6">
               <label>Region</label>
               <ng-select [items]="regions$ | async" bindLabel="name" bindValue="id" placeholder="Select Region"
-                [clearable]="false" formControlName="regionId"
+                [clearable]="false" [loading]="loadingRegions" formControlName="regionId"
                 [class.invalid-input]="regionId.dirty && regionId.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="regionId.dirty && regionId.errors">
                 This field is required
@@ -106,7 +106,7 @@
             <div class="form-group col-sm-12 col-md-6">
               <label>District</label>
               <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
-                [clearable]="false" formControlName="districtId"
+                [clearable]="false" [loading]="loadingDistricts" formControlName="districtId"
                 [class.invalid-input]="districtId.dirty && districtId.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="districtId.dirty && districtId.errors">
                 This field is required
@@ -132,7 +132,7 @@
             <div class="form-group col-sm-12 col-md-6">
               <label>Subscriber Type</label>
               <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id"
-                placeholder="Select Subscriber Type" [clearable]="false" formControlName="subscriberTypeId"
+                placeholder="Select Subscriber Type" [clearable]="false" [loading]="loadingSubscriberTypes" formControlName="subscriberTypeId"
                 [class.invalid-input]="subscriberTypeId.dirty && subscriberTypeId.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="subscriberTypeId.dirty && subscriberTypeId.errors">
                 This field is required
@@ -142,7 +142,7 @@
             <div class="form-group col-sm-12 col-md-6">
               <label>Primary Commodity</label>
               <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id"
-                placeholder="Select Primary Commodity" [clearable]="false" formControlName="primaryCommodity"
+                placeholder="Select Primary Commodity" [clearable]="false" [loading]="loadingCommodities" formControlName="primaryCommodity"
                 [class.invalid-input]="primaryCommodity.dirty && primaryCommodity.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="primaryCommodity.dirty && primaryCommodity.errors">
                 This field is required
@@ -154,7 +154,7 @@
             <div class="form-group col-sm-12 col-md-6">
               <label>Other Commodities</label>
               <ng-select [items]="commodities$ | async" bindLabel="name" placeholder="Select Other Commodities"
-                [clearable]="false" [multiple]="true" formControlName="otherCommodities"
+                [clearable]="false" [multiple]="true" [loading]="loadingCommodities" formControlName="otherCommodities"
                 [class.is-invalid]="otherCommodities.dirty && otherCommodities.invalid">
                 <ng-template ng-label-tmp let-item="item">
                   <div class="ng-value-wrapper default">
@@ -220,7 +220,7 @@
             <div class="form-group col-sm-12">
               <label>Subscriber Group</label>
               <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
-                [clearable]="false" [multiple]="true" formControlName="subscriberGroups"
+                [multiple]="true" [loading]="loadingGroups" formControlName="subscriberGroups"
                 [class.is-invalid]="subscriberGroups.dirty && subscriberGroups.invalid">
                 <ng-template ng-label-tmp let-item="item">
                   <div class="ng-value-wrapper default">

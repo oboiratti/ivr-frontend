@@ -30,6 +30,11 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   @BlockUI() blockUi: NgBlockUI
   subscriberGroupsCopy: any[]
   otherCommoditiesCopy: any[]
+  loadingRegions: boolean
+  loadingDistricts: boolean
+  loadingSubscriberTypes: boolean
+  loadingCommodities: boolean
+  loadingGroups: boolean
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -208,11 +213,17 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   private loadDistrictsInRegion(regionId: number) {
-    this.districts$ = this.subscriberService.fetchDistrictsByRegion(regionId)
+    this.loadingDistricts = true
+    this.districts$ = this.subscriberService.fetchDistrictsByRegion(regionId).pipe(
+      finalize(() => this.loadingDistricts = false)
+    )
   }
 
   private loadRegions() {
-    this.regions$ = this.settingsService.fetch2('region')
+    this.loadingRegions = true
+    this.regions$ = this.settingsService.fetch2('region').pipe(
+      finalize(() => this.loadingRegions = false)
+    )
   }
 
   private loadEducationalLevels() {
@@ -220,15 +231,26 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   private loadSubscriberTypes() {
-    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
+    this.loadingSubscriberTypes = true
+    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype').pipe(
+      finalize(() => this.loadingSubscriberTypes = false)
+    )
   }
 
   private loadSubscriberTypeCommodities(subscriberTypeId: number) {
-    this.commodities$ = this.subscriberService.fetchCommoditiesBySubscriberType(subscriberTypeId).pipe(shareReplay(1))
+    this.loadingCommodities = true
+    this.commodities$ = this.subscriberService.fetchCommoditiesBySubscriberType(subscriberTypeId)
+      .pipe(
+        shareReplay(1),
+        finalize(() => this.loadingCommodities = false)
+      )
   }
 
   private loadGroups() {
-    this.groups$ = this.subscriberService.fetchSubscriberGroups()
+    this.loadingGroups = true
+    this.groups$ = this.subscriberService.fetchSubscriberGroups().pipe(
+      finalize(() => this.loadingGroups = false)
+    )
   }
 
   private findSubscriber(id: number) {
@@ -299,12 +321,10 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((value: []) => {
         if (value && this.primaryCommodity.value) {
-          const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+          const match: any = value.find((elm: any) => elm.id === this.primaryCommodity.value)
+          if (match) {
+            MessageDialog.error(`${match.name} has already been added as a primary commodity`)
+            this.patchOtherCommodities(match.id, { emitEvent: false })
           }
         }
       })
@@ -315,12 +335,10 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((value: any) => {
         if (value && this.otherCommodities.value) {
-          const index: any = this.otherCommodities.value.findIndex((elm: any) => elm.id === value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.warning(`${obj.name} has been removed from other commodities`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+          const match: any = this.otherCommodities.value.find((elm: any) => elm.id === value)
+          if (match) {
+            MessageDialog.warning(`${match.name} has been removed from other commodities`)
+            this.patchOtherCommodities(match.id, { emitEvent: false })
           }
         }
       })
@@ -331,8 +349,8 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     this.subscriberGroups.patchValue(groups);
   }
 
-  private patchOtherCommodities(commodityId: number) {
+  private patchOtherCommodities(commodityId: number, options?: Object) {
     const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodityId);
-    this.otherCommodities.patchValue(commodities);
+    this.otherCommodities.patchValue(commodities, options);
   }
 }
