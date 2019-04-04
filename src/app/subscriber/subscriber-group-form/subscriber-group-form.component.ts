@@ -20,6 +20,7 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   subscribers$: Observable<Subscriber[]>
   @BlockUI() blockUi: NgBlockUI
   unsubscribe$ = new Subject<void>()
+  subscribersCopy: any[]
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -60,8 +61,13 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
 
   removeSubscriber(subscriber) {
     if (!this.id.value) {
-      const subscribers = (this.subscribers.value as []).filter((val: any) => val !== subscriber.id)
-      this.subscribers.patchValue(subscribers)
+      this.patchSubscribers(subscriber.id)
+      return
+    }
+
+    const match = this.subscribersCopy.some((val: any) => val === subscriber.id)
+    if (!match) {
+      this.patchSubscribers(subscriber.id)
       return
     }
 
@@ -76,8 +82,7 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
           .subscribe(res => {
             if (res.success) {
               this.blockUi.stop()
-              const subscribers = (this.subscribers.value as []).filter((val: any) => val !== subscriber.id)
-              this.subscribers.patchValue(subscribers)
+              this.patchSubscribers(subscriber.id)
             }
           })
 
@@ -113,7 +118,15 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockUi.stop()
-        if (res.success) { this.form.patchValue(res.data) }
+        if (res.success) {
+          this.form.patchValue(res.data)
+          this.subscribersCopy = res.data.subscribers
+        }
       }, () => this.blockUi.stop())
+  }
+
+  private patchSubscribers(subscriberId: number) {
+    const subscribers = (this.subscribers.value as []).filter((val: any) => val !== subscriberId);
+    this.subscribers.patchValue(subscribers);
   }
 }
