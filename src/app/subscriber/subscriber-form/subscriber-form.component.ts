@@ -28,6 +28,8 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   groups$: Observable<SubscriberGroup[]>
   unsubscribe$ = new Subject<void>();
   @BlockUI() blockUi: NgBlockUI
+  subscriberGroupsCopy: any[]
+  otherCommoditiesCopy: any[]
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -88,8 +90,13 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   removeFromGroup(group) {
     if (!this.id.value) {
-      const groups = (this.subscriberGroups.value as []).filter((val: any) => val !== group.id)
-      this.subscriberGroups.patchValue(groups)
+      this.patchSubscriberGroups(group.id)
+      return
+    }
+
+    const match = this.subscriberGroupsCopy.some((val: any) => val === group.id)
+    if (!match) {
+      this.patchSubscriberGroups(group.id)
       return
     }
 
@@ -104,8 +111,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           .subscribe(res => {
             if (res.success) {
               this.blockUi.stop()
-              const groups = (this.subscriberGroups.value as []).filter((val: any) => val !== group.id)
-              this.subscriberGroups.patchValue(groups)
+              this.patchSubscriberGroups(group.id)
             }
           })
 
@@ -115,8 +121,13 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   removeCommodity(commodity) {
     if (!this.id.value) {
-      const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodity.id)
-      this.otherCommodities.patchValue(commodities)
+      this.patchOtherCommodities(commodity.id)
+      return
+    }
+
+    const match = this.otherCommoditiesCopy.some((val: any) => val.id === commodity.id)
+    if (!match) {
+      this.patchOtherCommodities(commodity.id)
       return
     }
 
@@ -131,8 +142,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           .subscribe(res => {
             if (res.success) {
               this.blockUi.stop()
-              const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodity.id)
-              this.otherCommodities.patchValue(commodities)
+              this.patchOtherCommodities(commodity.id)
             }
           })
 
@@ -227,6 +237,11 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
         this.blockUi.stop()
+        this.subscriberGroupsCopy = data.subscriberGroups ? data.subscriberGroups.map(grp => grp.groupId) : null
+        this.otherCommoditiesCopy = data.otherCommodities ? data.otherCommodities
+          .map(elm => {
+            return { id: elm.commodityId, name: elm.commodity }
+          }) : null
         this.form.patchValue(data)
         this.form.patchValue({
           startDate: new Date(data.startDate).toISOString().substring(0, 10),
@@ -236,12 +251,9 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           districtId: data.district.id,
           educationLevelId: data.educationalLevel.educationLevelId,
           subscriberTypeId: data.subscriberType.subscriberTypeId,
-          subscriberGroups: data.subscriberGroups.map(grp => grp.groupId),
+          subscriberGroups: this.subscriberGroupsCopy,
           primaryCommodity: data.primaryComodity.commodityId,
-          otherCommodities: data.otherCommodities ? data.otherCommodities
-            .map(elm => {
-              return { id: elm.commodityId, name: elm.commodity }
-            }) : null
+          otherCommodities: this.otherCommoditiesCopy
         })
       }, () => this.blockUi.stop())
   }
@@ -312,5 +324,15 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           }
         }
       })
+  }
+
+  private patchSubscriberGroups(groupId: number) {
+    const groups = (this.subscriberGroups.value as []).filter((val: any) => val !== groupId);
+    this.subscriberGroups.patchValue(groups);
+  }
+
+  private patchOtherCommodities(commodityId: number) {
+    const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodityId);
+    this.otherCommodities.patchValue(commodities);
   }
 }

@@ -148,16 +148,6 @@ export class ScheduleFormComponent implements OnInit {
     })
   }
 
-  private patchGroupIds(groupId: number) {
-    const groups = (this.groupIds.value as []).filter((val: any) => val !== groupId);
-    this.groupIds.patchValue(groups);
-  }
-
-  private patchSubscriberIds(subscriberId: number) {
-    const subscribers = (this.subscriberIds.value as []).filter((val: any) => val !== subscriberId);
-    this.subscriberIds.patchValue(subscribers);
-  }
-
   get idc() { return this.form.get('id') }
   get pillarId() { return this.form.get('pillarId') }
   get topicId() { return this.form.get('topicId') }
@@ -322,5 +312,15 @@ export class ScheduleFormComponent implements OnInit {
           })
         }
       })
+  }
+
+  private patchGroupIds(groupId: number) {
+    const groups = (this.groupIds.value as []).filter((val: any) => val !== groupId);
+    this.groupIds.patchValue(groups);
+  }
+
+  private patchSubscriberIds(subscriberId: number) {
+    const subscribers = (this.subscriberIds.value as []).filter((val: any) => val !== subscriberId);
+    this.subscriberIds.patchValue(subscribers);
   }
 }
