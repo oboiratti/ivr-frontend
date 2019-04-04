@@ -479,12 +479,13 @@ export class TreeStudioComponent implements OnInit {
 
   removeChoice(i: number) {
     // const i = this.tree.nodes.findIndex(x => x.key === choice)
-    console.log('TO remove', i);
     this.currentNode.custom.choices.splice(i, 1);
+    const length = this.currentNode.custom.choices.length;
+    this.currentNode.custom.choices[length - 1].key = length;
     const node: go.Node = this.diagram.findNodeForKey(this.currentNode.key);
     const portId = 'bottom_' + this.currentNode.key + '_' + this.currentNode.custom.choices[i].key;
     this.diagram.model.removeArrayItem(node.data.multiArray, node.data.multiArray.findIndex(x => x.multifromPortId === portId));
-    this.resetChoiceKeys();
+    // this.resetChoiceKeys();
   }
 
   private resetChoiceKeys() {
@@ -618,6 +619,94 @@ export class TreeStudioComponent implements OnInit {
     this.tags = this.mediaService.fetchTags();
   }
 
+  saveTree() {
+    this.blockUi.start('Loading...');
+    const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
+    tosave.nodes = this.removeExtraChoices(tosave.nodes)
+    tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
+    tosave.treeModel = this.diagram.model.toJson();
+    tosave.connections = this.getConnections(tosave.treeModel);
+    this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
+      this.blockUi.stop();
+      if (res.success) { }
+    }, () => this.blockUi.stop());
+  }
+
+  private addExtraChoices(nodes: Array<BlockNode>) {
+    const newNodes: Array<BlockNode> = [];
+    nodes.forEach((node, index, array) => {
+      if ( node.type === TreeConfig.nodeTypes.multichoice) {
+        node.custom.choices.push({key: node.custom.choices.length + 1, value: '', weight: 0 })
+      }
+      newNodes.push(node);
+    });
+    return newNodes;
+  }
+
+  private removeExtraChoices(nodes: Array<BlockNode>) {
+    const newNodes: Array<BlockNode> = [];
+    nodes.forEach((node, index, array) => {
+      if ( node.type === TreeConfig.nodeTypes.multichoice) {
+        node.custom.choices.splice(node.custom.choices.length - 1, 1)
+      }
+      newNodes.push(node);
+    });
+    return newNodes;
+  }
+
+  private getConnections(tree: any) {
+    const obj = JSON.parse(tree);
+    const arr = obj.linkDataArray;
+    // this.processConnectionsForSave(arr);
+    return JSON.stringify(arr);
+  }
+
+  private processConnectionsForSave(arr: Array<any>) {
+    const nodes = this.tree.nodes;
+    nodes.forEach((node: BlockNode) => {
+      if (arr.findIndex(x => x.to === node.key) === -1) {
+        console.log('First => ', node.custom.title);
+      }
+    });
+  }
+
+  private loadTree(id: number) {
+    this.blockUi.start('Loading...');
+    this.findSubscription = this.treeService.findTree(id).subscribe(res => {
+      this.blockUi.stop();
+      if (res.success) {
+        const tree = res.data;
+        tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
+        // tree.connections = (tree.connections === null) ? tree.connections = [] : this.processNewConnections(res.data.connections);
+        if ( res.data.treeModel != null) {
+          this.diagram.model = go.Model.fromJson(res.data.treeModel)
+        }
+        this.tree = tree;
+        console.log('TREE => ', this.tree)
+        this.loadAudios();
+      }
+    }, () => this.blockUi.stop());
+  }
+
+  private processNewTree(node: string): Array<BlockNode> {
+    node = unescape(node);
+    let nodes: Array<BlockNode>;
+    nodes = (node == null) ? [] : JSON.parse(node);
+    return this.addExtraChoices(nodes);
+  }
+
+  private processNewConnections(connection: string): Array<Connection> {
+    connection = unescape(connection);
+    let connections: Array<Connection>;
+    connections = (connection == null) ? [] : JSON.parse(connection);
+    return connections;
+  }
+
+  private loadAudios() {
+    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
+      this.audios = res;
+    });
+  }
 
   // UTILITY FUNCTIONS
   // Show Forms
@@ -683,94 +772,6 @@ export class TreeStudioComponent implements OnInit {
     this.multiForm = false;
     this.treeForm = false;
     this.numericForm = true;
-  }
-
-  saveTree() {
-    this.blockUi.start('Loading...');
-    const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
-    tosave.nodes = this.removeExtraChoices(tosave.nodes)
-    tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
-    tosave.treeModel = this.diagram.model.toJson();
-    tosave.connections = this.getConnections(tosave.treeModel);
-    this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
-      this.blockUi.stop();
-      if (res.success) { }
-    }, () => this.blockUi.stop());
-  }
-
-  private addExtraChoices(nodes: Array<BlockNode>) {
-    const newNodes: Array<BlockNode> = [];
-    nodes.forEach((node, index, array) => {
-      if ( node.type === TreeConfig.nodeTypes.multichoice) {
-        node.custom.choices.push({key: node.custom.choices.length + 1, value: '', weight: 0 })
-      }
-      newNodes.push(node);
-    });
-    return newNodes;
-  }
-
-  private removeExtraChoices(nodes: Array<BlockNode>) {
-    const newNodes: Array<BlockNode> = [];
-    nodes.forEach((node, index, array) => {
-      if ( node.type === TreeConfig.nodeTypes.multichoice) {
-        node.custom.choices.splice(node.custom.choices.length - 1, 1)
-      }
-      newNodes.push(node);
-    });
-    return newNodes;
-  }
-  private getConnections(tree: any) {
-    const obj = JSON.parse(tree);
-    const arr = obj.linkDataArray;
-    // this.processConnectionsForSave(arr);
-    return JSON.stringify(arr);
-  }
-
-  private processConnectionsForSave(arr: Array<any>) {
-    const nodes = this.tree.nodes;
-    nodes.forEach((node: BlockNode) => {
-      if (arr.findIndex(x => x.to === node.key) === -1) {
-        console.log('First => ', node.custom.title);
-      }
-    });
-  }
-
-  private loadTree(id: number) {
-    this.blockUi.start('Loading...');
-    this.findSubscription = this.treeService.findTree(id).subscribe(res => {
-      this.blockUi.stop();
-      if (res.success) {
-        const tree = res.data;
-        tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
-        // tree.connections = (tree.connections === null) ? tree.connections = [] : this.processNewConnections(res.data.connections);
-        if ( res.data.treeModel != null) {
-          this.diagram.model = go.Model.fromJson(res.data.treeModel)
-        }
-        this.tree = tree;
-        console.log('TREE => ', this.tree)
-        this.loadAudios();
-      }
-    }, () => this.blockUi.stop());
-  }
-
-  private processNewTree(node: string): Array<BlockNode> {
-    node = unescape(node);
-    let nodes: Array<BlockNode>;
-    nodes = (node == null) ? [] : JSON.parse(node);
-    return this.addExtraChoices(nodes);
-  }
-
-  private processNewConnections(connection: string): Array<Connection> {
-    connection = unescape(connection);
-    let connections: Array<Connection>;
-    connections = (connection == null) ? [] : JSON.parse(connection);
-    return connections;
-  }
-
-  private loadAudios() {
-    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
-      this.audios = res;
-    });
   }
 
   ngOnInit() {

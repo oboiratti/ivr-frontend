@@ -120,10 +120,10 @@
                                             <div class="input-group" *ngFor="let choice of currentNode.custom.choices; let i = index;" style="margin-bottom: 5px;">
                                                 <div class="input-group-prepend"><span class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
                                                 <input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value" name="currentNode.custom.choices[{{i}}].value" (ngModelChange)="addChoice(i+1)">
-                                                <div class="input-group-prepend"><span class="input-group-text">Score</span></div>
-                                                <input class="form-control" type="number" [(ngModel)]="currentNode.custom.choices[i].weight" name="currentNode.custom.choices[{{i}}].weight" (ngModelChange)="addChoice(i+1)" [disabled]="(i + 1 === currentNode.custom.choices.length)">
+                                                <div class="input-group-prepend" *ngIf="(i !== currentNode.custom.choices.length - 1 )"><span class="input-group-text">Score</span></div>
+                                                <input class="form-control" type="number" [(ngModel)]="currentNode.custom.choices[i].weight" name="currentNode.custom.choices[{{i}}].weight" (ngModelChange)="addChoice(i+1)" *ngIf="(i !== currentNode.custom.choices.length - 1 )">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-secondary" type="button" (click)="removeChoice(i)" [disabled]="(i + 1 === currentNode.custom.choices.length)">X</button>
+                                                    <button class="btn btn-secondary" type="button" (click)="removeChoice(i)" [disabled]="(i === currentNode.custom.choices.length - 1 || i !== currentNode.custom.choices.length - 2 )">X</button>
                                                 </div>
                                             </div>
                                         </div>
