@@ -59,6 +59,12 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   }
 
   removeSubscriber(subscriber) {
+    if (!this.id.value) {
+      const subscribers = (this.subscribers.value as []).filter((val: any) => val !== subscriber.id)
+      this.subscribers.patchValue(subscribers)
+      return
+    }
+
     MessageDialog.confirm('Remove Subscriber', `Are you sure you want to remove '${subscriber.name}' from this group?`).then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Removing Subscriber...')

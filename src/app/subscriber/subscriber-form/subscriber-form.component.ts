@@ -87,6 +87,12 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   removeFromGroup(group) {
+    if (!this.id.value) {
+      const groups = (this.subscriberGroups.value as []).filter((val: any) => val !== group.id)
+      this.subscriberGroups.patchValue(groups)
+      return
+    }
+
     MessageDialog.confirm('Remove Group', `Are you sure you want to remove this subscriber from '${group.name}'?`).then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Removing Group...')
@@ -108,6 +114,12 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   removeCommodity(commodity) {
+    if (!this.id.value) {
+      const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodity.id)
+      this.otherCommodities.patchValue(commodities)
+      return
+    }
+
     MessageDialog.confirm('Remove Commodity', `Are you sure you want to remove '${commodity.name}' from other commodities?`).then(confirm => {
       if (confirm.value) {
         this.blockUi.start('Removing Commodity...')
@@ -119,8 +131,8 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           .subscribe(res => {
             if (res.success) {
               this.blockUi.stop()
-              const commodities = (this.otherCommodities.value as []).filter((val: any) => val !== commodity.id)
-              this.subscriberGroups.patchValue(commodities)
+              const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodity.id)
+              this.otherCommodities.patchValue(commodities)
             }
           })
 
@@ -215,22 +227,22 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
         this.blockUi.stop()
-          this.form.patchValue(data)
-          this.form.patchValue({
-            startDate: new Date(data.startDate).toISOString().substring(0, 10),
-            dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
-            languageId: data.language.id,
-            regionId: data.region.id,
-            districtId: data.district.id,
-            educationLevelId: data.educationalLevel.educationLevelId,
-            subscriberTypeId: data.subscriberType.subscriberTypeId,
-            subscriberGroups: data.subscriberGroups.map(grp => grp.groupId),
-            primaryCommodity: data.primaryComodity.commodityId,
-            otherCommodities: data.otherCommodities ? data.otherCommodities
-              .map(elm => {
-                return { id: elm.commodityId, name: elm.commodity }
-              }) : null
-          })
+        this.form.patchValue(data)
+        this.form.patchValue({
+          startDate: new Date(data.startDate).toISOString().substring(0, 10),
+          dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
+          languageId: data.language.id,
+          regionId: data.region.id,
+          districtId: data.district.id,
+          educationLevelId: data.educationalLevel.educationLevelId,
+          subscriberTypeId: data.subscriberType.subscriberTypeId,
+          subscriberGroups: data.subscriberGroups.map(grp => grp.groupId),
+          primaryCommodity: data.primaryComodity.commodityId,
+          otherCommodities: data.otherCommodities ? data.otherCommodities
+            .map(elm => {
+              return { id: elm.commodityId, name: elm.commodity }
+            }) : null
+        })
       }, () => this.blockUi.stop())
   }
 
