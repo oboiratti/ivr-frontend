@@ -47,6 +47,7 @@ export class TreeStudioComponent implements OnInit {
   tags: Observable<Lookup[]>;
   audios: Array<Media>;
   tree: Tree;
+  isEdit: boolean;
 
   private currentNode: BlockNode;
   private multiNode: Multichoice;
@@ -394,6 +395,18 @@ export class TreeStudioComponent implements OnInit {
     return (this.tree.nodes.length > 0 || this.tree.nodes != null) ? false : true;
   }
 
+  setDiagramToReadOnly(isReadOnly: boolean) {
+    if (isReadOnly) {
+      this.diagram.isEnabled = false;
+      this.diagram.clearSelection();
+      this.showTreeForm();
+      this.isEdit = false;
+    } else {
+      this.diagram.isEnabled = true;
+      this.isEdit = true;
+    }
+  }
+
   makeStartNode() {
     this.tree.nodes.filter(x => x.isStartingNode === true)[0].isStartingNode = false;
     this.tree.startingNodeKey = this.currentNode.key;
@@ -478,36 +491,12 @@ export class TreeStudioComponent implements OnInit {
   }
 
   removeChoice(i: number) {
-    // const i = this.tree.nodes.findIndex(x => x.key === choice)
     this.currentNode.custom.choices.splice(i, 1);
     const length = this.currentNode.custom.choices.length;
     this.currentNode.custom.choices[length - 1].key = length;
     const node: go.Node = this.diagram.findNodeForKey(this.currentNode.key);
     const portId = 'bottom_' + this.currentNode.key + '_' + this.currentNode.custom.choices[i].key;
     this.diagram.model.removeArrayItem(node.data.multiArray, node.data.multiArray.findIndex(x => x.multifromPortId === portId));
-    // this.resetChoiceKeys();
-  }
-
-  private resetChoiceKeys() {
-    const newChoices: Array<Choice> = [];
-    const node: any = this.diagram.findNodeForKey(this.currentNode.key);
-    // const newMultiArray: Array<any> = [];
-    const length = this.currentNode.custom.choices.length;
-    this.currentNode.custom.choices.forEach((item, i, array) => {
-      item.key = i + 1;
-      if (item.key !== length) {
-        const portId = 'bottom_' + this.currentNode.key + '_' + item.key;
-        const index = node.data.multiArray.findIndex(x => x.multifromPortId === portId);
-        const nodedata = this.diagram.findNodeForKey(this.currentNode.key).data.multiArray[index];
-        this.diagram.model.setDataProperty(nodedata, 'multifromPortId',  item.key);
-        this.diagram.model.setDataProperty(nodedata, 'choice',  item.value);
-      }
-      newChoices.push(item);
-      console.log(item);
-    });
-    console.log(newChoices);
-    this.currentNode.custom.choices = newChoices;
-    // this.diagram.model.insertArrayItem(arr, -1, newMultiArray);
   }
 
   // ADD PORT
@@ -591,7 +580,6 @@ export class TreeStudioComponent implements OnInit {
     if (!selectedNodeData.key) { return ; }
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
     this.showForm(this.currentNode.key);
-    // console.log('Current Node', this.currentNode);
   }
 
   updateMessageTitle() {
@@ -778,6 +766,7 @@ export class TreeStudioComponent implements OnInit {
     this.diagram.div = this.diagramRef.nativeElement;
     this.loadLanguages();
     this.loadTags();
+    this.setDiagramToReadOnly(true);
 
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
     this.tree = <Tree>{};
