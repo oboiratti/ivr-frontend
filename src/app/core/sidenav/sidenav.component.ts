@@ -50,7 +50,7 @@ export class SidenavComponent implements OnInit {
   }
 
   setUsername() {
-    let user = this.authService.currentUser;
+    const user = this.authService.currentUser;
     if (user) {
       this.username = user.name;
       this.email = user.email
@@ -58,6 +58,6 @@ export class SidenavComponent implements OnInit {
   }
 
   private setVersion() {
-    this.version = 'v0.0.5'
+    this.version = 'v0.0.6'
   }
 }
