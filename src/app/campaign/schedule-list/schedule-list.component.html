@@ -1,23 +1,23 @@
 <div class="row">
   <div class="col-sm-12">
     <filter class="float-left" placeholder="Search by title" label="title" [model]="title"
-      (search)="getCampaigns($event)" [filter]="filter">
+      (search)="getCampaignSchedules($event)" [filter]="filter">
       <div class="form-group">
-        <ng-select [items]="areas$ | async" bindLabel="name" bindValue="id" placeholder="Select Area"
-          [clearable]="true" [(ngModel)]="filter.areaId">
+        <ng-select [items]="topics$ | async" bindLabel="name" bindValue="id" placeholder="Select Topic"
+          [clearable]="true" [(ngModel)]="filter.topicId">
         </ng-select>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="startDate" placeholder="Start Date" onfocus="(this.type='date')"
-          onblur="(this.type='text')" [(ngModel)]="filter.startDate">
+        <ng-select [items]="recipientTypes" placeholder="Select Recipient Type" [clearable]="true" [(ngModel)]="filter.receipientType">
+        </ng-select>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" name="endDate" placeholder="End Date" onfocus="(this.type='date')"
-          onblur="(this.type='text')" [(ngModel)]="filter.endDate">
+        <ng-select [items]="scheduleTypes" placeholder="Select Schedule Type" [clearable]="true" [(ngModel)]="filter.scheduleType">
+        </ng-select>
       </div>
     </filter>
-    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Outbound
-      Campaign</button>
+    <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New Campaign
+      Schedule</button>
   </div>
 </div>
 <hr>
@@ -30,25 +30,29 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Title</th>
-              <th>Campaign Area</th>
+              <th>Pillar</th>
+              <th>Topic</th>
+              <th>Tree</th>
+              <th>Recipient Type</th>
+              <th>Schedule Type</th>
               <th>Start Date</th>
               <th>End Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let campaign of campaigns$ | async; let i = index">
+            <tr *ngFor="let schedule of campaignSchedules$ | async; let i = index">
               <td>{{i + 1}}.</td>
-              <td>{{campaign.title}}</td>
-              <td>{{campaign.area.name}}</td>
-              <td>{{campaign.startDate | date:'mediumDate'}}</td>
-              <td>{{campaign.endDate | date:'mediumDate'}}</td>
+              <td>{{schedule.pillar.name}}</td>
+              <td>{{schedule.topic.name}}</td>
+              <td>{{schedule.tree.title}}</td>
+              <td>{{schedule.recipientType}}</td>
+              <td>{{schedule.scheduleType}}</td>
+              <td>{{schedule.startDate | date:'mediumDate'}}</td>
+              <td>{{schedule.endDate | date:'mediumDate'}}</td>
               <td>
-                <a class="pointer" (click)="editForm(campaign.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="gotoSchedule(campaign.id)" title="Schedule"><i
-                    class="fa fa-clock-o"></i></a> &nbsp;
-                <a class="pointer" (click)="delete(campaign.id)" title="Delete"><i class="fa fa-trash"></i></a>
+                <a class="pointer" (click)="editForm(schedule.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="delete(schedule.id)" title="Delete"><i class="fa fa-trash"></i></a>
               </td>
             </tr>
           </tbody>

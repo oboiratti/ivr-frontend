@@ -2,6 +2,7 @@
   <nav class="sidebar" *ngIf="authenticated" #sidebar>
     <div class="logo text-center mb-4">
       <img class="img-fluid image" src="../assets/images/logo.png">
+      <div><small>{{version}}</small></div>
     </div>
     <ul class="nav flex-column flex-nowrap">
       <li class="nav-item" *ngFor="let menu of menus" routerLinkActive="active">

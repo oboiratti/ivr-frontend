@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { User, UserQuery, Role } from '../../auth/auth.model';
@@ -6,8 +6,8 @@ import { UserService } from './user.service';
 import { RoleService } from '../role/role.service';
 import { MessageDialog } from '../../shared/message_helper';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -16,7 +16,7 @@ declare var $: any;
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
 
   loading: boolean;
   showForm: boolean;
@@ -33,19 +33,7 @@ export class UserComponent implements OnInit {
   selectedFilter: any;
   title = 'Add New User';
   @BlockUI() blockForm: NgBlockUI;
-
-  filter = [
-    { label: 'Name', value: { value: 'name', type: 'text' } },
-    { label: 'Email', value: { value: 'email', type: 'text' } },
-    { label: 'Username', value: { value: 'username', type: 'text' } }
-  ]
-
-  operation = [
-    { label: '=', value: '=' },
-    { label: '>', value: '>' },
-    { label: '<', value: '<' },
-    { label: ':', value: ':' }
-  ]
+  unsubscribe$ = new Subject<void>()
 
   constructor(private formBuilder: FormBuilder, private userService: UserService, private roleService: RoleService) {
     this.userForm = this.formBuilder.group({
@@ -61,8 +49,8 @@ export class UserComponent implements OnInit {
         Validators.required,
         Validators.minLength(6)
       ])),
-      passwordConfirmation: new FormControl('', Validators.required),
-      role: new FormControl('', Validators.required)
+      confirmPassword: new FormControl('', Validators.required),
+      roleId: new FormControl('', Validators.required)
     }, { validator: this.checkPasswords });
   }
 
@@ -70,6 +58,11 @@ export class UserComponent implements OnInit {
     this.fetchUsers();
     this.fetchRoles();
     // this.params = <UserQuery>{ page: 0, size: 5, sortField: "id", sortOrder: -1 };
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   openForm() {
@@ -87,14 +80,14 @@ export class UserComponent implements OnInit {
 
   checkPasswords(formGroup: FormGroup) {
     if (!formGroup.controls) { return null; }
-    return formGroup.controls['password'].value === formGroup.controls['passwordConfirmation'].value ? null : { passwordMismatch: true }
+    return formGroup.controls['password'].value === formGroup.controls['confirmPassword'].value ? null : { passwordMismatch: true }
   }
 
   selectRow(user: User) {
     this.userForm.patchValue(user);
     this.userForm.get('userName').disable();
     this.userForm.get('password').setValidators(null)
-    this.userForm.get('passwordConfirmation').setValidators(null)
+    this.userForm.get('confirmPassword').setValidators(null)
     this.userForm.updateValueAndValidity()
     this.showForm = true;
   }
@@ -104,12 +97,14 @@ export class UserComponent implements OnInit {
     console.log(this.user);
     if (this.user.id) {
       delete this.user.password;
-      delete this.user.passwordConfirmation;
+      delete this.user.confirmPassword;
     }
 
     this.blockForm.start('Saving...');
     this.saving = true;
-    this.userService.save(this.user).subscribe((res) => {
+    this.userService.save(this.user)
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((res) => {
       this.saving = false;
       this.blockForm.stop();
       if (res.success) {
@@ -127,7 +122,9 @@ export class UserComponent implements OnInit {
       if (confirm.value) {
         this.blockForm.start('Deleting...');
         this.deleting = true;
-        this.userService.destroy(id).subscribe((res) => {
+        this.userService.destroy(id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe((res) => {
           this.blockForm.stop();
           this.deleting = false;
           if (res.success) {

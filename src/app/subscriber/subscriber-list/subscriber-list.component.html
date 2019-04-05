@@ -1,11 +1,17 @@
 <div class="row">
   <div class="col-sm-12">
-    <filter class="float-left" placeholder="Search by name" label="name" [model]="name" (search)="getSubscribers($event)" [filter]="filter">
+    <filter class="float-left" placeholder="Search by name" label="name" [model]="name"
+      (search)="getSubscribers($event)" [filter]="filter">
       <div class="form-group">
         <input type="text" class="form-control" name="phone" placeholder="Phone Number" [(ngModel)]="filter.phone">
       </div>
       <div class="form-group">
         <input type="text" class="form-control" name="location" placeholder="Location" [(ngModel)]="filter.location">
+      </div>
+      <div class="form-group">
+        <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Type"
+          [clearable]="true" [(ngModel)]="filter.subscriberTypeId">
+        </ng-select>
       </div>
     </filter>
     <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New
@@ -22,6 +28,7 @@
           <thead>
             <tr>
               <th>#</th>
+              <th>Subscriber Id</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Start Date</th>
@@ -34,6 +41,7 @@
           <tbody>
             <tr *ngFor="let subscriber of subscribers$ | async; let i = index">
               <td>{{i + 1}}</td>
+              <td>{{subscriber.code}}</td>
               <td>{{subscriber.name}}</td>
               <td>{{subscriber.phoneNumber}}</td>
               <td>{{subscriber.startDate | date:'mediumDate'}}</td>
@@ -41,6 +49,7 @@
               <td>{{subscriber.subscriberType.name}}</td>
               <!-- <td>Yes</td> -->
               <td>
+                <a class="pointer" (click)="view(subscriber.id)"><i class="fa fa-eye"></i></a> &nbsp;
                 <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(subscriber.id)"><i class="fa fa-trash"></i></a>
               </td>
@@ -49,5 +58,22 @@
         </table>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-3">
+    <div class="input-group mb-3 float-left">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Records per page</label>
+      </div>
+      <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="size" (ngModelChange)="pageSizeChangeEvent()">
+        <option *ngFor="let size of pageSizes" [ngValue]="size">{{size}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col">
+    <ngb-pagination class="float-right" [(page)]="currentPage" [pageSize]="size" [collectionSize]="totalRecords"
+     [maxSize]="5"  (pageChange)="pageChanged($event)"></ngb-pagination>
   </div>
 </div>

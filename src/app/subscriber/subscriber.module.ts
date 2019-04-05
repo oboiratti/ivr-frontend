@@ -12,6 +12,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { SubscriberGroupFormComponent } from './subscriber-group-form/subscriber-group-form.component';
 import { SubscriberImportComponent } from './subscriber-import/subscriber-import.component';
 import { SubscriberExportComponent } from './subscriber-export/subscriber-export.component';
+import { SubscriberDetailsComponent } from './subscriber-details/subscriber-details.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { SubscriberExportComponent } from './subscriber-export/subscriber-export
     SubscriberGroupListComponent,
     SubscriberFormComponent,
     SubscriberGroupFormComponent,
-    SubscriberImportComponent, SubscriberExportComponent
+    SubscriberImportComponent, SubscriberExportComponent, SubscriberDetailsComponent
   ],
   imports: [
     CommonModule,

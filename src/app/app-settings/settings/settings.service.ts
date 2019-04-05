@@ -13,7 +13,10 @@ export class LookUps {
       {label: 'Tag', description: 'Add, Edit and Delete Tags', name: 'tags', icon: 'fa fa-tag'},
       {label: 'Subscriber Type', description: 'Add, Edit and Delete Subscriber Types', name: 'subscriberType', icon: 'fa fa-address-book'},
       {label: 'Educational Level', description: 'Add, Edit and Delete Educational Levels', name: 'educationalLevel', icon: 'fa fa-graduation-cap'},
-      {label: 'Commodity', description: 'Add, Edit and Delete Commodities', name: 'commodity', icon: 'fa fa-th-list'}
+      {label: 'Commodity', description: 'Add, Edit and Delete Commodities', name: 'commodity', icon: 'fa fa-th-list'},
+      {label: 'Area', description: 'Add, Edit and Delete Areas', name: 'area', icon: 'fa fa-square'},
+      {label: 'Pillar', description: 'Add, Edit and Delete Pillars', name: 'pillar', icon: 'fa fa-paragraph'},
+      {label: 'Topic', description: 'Add, Edit and Delete Topics', name: 'topic', icon: 'fa fa-align-center'}
     ];
   }
 }
@@ -46,6 +49,6 @@ export class SettingsService {
   }
 
   destroy(name: string, id: number) {
-    return this.httpClient.delete<ResponseObject<any>>(`${this.baseApi}/${name}/${id}`);
+    return this.httpClient.delete<ResponseObject<any>>(`${this.baseApi}/${name}/delete/${id}`);
   }
 }

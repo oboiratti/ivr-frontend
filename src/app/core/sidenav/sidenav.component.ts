@@ -17,6 +17,7 @@ export class SidenavComponent implements OnInit {
   show: boolean
   username: string;
   email: string;
+  version: string
 
   constructor(private authService: AuthService, private renderer: Renderer2) { }
 
@@ -32,6 +33,7 @@ export class SidenavComponent implements OnInit {
 
   ngOnInit() {
     this.setUsername();
+    this.setVersion()
   }
 
   toggle() {
@@ -48,10 +50,14 @@ export class SidenavComponent implements OnInit {
   }
 
   setUsername() {
-    let user = this.authService.currentUser;
+    const user = this.authService.currentUser;
     if (user) {
       this.username = user.name;
       this.email = user.email
     }
+  }
+
+  private setVersion() {
+    this.version = 'v0.0.6'
   }
 }

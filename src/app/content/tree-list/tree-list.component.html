@@ -1,34 +1,37 @@
 <div class="row">
-    <div class="col-sm-8"><button type="button" class="btn btn-primary-custom border border-dark" routerLink="form"><i class="fa fa-plus"></i> New Tree</button></div>
+    <div class="col-sm-8"><button type="button" class="btn btn-primary-custom border border-dark" routerLink="form"><i
+                class="fa fa-plus"></i> New Tree</button></div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getMedia(lastFilter)">
+            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title"
+                (keyup.enter)="getTree(lastFilter)">
             <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary" (click)="getMedia(lastFilter)" style="margin-right: 0px;"><i class="fa fa-search"></i></button>
-                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0px;">
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
+                <button type="button" class="btn btn-outline-secondary" (click)="getTree(lastFilter)"
+                    style="margin-right: 0px;"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0px;">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
                 <div class="dropdown-menu" style="padding: 10px" (click)="$event.stopPropagation()">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Code" [(ngModel)]="lastFilter.code">
                     </div>
                     <div class="form-group">
                         <select class="form-control" [(ngModel)]="lastFilter.languageId" placeholder="Language">
-              <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
-            </select>
+                            <option *ngFor="let language of languages$ | async" [ngValue]="language.id">
+                                {{language.name}}</option>
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <select class="form-control" [(ngModel)]="lastFilter.type" placeholder="Type">
-              <option *ngFor="let t of types" [ngValue]="t">{{t}}</option>
-            </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Description" [(ngModel)]="lastFilter.description">
+                        <input type="text" class="form-control" placeholder="Description"
+                            [(ngModel)]="lastFilter.description">
                     </div>
                     <div>
-                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm" (click)="getMedia(lastFilter)">
-              Search
-            </button>
+                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm"
+                            (click)="getTree(lastFilter)">
+                            Search
+                        </button>
                     </div>
                 </div>
             </div>
@@ -57,7 +60,7 @@
                             <td>{{i + 1}}</td>
                             <td>{{x.code}}</td>
                             <td>
-                                {{x.title}} <br/>
+                                {{x.title}} <br />
                                 <span class="badge badge-info" style="font-size: inherit">{{x.tags}}</span>
                             </td>
                             <td>{{x.language}}</td>
@@ -65,8 +68,10 @@
                             <td>{{x.length}}</td>
                             <td>{{x.createdAt | date:'mediumDate'}}</td>
                             <td>
-                                <a class="pointer" (click)="open(x.id)"><i class="fa fa-eye fa-lg  color-light-blue"></i></a> &nbsp;
-                                <a class="pointer" (click)="openTree(x.id)"><i class="fa fa-sitemap fa-lg  color-purple"></i></a> &nbsp;
+                                <a class="pointer" (click)="open(x.id)"><i
+                                        class="fa fa-eye fa-lg  color-light-blue"></i></a> &nbsp;
+                                <a class="pointer" (click)="openTree(x.id)"><i
+                                        class="fa fa-sitemap fa-lg  color-purple"></i></a> &nbsp;
                             </td>
                         </tr>
                     </tbody>

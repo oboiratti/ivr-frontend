@@ -1,17 +1,19 @@
 export class RouteNames {
-    static login = "login";
-    static dashboard = "dashboard";
-    static appSettings = "app-settings";
-    static settings = "settings";
-    static genericSettings = "settings/:model";
-    static admin = "admin";
-    static users = "users";
-    static roles = "roles";
+    static login = 'login';
+    static dashboard = 'dashboard';
+    static appSettings = 'app-settings';
+    static settings = 'settings';
+    static genericSettings = 'settings/:model';
+    static admin = 'admin';
+    static users = 'users';
+    static roles = 'roles';
 
     static subscriber = 'subscriber';
     static subscriberList = 'subscribers';
     static subscriberForm = 'subscribers/form';
     static subscriberFormEdit = 'subscribers/form/:id';
+    static subscriberDetails = 'subscribers/details';
+    static subscriberDetailsId = 'subscribers/details/:id';
 
     static subscriberGroupList = 'groups';
     static subscriberGroupForm = 'groups/form';
@@ -43,6 +45,11 @@ export class RouteNames {
     static outbound = 'outbound';
     static outboundForm = 'outbound/form';
     static outboundFormEdit = 'outbound/form/:id';
+    static schedules = 'schedules'
+    static sform = 'form'
+    static schedulesWithId = 'outbound/:id/schedules'
+    static scheduleForm = 'outbound/:id/schedules/form'
+    static scheduleFormEdit = 'outbound/:id/schedules/form/:sid'
 
     static profile = 'profile';
     static profileForm = 'profile-form';

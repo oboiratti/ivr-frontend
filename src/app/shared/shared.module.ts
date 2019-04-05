@@ -7,6 +7,7 @@ import { SearchComponent } from './search/search.component';
 import { SubmenuComponent } from './submenu/submenu.component';
 import { RouterModule } from '@angular/router';
 import { FilterComponent } from './filter/filter.component';
+import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { FilterComponent } from './filter/filter.component';
     ValidateFormDirective,
     SearchComponent,
     SubmenuComponent,
-    FilterComponent
+    FilterComponent,
+    NgbPaginationModule
   ]
 })
 export class SharedModule { }

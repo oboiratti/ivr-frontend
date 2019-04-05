@@ -55,6 +55,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group" *ngIf="modelName === 'topic'">
+                            <label>Pillar</label>
+                            <select class="form-control" formControlName="pillarId" [class.is-invalid]="formGroup.controls.pillarId.dirty && formGroup.controls.pillarId.invalid">
+                                <option *ngFor="let pillar of pillars$ | async"
+                                    [ngValue]="pillar.id">{{pillar.name}}</option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="formGroup.controls.pillarId.dirty && formGroup.controls.pillarId.invalid">
+                                <div *ngIf="formGroup.controls.pillarId.errors.required">
+                                    This field is required
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Description</label>
                             <textarea rows="3" class="form-control" formControlName="notes"></textarea>
@@ -84,6 +96,7 @@
                         <th>Name</th>
                         <th *ngIf="modelName === 'commodity'">Subscriber Type</th>
                         <th *ngIf="modelName === 'district'">Region</th>
+                        <th *ngIf="modelName === 'topic'">Pillar</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -93,6 +106,7 @@
                         <td>{{record.name}}</td>
                         <td *ngIf="modelName === 'commodity'">{{record.subscriberType.name}}</td>
                         <td *ngIf="modelName === 'district'">{{record.region.name}}</td>
+                        <td *ngIf="modelName === 'topic'">{{record.pillar.name}}</td>
                         <td>{{record.notes}}</td>
                     </tr>
                 </tbody>

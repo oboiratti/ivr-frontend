@@ -3,7 +3,8 @@ import swal from 'sweetalert2';
 import { SweetAlertType } from 'sweetalert2';
 
 toast.options = {
-    'positionClass': 'toast-top-center'
+    'positionClass': 'toast-top-center',
+    'toastClass': 'toastr'
 };
 export class Toast {
 

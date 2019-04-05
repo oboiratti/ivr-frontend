@@ -9,6 +9,7 @@ import { SubscriberFormComponent } from './subscriber-form/subscriber-form.compo
 import { SubscriberGroupFormComponent } from './subscriber-group-form/subscriber-group-form.component';
 import { SubscriberImportComponent } from './subscriber-import/subscriber-import.component';
 import { SubscriberExportComponent } from './subscriber-export/subscriber-export.component';
+import { SubscriberDetailsComponent } from './subscriber-details/subscriber-details.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,11 @@ const routes: Routes = [
       {
         path: RouteNames.subscriberExport,
         component: SubscriberExportComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.subscriberDetailsId,
+        component: SubscriberDetailsComponent,
         canActivate: [AuthGuard]
       }
     ]

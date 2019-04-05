@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
-import { Subscriber, SubscriberGroup, SubscriberQuery } from './subscriber.model';
+import { Subscriber, SubscriberGroup, SubscriberQuery, SubscriberGroupQuery } from './subscriber.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -10,15 +10,18 @@ import { map } from 'rxjs/operators';
 })
 export class SubscriberService {
 
+  totalSubscribers = 0
+  totalGroups = 0
+
   constructor(private http: HttpClient) { }
 
   fetchDistrictsByRegion(regionId: number) {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/district/getdistricts?regionId=${regionId}`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data }
-      })
-    )
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
   }
 
   fetchSubscribers() {
@@ -34,13 +37,23 @@ export class SubscriberService {
     return this.http.post<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber/query`, params)
       .pipe(
         map(res => {
-          if (res.success) { return res.data }
+          if (res.success) {
+            this.totalSubscribers = res.total
+            return res.data
+          }
         })
       )
   }
 
   findSubscriber(id: number) {
     return this.http.get<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/get/${id}`)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            return res.data
+          }
+        })
+      )
   }
 
   deleteSubscriber(id: number) {
@@ -61,6 +74,18 @@ export class SubscriberService {
       )
   }
 
+  querySubscriberGroups(params: SubscriberGroupQuery) {
+    return this.http.post<ResponseObject<SubscriberGroup[]>>(`${environment.baseUrl}/group/query`, params)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            this.totalGroups = res.total
+            return res.data
+          }
+        })
+      )
+  }
+
   deleteSubscriberGroup(id: number) {
     return this.http.delete<ResponseObject<SubscriberGroup>>(`${environment.baseUrl}/group/delete/${id}`)
   }
@@ -76,11 +101,11 @@ export class SubscriberService {
 
   fetchCommoditiesBySubscriberType(subscriberTypeId: number) {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/commodity/getcommodities?subscriberTypeId=${subscriberTypeId}`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data }
-      })
-    )
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
   }
 
   downloadTemplate() {
@@ -94,5 +119,18 @@ export class SubscriberService {
 
   saveUploadData(params: any[]) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/subscriber/saveuploaddata`, params)
+  }
+
+  removeSubscriberFromGroup(subscriberId: number, groupId: number) {
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/subscriber/removegroupbyid?subscriberId=${subscriberId}&groupId=${groupId}`)
+  }
+
+  removeSubscriberCommodity(subscriberId: number, commodityId: number) {
+    // tslint:disable-next-line: max-line-length
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/subscriber/removecommoditybyid?subscriberId=${subscriberId}&commodityId=${commodityId}`)
+  }
+
+  removeGroupBySubscriberId(subscriberId: number, groupId: number) {
+    return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/group/removesubscriberbyid?subscriberId=${subscriberId}&groupId=${groupId}`)
   }
 }
