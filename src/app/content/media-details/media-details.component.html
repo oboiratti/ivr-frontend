@@ -1,23 +1,31 @@
 <div class="row">
-    <div class="col-sm-12">
-        <div class="p-2 text-uppercase form-header-text">Media File Details</div>
-    </div>
-</div>
-<hr>
-<div class="row">
     <div class="col-sm-12 col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header">
-                <div class="p-2 text-uppercase form-header-text">File Details</div>
+                <div class="p-2 text-uppercase form-header-text">
+                    Media File Details
+                    <span class="float-right">
+                            <button type="button" class="btn rounded-circle" (click)="delete()" style="background-color: #cc1800;">
+                                    <i class="fa fa-trash-o" style="color: white"></i>
+                                  </button>
+                                  <button type="button" class="btn rounded-circle" (click)="editForm()"  *ngIf="data.status == 'Active'" style="background-color: #1a79ff;">
+                                        <i class="fa fa-edit" style="color: white"></i>
+                                      </button>
+                                  <button type="button" class="btn rounded-circle" (click)="back()" style="background-color: #666666;">
+                                        <i class="fa fa-times" style="color: white"></i>
+                                      </button>
+                            
+                    </span>
+                </div>
             </div>
             <div class="card-body">
                 <div class="form-row">
-                    <div class="form-group col-sm-12 col-md-5">
+                    <div class="form-group col-sm-12 col-md-6">
                         <label>Code:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.code" disabled>
                     </div>
-                    <div class="form-group col-sm-12 col-md-7">
-                        <audio controls [attr.id]="data.id" *ngIf="data.filePath" class="pull-right">
+                    <div class="form-group col-sm-12 col-md-6">
+                        <audio controls [attr.id]="data.id" *ngIf="data.filePath" class="pull-right" style="width:100%">
                             <source src="{{data.filePath}}">
                             Your browser does not support the audio element.
                         </audio>
@@ -26,11 +34,11 @@
 
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-sm-12 col-md-8">
+                    <div class="form-group col-sm-12 col-md-6">
                         <label>Title:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.title" disabled>
                     </div>
-                    <div class="form-group col-sm-12 col-md-4">
+                    <div class="form-group col-sm-12 col-md-6">
                         <label>Language:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.language" disabled>
                     </div>
@@ -38,31 +46,28 @@
                         <label>Description</label>
                         <textarea class="form-control" [(ngModel)]="data.description" rows="3" disabled></textarea>
                     </div>
-                    <div class="form-group col-sm-12 col-md-4">
+                    <div class="form-group col-sm-12 col-md-6">
                         <label>Type:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.type" disabled>
                     </div>
-                    <div class="form-group col-sm-12 col-md-8">
+                    <div class="form-group col-sm-12 col-md-6">
                         <label>Tags:</label>
                         <input type="text" class="form-control" [(ngModel)]="data.tags" disabled>
                     </div>
                 </div>
-            </div>
-            <div class="card-footer clearfix">
-                <button class="btn btn-primary border border-dark" (click)="activate()" *ngIf="data.status == 'InActive'">
-                                <i class="fa fa-edit"></i> Activate
-                              </button>
-                <button type="button" class="btn border border-dark btn-danger" (click)="deactivate()" *ngIf="data.status == 'Active'">
-                                <i class="fa fa-ban"></i> Deactivate
-                              </button>
-                <span>
-                <button class="btn btn-success border border-dark float-right" (click)="editForm()"  *ngIf="data.status == 'Active'">
-                                <i class="fa fa-edit"></i> Update
-                              </button>
-                <button type="button" class="btn float-right border border-dark btn-danger" (click)="delete()">
-                                <i class="fa fa-ban"></i> Delete
-                              </button>
-                            </span>
+                <div class="form-row">
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label>Status: <span *ngIf="data.status == 'Active'"  style="color: #4CAF50;">Active</span><span *ngIf="data.status == 'InActive'"  style="color: red;">InActive</span></label>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-6 float-right">
+                        <button class="btn btn-outline-success float-right" (click)="activate()" *ngIf="data.status == 'InActive'">
+                                    <i class="fa fa-toggle-on"></i> Activate
+                                  </button>
+                        <button type="button" class="btn btn-outline-danger float-right" (click)="deactivate()" *ngIf="data.status == 'Active'">
+                                    <i class="fa fa-toggle-off"></i> Deactivate
+                                  </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
