@@ -16,7 +16,7 @@ export class UserService {
 
   fetch() {
     return this.httpClient.get<ResponseObject<User[]>>(`${this.baseApi}/account/getusers`).pipe(map(res => {
-      if (res.success) return res.data
+      if (res.success) { return res.data }
     }));
   }
 
@@ -25,11 +25,11 @@ export class UserService {
   }
 
   save(params: User) {
-    if (params.id) return this.httpClient.put<ResponseObject<User>>(`${this.baseApi}/account/updateuser`, params);
+    if (params.id) { return this.httpClient.put<ResponseObject<User>>(`${this.baseApi}/account/updateuser`, params); }
     return this.httpClient.post<ResponseObject<User>>(`${this.baseApi}/account/createuser`, params);
   }
 
   destroy(id: number) {
-    return this.httpClient.delete<ResponseObject<User>>(`${this.baseApi}/auth/user/${id}`);
+    return this.httpClient.delete<ResponseObject<User>>(`${this.baseApi}/account/deleteuser?id=${id}`);
   }
 }

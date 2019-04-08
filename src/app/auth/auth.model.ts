@@ -4,11 +4,12 @@ export interface User {
     id: number;
     userName: string;
     password: string;
-    passwordConfirmation: string;
+    confirmPassword: string;
     name: string;
     email: string;
     token: string;
     role: Role;
+    profileId: number
     image: string
 }
 
@@ -16,7 +17,7 @@ export interface Role {
     id: number;
     name: string;
     notes?: string;
-    permissions: string;
+    privileges: string | string[];
 }
 
 export interface LoginParams {

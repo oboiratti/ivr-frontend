@@ -12,6 +12,8 @@ export class RouteNames {
     static subscriberList = 'subscribers';
     static subscriberForm = 'subscribers/form';
     static subscriberFormEdit = 'subscribers/form/:id';
+    static subscriberDetails = 'subscribers/details';
+    static subscriberDetailsId = 'subscribers/details/:id';
 
     static subscriberGroupList = 'groups';
     static subscriberGroupForm = 'groups/form';

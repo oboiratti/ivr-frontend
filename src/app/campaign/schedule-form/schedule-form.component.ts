@@ -13,6 +13,7 @@ import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
 import { finalize, shareReplay, takeUntil } from 'rxjs/operators';
 import { Campaign } from '../shared/campaign.models';
+import { MessageDialog } from 'src/app/shared/message_helper';
 
 @Component({
   selector: 'app-schedule-form',
@@ -42,6 +43,8 @@ export class ScheduleFormComponent implements OnInit {
   loadingSubscribers: boolean
   campaign: Campaign
   unsubscribe$ = new Subject<void>()
+  subscriberIdsCopy: number[]
+  groupIdsCopy: number[]
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -72,20 +75,80 @@ export class ScheduleFormComponent implements OnInit {
 
   save(formData: any) {
     const params = this.buildJsonRequest(formData)
-    console.log(params);
     this.blockUi.start('Saving...')
     this.campaignService.saveCampaignSchedule(params)
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(res => {
-      this.blockUi.stop()
-      if (res.success) { this.closeForm() }
-    }, () => this.blockUi.stop())
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(res => {
+        this.blockUi.stop()
+        if (res.success) { this.closeForm() }
+      }, () => this.blockUi.stop())
   }
 
   closeForm() {
     this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.id}/${RouteNames.schedules}`)
   }
 
+  removeGroup(group) {
+    if (!this.idc.value) {
+      this.patchGroupIds(group.id);
+      return
+    }
+
+    const match = this.groupIdsCopy.some((val: any) => val === group.id)
+    if (!match) {
+      this.patchGroupIds(group.id);
+      return
+    }
+
+    MessageDialog.confirm('Remove Group', `Are you sure you want to remove '${group.name}' from this schedule?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Group...')
+        this.campaignService.removeGroupFromSchedule(this.idc.value, group.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              this.patchGroupIds(group.id);
+            }
+          })
+      }
+    })
+  }
+
+  removeSubscriber(subscriber) {
+    if (!this.idc.value) {
+      this.patchSubscriberIds(subscriber.id)
+      return
+    }
+
+    const match = this.subscriberIdsCopy.some((val: any) => val === subscriber.id)
+    if (!match) {
+      this.patchSubscriberIds(subscriber.id)
+      return
+    }
+
+    MessageDialog.confirm('Remove Subscriber', `Are you sure you want to remove '${subscriber.name}' from this schedule?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Subscriber...')
+        this.campaignService.removeSubscriberFromSchedule(this.idc.value, subscriber.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              this.patchSubscriberIds(subscriber.id)
+            }
+          })
+      }
+    })
+  }
+
+  get idc() { return this.form.get('id') }
   get pillarId() { return this.form.get('pillarId') }
   get topicId() { return this.form.get('topicId') }
   get recipientType() { return this.form.get('recipientType') }
@@ -158,13 +221,13 @@ export class ScheduleFormComponent implements OnInit {
 
   private pillarChangeListener() {
     this.pillarId.valueChanges
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(value => {
-      if (value) {
-        this.loadTopicsInPillar(value)
-        this.topicId.enable()
-      }
-    })
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(value => {
+        if (value) {
+          this.loadTopicsInPillar(value)
+          this.topicId.enable()
+        }
+      })
   }
 
   private loadTrees() {
@@ -212,42 +275,52 @@ export class ScheduleFormComponent implements OnInit {
   private findCampaign(id: number) {
     this.blockUi.start('Loading...')
     this.campaignService.findCampaign(id)
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(res => {
-      this.blockUi.stop()
-      if (res.success) {
-        this.campaign = res.data
-      }
-    }, () => this.blockUi.stop())
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(res => {
+        this.blockUi.stop()
+        if (res.success) {
+          this.campaign = res.data
+        }
+      }, () => this.blockUi.stop())
   }
 
   private findCampaignSchedule(id: number) {
     this.blockUi.start('Loading...')
     this.campaignService.findCampaignSchedule(id)
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe(res => {
-      this.blockUi.stop()
-      if (res.success) {
-        this.doToggle()
-        const data = res.data
-        data.advancedOptions = JSON.parse(data.advancedOptions)
-        console.log(data);
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(res => {
+        this.blockUi.stop()
+        if (res.success) {
+          this.doToggle()
+          const data = res.data
+          this.groupIdsCopy = data.groups ? data.groups.map(group => group.id) : null
+          this.subscriberIdsCopy = data.subscribers ? data.subscribers.map(sub => sub.id) : null
+          data.advancedOptions = JSON.parse(data.advancedOptions)
+          this.form.patchValue(data)
+          this.form.patchValue({
+            pillarId: data.pillar.id,
+            topicId: data.topic.id,
+            groupIds: this.groupIdsCopy,
+            subscriberIds: this.subscriberIdsCopy,
+            startDate: data.startDate.substring(0, 10),
+            endDate: data.endDate.substring(0, 10),
+            dontCallBefore: data.advancedOptions.voiceOptions.dontCallBefore,
+            dontCallAfter: data.advancedOptions.voiceOptions.dontCallAfter,
+            retryTime: data.advancedOptions.callRetryOptions.retryTime,
+            minutesApart: data.advancedOptions.callRetryOptions.minutesApart,
+            detectVoicemail: data.advancedOptions.detectVoicemail
+          })
+        }
+      })
+  }
 
-        this.form.patchValue(data)
-        this.form.patchValue({
-          pillarId: data.pillar.id,
-          topicId: data.topic.id,
-          groupIds: data.groups ? data.groups.map(group => group.id) : null,
-          subscriberIds: data.subscribers ? data.subscribers.map(sub => sub.id) : null,
-          startDate: data.startDate.substring(0, 10),
-          endDate: data.endDate.substring(0, 10),
-          dontCallBefore: data.advancedOptions.voiceOptions.dontCallBefore,
-          dontCallAfter: data.advancedOptions.voiceOptions.dontCallAfter,
-          retryTime: data.advancedOptions.callRetryOptions.retryTime,
-          minutesApart: data.advancedOptions.callRetryOptions.minutesApart,
-          detectVoicemail: data.advancedOptions.detectVoicemail
-        })
-      }
-    })
+  private patchGroupIds(groupId: number) {
+    const groups = (this.groupIds.value as []).filter((val: any) => val !== groupId);
+    this.groupIds.patchValue(groups);
+  }
+
+  private patchSubscriberIds(subscriberId: number) {
+    const subscribers = (this.subscriberIds.value as []).filter((val: any) => val !== subscriberId);
+    this.subscriberIds.patchValue(subscribers);
   }
 }

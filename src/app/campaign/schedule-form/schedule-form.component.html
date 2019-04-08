@@ -58,8 +58,15 @@
             <div class="form-group col-sm-12 col-md-6" *ngIf="recipientType.value === 'SelectedGroups'">
               <label>Subscriber Group</label>
               <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
-                [clearable]="false" [multiple]="true" [hideSelected]="true" [loading]="loadingGroups"
-                formControlName="groupIds" [class.invalid-input]="groupIds.dirty && groupIds.invalid"></ng-select>
+                [multiple]="true" [hideSelected]="true" [loading]="loadingGroups"
+                formControlName="groupIds" [class.invalid-input]="groupIds.dirty && groupIds.invalid">
+                <ng-template ng-label-tmp let-item="item">
+                  <div class="ng-value-wrapper default">
+                    <span class="ng-value-icon left" (click)="removeGroup(item)" *ngIf="item.disabled !== true">×</span>
+                    <span class="ng-value-label">{{ item.name }}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
               <div class="invalid-msg" *ngIf="groupIds.dirty && groupIds.errors">
                 This field is required
               </div>
@@ -68,8 +75,14 @@
             <div class="form-group col-sm-12 col-md-6" *ngIf="recipientType.value === 'SelectedSubscribers'">
               <label>Subscribers</label>
               <ng-select [items]="subscribers$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscribers"
-                [clearable]="false" [multiple]="true" [hideSelected]="true" [loading]="loadingSubscribers"
+                [multiple]="true" [hideSelected]="true" [loading]="loadingSubscribers"
                 formControlName="subscriberIds" [class.invalid-input]="subscriberIds.dirty && subscriberIds.invalid">
+                <ng-template ng-label-tmp let-item="item">
+                  <div class="ng-value-wrapper default">
+                    <span class="ng-value-icon left" (click)="removeSubscriber(item)" *ngIf="item.disabled !== true">×</span>
+                    <span class="ng-value-label">{{ item.name }}</span>
+                  </div>
+                </ng-template>
               </ng-select>
               <div class="invalid-msg" *ngIf="subscriberIds.dirty && subscriberIds.errors">
                 This field is required

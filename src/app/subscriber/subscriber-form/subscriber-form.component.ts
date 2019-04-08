@@ -9,7 +9,7 @@ import { RouteNames } from 'src/app/shared/constants';
 import { MessageDialog } from 'src/app/shared/message_helper';
 import { Subscriber, SubscriberGroup } from '../shared/subscriber.model';
 import { SettingsService } from 'src/app/app-settings/settings/settings.service';
-import { shareReplay, takeUntil } from 'rxjs/operators';
+import { shareReplay, takeUntil, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-subscriber-form',
@@ -28,8 +28,13 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   groups$: Observable<SubscriberGroup[]>
   unsubscribe$ = new Subject<void>();
   @BlockUI() blockUi: NgBlockUI
-  saveSubscription: Subscription
-  findSubscription: Subscription
+  subscriberGroupsCopy: any[]
+  otherCommoditiesCopy: any[]
+  loadingRegions: boolean
+  loadingDistricts: boolean
+  loadingSubscriberTypes: boolean
+  loadingCommodities: boolean
+  loadingGroups: boolean
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -76,7 +81,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     params.subscriberCommodities.push({ commodityId: params.primaryCommodity, isPrimaryCommodity: true })
 
     this.blockUi.start('Saving...')
-    this.saveSubscription = this.subscriberService.saveSubscriber(formData)
+    this.subscriberService.saveSubscriber(formData)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockUi.stop()
@@ -86,6 +91,68 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   closeForm() {
     this.router.navigateByUrl(`${RouteNames.subscriber}/${RouteNames.subscriberList}`)
+  }
+
+  removeFromGroup(group) {
+    if (!this.id.value) {
+      this.patchSubscriberGroups(group.id)
+      return
+    }
+
+    const match = this.subscriberGroupsCopy.some((val: any) => val === group.id)
+    if (!match) {
+      this.patchSubscriberGroups(group.id)
+      return
+    }
+
+    MessageDialog.confirm('Remove Group', `Are you sure you want to remove this subscriber from '${group.name}'?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Group...')
+        this.subscriberService.removeSubscriberFromGroup(this.id.value, group.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              this.patchSubscriberGroups(group.id)
+            }
+          })
+
+      }
+    })
+  }
+
+  removeCommodity(commodity) {
+    if (!this.id.value) {
+      this.patchOtherCommodities(commodity.id)
+      return
+    }
+
+    const match = this.otherCommoditiesCopy.some((val: any) => val.id === commodity.id)
+    if (!match) {
+      this.patchOtherCommodities(commodity.id)
+      return
+    }
+
+    MessageDialog.confirm('Remove Commodity', `Are you sure you want to remove '${commodity.name}' from other commodities?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Commodity...')
+        this.subscriberService.removeSubscriberCommodity(this.id.value, commodity.id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              this.patchOtherCommodities(commodity.id)
+            }
+          })
+
+      }
+    })
   }
 
   get id() { return this.form.get('id') }
@@ -146,11 +213,17 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   private loadDistrictsInRegion(regionId: number) {
-    this.districts$ = this.subscriberService.fetchDistrictsByRegion(regionId)
+    this.loadingDistricts = true
+    this.districts$ = this.subscriberService.fetchDistrictsByRegion(regionId).pipe(
+      finalize(() => this.loadingDistricts = false)
+    )
   }
 
   private loadRegions() {
-    this.regions$ = this.settingsService.fetch2('region')
+    this.loadingRegions = true
+    this.regions$ = this.settingsService.fetch2('region').pipe(
+      finalize(() => this.loadingRegions = false)
+    )
   }
 
   private loadEducationalLevels() {
@@ -158,44 +231,52 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   }
 
   private loadSubscriberTypes() {
-    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
+    this.loadingSubscriberTypes = true
+    this.subscriberTypes$ = this.settingsService.fetch2('subscribertype').pipe(
+      finalize(() => this.loadingSubscriberTypes = false)
+    )
   }
 
   private loadSubscriberTypeCommodities(subscriberTypeId: number) {
-    this.commodities$ = this.subscriberService.fetchCommoditiesBySubscriberType(subscriberTypeId).pipe(shareReplay(1))
+    this.loadingCommodities = true
+    this.commodities$ = this.subscriberService.fetchCommoditiesBySubscriberType(subscriberTypeId)
+      .pipe(
+        shareReplay(1),
+        finalize(() => this.loadingCommodities = false)
+      )
   }
 
   private loadGroups() {
-    this.groups$ = this.subscriberService.fetchSubscriberGroups()
+    this.loadingGroups = true
+    this.groups$ = this.subscriberService.fetchSubscriberGroups().pipe(
+      finalize(() => this.loadingGroups = false)
+    )
   }
 
   private findSubscriber(id: number) {
     this.blockUi.start('Loading...')
-    this.findSubscription = this.subscriberService.findSubscriber(id)
+    this.subscriberService.findSubscriber(id)
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(res => {
+      .subscribe(data => {
         this.blockUi.stop()
-        if (res.success) {
-          const data = res.data
-          this.form.patchValue(data)
-          this.form.patchValue({
-            startDate: new Date(data.startDate).toISOString().substring(0, 10),
-            // dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
-            languageId: data.language.id,
-            regionId: data.region.id,
-            districtId: data.district.id,
-            educationLevelId: data.educationalLevel.educationLevelId,
-            subscriberTypeId: data.subscriberType.subscriberTypeId,
-            subscriberGroups: data.subscriberGroups.map(grp => grp.groupId),
-            primaryCommodity: data.subscriberCommodities ? data.subscriberCommodities
-              .find(elm => elm.isPricipalCommodity === true).commodityId : null,
-            otherCommodities: data.subscriberCommodities ? data.subscriberCommodities
-              .filter(elm => elm.isPricipalCommodity === false)
-              .map(elm => {
-                return { id: elm.commodityId, name: elm.commodity }
-              }) : null
-          })
-        }
+        this.subscriberGroupsCopy = data.subscriberGroups ? data.subscriberGroups.map(grp => grp.groupId) : null
+        this.otherCommoditiesCopy = data.otherCommodities ? data.otherCommodities
+          .map(elm => {
+            return { id: elm.commodityId, name: elm.commodity }
+          }) : null
+        this.form.patchValue(data)
+        this.form.patchValue({
+          startDate: new Date(data.startDate).toISOString().substring(0, 10),
+          dateOfBirth: new Date(data.dateOfBirth).toISOString().substring(0, 10),
+          languageId: data.language.id,
+          regionId: data.region.id,
+          districtId: data.district.id,
+          educationLevelId: data.educationalLevel.educationLevelId,
+          subscriberTypeId: data.subscriberType.subscriberTypeId,
+          subscriberGroups: this.subscriberGroupsCopy,
+          primaryCommodity: data.primaryComodity.commodityId,
+          otherCommodities: this.otherCommoditiesCopy
+        })
       }, () => this.blockUi.stop())
   }
 
@@ -240,12 +321,10 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((value: []) => {
         if (value && this.primaryCommodity.value) {
-          const index: any = value.findIndex((elm: any) => elm.id === this.primaryCommodity.value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.error(`${obj.name} has already been added as a primary commodity`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+          const match: any = value.find((elm: any) => elm.id === this.primaryCommodity.value)
+          if (match) {
+            MessageDialog.error(`${match.name} has already been added as a primary commodity`)
+            this.patchOtherCommodities(match.id, { emitEvent: false })
           }
         }
       })
@@ -256,14 +335,22 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((value: any) => {
         if (value && this.otherCommodities.value) {
-          const index: any = this.otherCommodities.value.findIndex((elm: any) => elm.id === value)
-          if (index >= 0) {
-            const obj = this.otherCommodities.value[index]
-            MessageDialog.warning(`${obj.name} has been removed from other commodities`)
-            this.otherCommodities.value.splice(index, 1)
-            this.otherCommodities.patchValue(this.otherCommodities.value, { emitEvent: false })
+          const match: any = this.otherCommodities.value.find((elm: any) => elm.id === value)
+          if (match) {
+            MessageDialog.warning(`${match.name} has been removed from other commodities`)
+            this.patchOtherCommodities(match.id, { emitEvent: false })
           }
         }
       })
+  }
+
+  private patchSubscriberGroups(groupId: number) {
+    const groups = (this.subscriberGroups.value as []).filter((val: any) => val !== groupId);
+    this.subscriberGroups.patchValue(groups);
+  }
+
+  private patchOtherCommodities(commodityId: number, options?: Object) {
+    const commodities = (this.otherCommodities.value as []).filter((val: any) => val.id !== commodityId);
+    this.otherCommodities.patchValue(commodities, options);
   }
 }

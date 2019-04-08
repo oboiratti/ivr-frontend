@@ -81,15 +81,15 @@
                             <label>Password Confirmation
                                 <i class="fa fa-asterisk text-danger"></i>
                             </label>
-                            <input type="password" class="form-control" formControlName="passwordConfirmation"
-                                [class.invalid-input]="userForm.controls.passwordConfirmation.dirty && userForm.controls.passwordConfirmation.invalid">
+                            <input type="password" class="form-control" formControlName="confirmPassword"
+                                [class.invalid-input]="userForm.controls.confirmPassword.dirty && userForm.controls.confirmPassword.invalid">
                             <div class="invalid-msg">
                                 <div
-                                    *ngIf="userForm.controls.passwordConfirmation.dirty && userForm.controls.passwordConfirmation.errors">
+                                    *ngIf="userForm.controls.confirmPassword.dirty && userForm.controls.confirmPassword.errors">
                                     This field is required
                                 </div>
                                 <div
-                                    *ngIf="userForm.controls.passwordConfirmation.dirty && userForm.hasError('passwordMismatch')">
+                                    *ngIf="userForm.controls.confirmPassword.dirty && userForm.hasError('passwordMismatch')">
                                     Passwords don't match
                                 </div>
                             </div>
@@ -101,23 +101,23 @@
                             <label>Role
                                 <i class="fa fa-asterisk text-danger"></i>
                             </label>
-                            <select class="form-control" formControlName="role" [compareWith]="compareRoles"
-                                [class.invalid-input]="userForm.controls.role.dirty && userForm.controls.role.invalid">
+                            <select class="form-control" formControlName="roleId"
+                                [class.invalid-input]="userForm.controls.roleId.dirty && userForm.controls.roleId.invalid">
                                 <option value="">Select Role</option>
-                                <option *ngFor="let role of roles$ | async" [ngValue]="role">{{role.name}}</option>
+                                <option *ngFor="let role of roles$ | async" [ngValue]="role.id">{{role.name}}</option>
                             </select>
                             <div class="invalid-msg"
-                                *ngIf="userForm.controls.role.dirty && userForm.controls.role.errors">
+                                *ngIf="userForm.controls.roleId.dirty && userForm.controls.roleId.errors">
                                 This field is required
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <!-- <button type="button" class="btn btn-danger float-right"
+                        <button type="button" class="btn btn-danger float-left"
                             (click)="remove(userForm.controls.id.value)" *ngIf="userForm.controls.id.value">
                             <i class="fa fa-trash"></i> Delete
-                        </button> -->
+                        </button>
                         <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="userForm" (valid)="save()">
                             <i class="fa fa-save"></i> Save
                         </button>

@@ -6,7 +6,8 @@ import { Subscriber, SubscriberGroup } from '../shared/subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouteNames } from 'src/app/shared/constants';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
+import { MessageDialog } from 'src/app/shared/message_helper';
 
 @Component({
   selector: 'app-subscriber-group-form',
@@ -19,6 +20,7 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
   subscribers$: Observable<Subscriber[]>
   @BlockUI() blockUi: NgBlockUI
   unsubscribe$ = new Subject<void>()
+  subscribersCopy: any[]
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -57,6 +59,38 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`${RouteNames.subscriber}/${RouteNames.subscriberGroupList}`)
   }
 
+  removeSubscriber(subscriber) {
+    if (!this.id.value) {
+      this.patchSubscribers(subscriber.id)
+      return
+    }
+
+    const match = this.subscribersCopy.some((val: any) => val === subscriber.id)
+    if (!match) {
+      this.patchSubscribers(subscriber.id)
+      return
+    }
+
+    MessageDialog.confirm('Remove Subscriber', `Are you sure you want to remove '${subscriber.name}' from this group?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Removing Subscriber...')
+        this.subscriberService.removeGroupBySubscriberId(subscriber.id, this.id.value)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) {
+              this.blockUi.stop()
+              this.patchSubscribers(subscriber.id)
+            }
+          })
+
+      }
+    })
+  }
+
+  get id() { return this.form.get('id') }
   get name() { return this.form.get('name') }
   get notes() { return this.form.get('notes') }
   get subscribers() { return this.form.get('subscribers') }
@@ -84,7 +118,15 @@ export class SubscriberGroupFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockUi.stop()
-        if (res.success) { this.form.patchValue(res.data) }
+        if (res.success) {
+          this.form.patchValue(res.data)
+          this.subscribersCopy = res.data.subscribers
+        }
       }, () => this.blockUi.stop())
+  }
+
+  private patchSubscribers(subscriberId: number) {
+    const subscribers = (this.subscribers.value as []).filter((val: any) => val !== subscriberId);
+    this.subscribers.patchValue(subscribers);
   }
 }

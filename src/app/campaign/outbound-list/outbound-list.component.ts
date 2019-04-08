@@ -21,6 +21,7 @@ export class OutboundListComponent implements OnInit, OnDestroy {
   campaigns$: Observable<any>
   @BlockUI() blockUi: NgBlockUI
   unsubscribe$ = new Subject<void>()
+  title = ''
   lastFilter: CampaignQuery
   filter = <CampaignQuery>{}
   pageSizes = [10, 20, 50, 100]
