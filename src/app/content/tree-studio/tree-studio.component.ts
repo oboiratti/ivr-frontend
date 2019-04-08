@@ -22,6 +22,7 @@ import { TreeConfig } from '../tree-config';
 import { TreeService } from '../shared/tree.service';
 import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
 import { stringify } from 'querystring';
+import { keyframes } from '@angular/animations';
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -46,6 +47,8 @@ export class TreeStudioComponent implements OnInit {
   tags: Observable<Lookup[]>;
   audios: Array<Media>;
   tree: Tree;
+  isEdit: boolean;
+  hasSelected: boolean;
 
   private currentNode: BlockNode;
   private multiNode: Multichoice;
@@ -121,13 +124,15 @@ export class TreeStudioComponent implements OnInit {
         this.loadNode(node);
         this.showForm(node.category);
         this.nodeSelected.emit(node instanceof go.Node ? node : null);
+        this.hasSelected = true;
       } else {
+        this.hasSelected = false;
         this.showTreeForm();
       }
     });
 
     this.diagram.addDiagramListener('ChangingSelection', (e: go.DiagramEvent)  => {
-      // this.showTreeForm();
+      // const copiedNode = this.diagram.copyParts(go.Node, null, true).[0];
     });
 
     this.diagram.addDiagramListener('LinkDrawn', (e: go.DiagramEvent) => {
@@ -393,6 +398,18 @@ export class TreeStudioComponent implements OnInit {
     return (this.tree.nodes.length > 0 || this.tree.nodes != null) ? false : true;
   }
 
+  setDiagramToReadOnly(isReadOnly: boolean) {
+    if (isReadOnly) {
+      this.diagram.isEnabled = false;
+      this.diagram.clearSelection();
+      this.showTreeForm();
+      this.isEdit = false;
+    } else {
+      this.diagram.isEnabled = true;
+      this.isEdit = true;
+    }
+  }
+
   makeStartNode() {
     this.tree.nodes.filter(x => x.isStartingNode === true)[0].isStartingNode = false;
     this.tree.startingNodeKey = this.currentNode.key;
@@ -436,7 +453,7 @@ export class TreeStudioComponent implements OnInit {
         repeatKey: '2', // Key to press to repeat
         repeatDelay: '7',  // Seconds before repeat
         repeatMax: '3',
-        choices: [{key: 1, value: ''}],
+        choices: [{key: 1, value: '', weight: 0 }],
         choiceKeypresses: {},
         branching: true,
         addExitForNoResponse : false
@@ -462,7 +479,7 @@ export class TreeStudioComponent implements OnInit {
   addChoice(i: number) {
     const num: number = this.currentNode.custom.choices.length;
     if (num === i ) {
-      this.currentNode.custom.choices.push({ key: num + 1, value : '' });
+      this.currentNode.custom.choices.push({ key: num + 1, value : '', weight: 0 });
       const name: number = num + 1;
       this.addPort(this.currentNode.key, this.currentNode.custom.choices[num - 1]);
     } else {
@@ -477,11 +494,11 @@ export class TreeStudioComponent implements OnInit {
   }
 
   removeChoice(i: number) {
-    // const i = this.tree.nodes.findIndex(x => x.key === choice)
     this.currentNode.custom.choices.splice(i, 1);
+    const length = this.currentNode.custom.choices.length;
+    this.currentNode.custom.choices[length - 1].key = length;
     const node: go.Node = this.diagram.findNodeForKey(this.currentNode.key);
     const portId = 'bottom_' + this.currentNode.key + '_' + this.currentNode.custom.choices[i].key;
-    // const index = 
     this.diagram.model.removeArrayItem(node.data.multiArray, node.data.multiArray.findIndex(x => x.multifromPortId === portId));
   }
 
@@ -566,7 +583,6 @@ export class TreeStudioComponent implements OnInit {
     if (!selectedNodeData.key) { return ; }
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
     this.showForm(this.currentNode.key);
-    // console.log('Current Node', this.currentNode);
   }
 
   updateMessageTitle() {
@@ -576,11 +592,20 @@ export class TreeStudioComponent implements OnInit {
     }
   }
 
-  removeNode(key: string) {
+  private removeNode(key: string) {
     const index = this.tree.nodes.findIndex(x => x.key === key)
     this.tree.nodes.splice(index, 1)
   }
 
+  deleteNode() {
+    if (this.currentNode == null) { return ; }
+    const node = this.diagram.findNodeForKey(this.currentNode.key);
+    if (node !== null) {
+      this.diagram.startTransaction('deleting node => ' + this.currentNode.key);
+      this.diagram.remove(node);
+      this.diagram.commitTransaction('deleted node => ' + this.currentNode.key);
+    }
+  }
   copyNode() {
     // TODO :add copy code
     console.log('copy node')
@@ -594,6 +619,94 @@ export class TreeStudioComponent implements OnInit {
     this.tags = this.mediaService.fetchTags();
   }
 
+  saveTree() {
+    this.blockUi.start('Loading...');
+    const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
+    tosave.nodes = this.removeExtraChoices(tosave.nodes)
+    tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
+    tosave.treeModel = this.diagram.model.toJson();
+    tosave.connections = this.getConnections(tosave.treeModel);
+    this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
+      this.blockUi.stop();
+      if (res.success) { }
+    }, () => this.blockUi.stop());
+  }
+
+  private addExtraChoices(nodes: Array<BlockNode>) {
+    const newNodes: Array<BlockNode> = [];
+    nodes.forEach((node, index, array) => {
+      if ( node.type === TreeConfig.nodeTypes.multichoice) {
+        node.custom.choices.push({key: node.custom.choices.length + 1, value: '', weight: 0 })
+      }
+      newNodes.push(node);
+    });
+    return newNodes;
+  }
+
+  private removeExtraChoices(nodes: Array<BlockNode>) {
+    const newNodes: Array<BlockNode> = [];
+    nodes.forEach((node, index, array) => {
+      if ( node.type === TreeConfig.nodeTypes.multichoice) {
+        node.custom.choices.splice(node.custom.choices.length - 1, 1)
+      }
+      newNodes.push(node);
+    });
+    return newNodes;
+  }
+
+  private getConnections(tree: any) {
+    const obj = JSON.parse(tree);
+    const arr = obj.linkDataArray;
+    // this.processConnectionsForSave(arr);
+    return JSON.stringify(arr);
+  }
+
+  private processConnectionsForSave(arr: Array<any>) {
+    const nodes = this.tree.nodes;
+    nodes.forEach((node: BlockNode) => {
+      if (arr.findIndex(x => x.to === node.key) === -1) {
+        console.log('First => ', node.custom.title);
+      }
+    });
+  }
+
+  private loadTree(id: number) {
+    this.blockUi.start('Loading...');
+    this.findSubscription = this.treeService.findTree(id).subscribe(res => {
+      this.blockUi.stop();
+      if (res.success) {
+        const tree = res.data;
+        tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
+        // tree.connections = (tree.connections === null) ? tree.connections = [] : this.processNewConnections(res.data.connections);
+        if ( res.data.treeModel != null) {
+          this.diagram.model = go.Model.fromJson(res.data.treeModel)
+        }
+        this.tree = tree;
+        console.log('TREE => ', this.tree)
+        this.loadAudios();
+      }
+    }, () => this.blockUi.stop());
+  }
+
+  private processNewTree(node: string): Array<BlockNode> {
+    node = unescape(node);
+    let nodes: Array<BlockNode>;
+    nodes = (node == null) ? [] : JSON.parse(node);
+    return this.addExtraChoices(nodes);
+  }
+
+  private processNewConnections(connection: string): Array<Connection> {
+    connection = unescape(connection);
+    let connections: Array<Connection>;
+    connections = (connection == null) ? [] : JSON.parse(connection);
+    return connections;
+  }
+
+  private loadAudios() {
+    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
+      this.audios = res;
+    });
+  }
 
   // UTILITY FUNCTIONS
   // Show Forms
@@ -661,76 +774,11 @@ export class TreeStudioComponent implements OnInit {
     this.numericForm = true;
   }
 
-  saveTree() {
-    this.blockUi.start('Loading...');
-    const tosave = JSON.parse(JSON.stringify(this.tree)); // Do deep copy of tree object
-    tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
-    tosave.treeModel = this.diagram.model.toJson();
-    tosave.connections = this.getConnections(tosave.treeModel);
-    this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
-      this.blockUi.stop();
-      if (res.success) { }
-    }, () => this.blockUi.stop());
-  }
-
-  private getConnections(tree: any) {
-    const obj = JSON.parse(tree);
-    const arr = obj.linkDataArray;
-    // this.processConnectionsForSave(arr);
-    return JSON.stringify(arr);
-  }
-
-  private processConnectionsForSave(arr: Array<any>) {
-    const nodes = this.tree.nodes;
-    nodes.forEach((node: BlockNode) => {
-      if (arr.findIndex(x => x.to === node.key) === -1) {
-        console.log('First => ', node.custom.title);
-      }
-    });
-  }
-
-  private loadTree(id: number) {
-    this.blockUi.start('Loading...');
-    this.findSubscription = this.treeService.findTree(id).subscribe(res => {
-      this.blockUi.stop();
-      if (res.success) {
-        const tree = res.data;
-        tree.nodes = (tree.nodes === null) ? tree.nodes = [] : this.processNewTree(res.data.nodes);
-        // tree.connections = (tree.connections === null) ? tree.connections = [] : this.processNewConnections(res.data.connections);
-        if ( res.data.treeModel != null) {
-          this.diagram.model = go.Model.fromJson(res.data.treeModel)
-        }
-        this.tree = tree;
-        console.log('TREE => ', this.tree)
-        this.loadAudios();
-      }
-    }, () => this.blockUi.stop());
-  }
-
-  private processNewTree(node: string): Array<BlockNode> {
-    node = unescape(node);
-    let nodes: Array<BlockNode>;
-    nodes = (node == null) ? [] : JSON.parse(node);
-    return nodes;
-  }
-
-  private processNewConnections(connection: string): Array<Connection> {
-    connection = unescape(connection);
-    let connections: Array<Connection>;
-    connections = (connection == null) ? [] : JSON.parse(connection);
-    return connections;
-  }
-
-  private loadAudios() {
-    this.findSubscription = this.mediaService.queryMedia(<MediaQuery>{languageId: this.tree.language.id}).subscribe(res => {
-      this.audios = res;
-    });
-  }
-
   ngOnInit() {
     this.diagram.div = this.diagramRef.nativeElement;
     this.loadLanguages();
     this.loadTags();
+    this.setDiagramToReadOnly(true);
 
     const id = +this.activatedRoute.snapshot.paramMap.get('id');
     this.tree = <Tree>{};
