@@ -49,7 +49,9 @@ export class MediaFormComponent implements OnInit, OnDestroy {
 
   save(formData: any) {
     const params = formData;
-    params.tags = params.tagsList.join();
+    if (params.tagsList) {
+      params.tags = params.tagsList.join();
+    }
     this.blockUi.start('Uploading Media...');
     this.saveSubscription = this.mediaService.saveMedia(params).subscribe(res => {
       this.blockUi.stop();
