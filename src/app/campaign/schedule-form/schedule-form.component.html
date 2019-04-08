@@ -1,0 +1,231 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase form-header-text">Campaign Schedule Form</div>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col-sm-12 col-md-10 offset-md-1">
+    <form [formGroup]="form">
+      <div class="card">
+        <div class="card-body">
+          <div class="alert alert-info" role="alert" *ngIf="campaign">
+            Campaign Scheduling for Campaign: <b>{{campaign.title}}</b> in the area of <b>{{campaign.area.name}}</b>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Pillar</label>
+              <ng-select [items]="pillars$ | async" bindLabel="name" bindValue="id" placeholder="Select Pillar"
+                [clearable]="false" [loading]="loadingPillars" formControlName="pillarId"
+                [class.invalid-input]="pillarId.dirty && pillarId.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="pillarId.dirty && pillarId.invalid">
+                <div *ngIf="pillarId.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Topic</label>
+              <ng-select [items]="topics$ | async" bindLabel="name" bindValue="id" placeholder="Select Topic"
+                [clearable]="false" [loading]="loadingTopics" formControlName="topicId"
+                [class.invalid-input]="topicId.dirty && topicId.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="topicId.dirty && topicId.invalid">
+                <div *ngIf="topicId.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Recipient Type</label>
+              <ng-select [items]="recipientTypes" placeholder="Send this campaign to..." [clearable]="false"
+                formControlName="recipientType" [class.invalid-input]="recipientType.dirty && recipientType.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="recipientType.dirty && recipientType.invalid">
+                <div *ngIf="recipientType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="recipientType.value === 'SelectedGroups'">
+              <label>Subscriber Group</label>
+              <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Group"
+                [clearable]="false" [multiple]="true" [hideSelected]="true" [loading]="loadingGroups"
+                formControlName="groupIds" [class.invalid-input]="groupIds.dirty && groupIds.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="groupIds.dirty && groupIds.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6" *ngIf="recipientType.value === 'SelectedSubscribers'">
+              <label>Subscribers</label>
+              <ng-select [items]="subscribers$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscribers"
+                [clearable]="false" [multiple]="true" [hideSelected]="true" [loading]="loadingSubscribers"
+                formControlName="subscriberIds" [class.invalid-input]="subscriberIds.dirty && subscriberIds.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="subscriberIds.dirty && subscriberIds.errors">
+                This field is required
+              </div>
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Schedule Type</label>
+              <ng-select [items]="scheduleTypes" placeholder="Schedule Type" [clearable]="false"
+                formControlName="scheduleType" [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="scheduleType.dirty && scheduleType.invalid">
+                <div *ngIf="scheduleType.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <ng-container *ngIf="scheduleType.value && scheduleType.value !== 'Now'">
+              <div class="form-group col-sm-12 col-md-3">
+                <label>Start Date</label>
+                <input type="date" class="form-control" formControlName="startDate">
+              </div>
+
+              <div class="form-group col-sm-12 col-md-3">
+                <label>Send Time</label>
+                <input type="time" class="form-control" formControlName="sendTime">
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="scheduleType.value === 'Repeating'">
+              <div class="form-group col-sm-12 col-md-6">
+                <label>Period</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Repeat Every</span>
+                  </div>
+                  <input type="number" class="form-control" min="1" formControlName="period">
+                  <div class="input-group-append">
+                    <select class="form-control" formControlName="frequency">
+                      <option *ngFor="let period of periods" [ngValue]="period">{{period}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group col-sm-12 col-md-6">
+                <label>End Date</label><br>
+                <input type="date" class="form-control" formControlName="endDate">
+              </div>
+            </ng-container>
+          </div>
+          <hr>
+
+          <div class="form-row">
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Tree Details</label>
+              <ng-select [items]="trees$ | async" bindLabel="title" placeholder="Select Tree" [clearable]="false"
+                formControlName="tree" [class.invalid-input]="tree.dirty && tree.invalid" [loading]="loadingTrees">
+              </ng-select>
+              <div class="invalid-msg" *ngIf="tree.dirty && tree.invalid">
+                <div *ngIf="tree.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group col-sm-12 col-md-6">
+              <label>Version</label>
+              <ng-select [items]="" bindLabel="label" bindValue="value" placeholder="Select Tree Version"
+                [clearable]="false" formControlName="treeVersion"
+                [class.invalid-input]="scheduleType.dirty && scheduleType.invalid">
+              </ng-select>
+            </div> -->
+          </div>
+
+          <div class="form-row" *ngIf="tree.value">
+            <div class="col-12">
+              <div><b>Title:</b> {{tree.value.title}}</div>
+              <div><b>Blocks:</b> {{tree.value.blocks}}</div>
+              <div><b>Language:</b> {{tree.value.language}}</div>
+            </div>
+          </div><br>
+
+          <div class="ml-n3">
+            <button type="button" class="btn btn-link" (click)="doToggle()">
+              <i [ngClass]="toggleIcon" class="text-dark"></i> Advanced Options
+            </button>
+          </div>
+
+          <div class="ml-3" *ngIf="toggle">
+            <h6 class="text-uppercase">Voice Options</h6>
+            <div class="ml-3 mb-1">Call Time Window</div>
+            <div class="form-row ml-3">
+              <div class="col-sm-12 col-md-6">
+                <div class="form-inline">
+                  <label for="inlineFormInputName2">Do not send call before: </label> &nbsp;
+                  <input type="time" class="form-control mb-2 mr-sm-2" formControlName="dontCallBefore">
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="form-inline">
+                  <label for="inlineFormInputName2">Do not send call after: </label> &nbsp;
+                  <input type="time" class="form-control mb-2 mr-sm-2" formControlName="dontCallAfter">
+                </div>
+              </div>
+            </div>
+            <hr>
+
+            <h6 class="text-uppercase">Call Retry Options</h6>
+            <div class="ml-3 mb-2">If not answered</div>
+            <div class="form-group row">
+              <div class="input-group mb-3 ml-3 col-sm-12 col-md-4">
+                <label class="mt-1">Try </label>
+                <input type="number" class="form-control ml-1" min="0" formControlName="retryTime">
+                <div class="input-group-append">
+                  <span class="input-group-text">times</span>
+                </div>
+              </div>
+
+              <div class="input-group mb-3 col-sm-12 col-md-6">
+                <!-- <label>in quick succession</label> -->
+                <input type="number" class="form-control ml-sm-3 ml-1" min="0" formControlName="minutesApart">
+                <div class="input-group-append">
+                  <span class="input-group-text">minutes</span>
+                </div>
+                <div class="input-group-append">
+                  <span class="input-group-text">apart</span>
+                </div>
+              </div>
+            </div>
+            <hr>
+
+            <h6 class="text-uppercase">Voice Mail Detection</h6>
+            <div class="custom-control custom-checkbox custom-control-inline ml-3">
+              <input type="checkbox" id="customcheckboxInline1" name="customcheckboxInline1"
+                class="custom-control-input" formControlName="detectVoicemail">
+              <label class="custom-control-label" for="customcheckboxInline1">Detect Voicemail</label>
+            </div>
+            <hr>
+          </div>
+
+          <div>
+            <!-- <button type="button" class="btn btn-danger" (click)="remove(id.value)" *ngIf="id.value">
+              <i class="fa fa-trash"></i> Delete
+            </button> -->
+            <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
+              (valid)="save(form.value)">
+              <i class="fa fa-save"></i> Save
+            </button>
+            <button type="button" class="btn float-right" (click)="closeForm()">
+              <i class="fa fa-close"></i> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

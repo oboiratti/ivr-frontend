@@ -152,7 +152,7 @@
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Other Commodities</label>
-              <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id" placeholder="Select Other Commodities"
+              <ng-select [items]="commodities$ | async" bindLabel="name" placeholder="Select Other Commodities"
                 [clearable]="false" [multiple]="true" formControlName="otherCommodities"
                 [class.is-invalid]="otherCommodities.dirty && otherCommodities.invalid"></ng-select>
               <!-- <div class="invalid-feedback" *ngIf="otherCommodities.dirty && otherCommodities.invalid">
@@ -160,6 +160,17 @@
                   This field is required
                 </div>
               </div> -->
+            </div>
+
+            <div class="form-group col-sm-12 col-md-6">
+              <label>Land Size</label>
+              <input type="number" class="form-control" min="0" formControlName="landSize"
+                [class.is-invalid]="landSize.dirty && landSize.invalid">
+              <div class="invalid-feedback" *ngIf="landSize.dirty && landSize.invalid">
+                <div *ngIf="landSize.errors.required">
+                  This field is required
+                </div>
+              </div>
             </div>
           </div>
           <hr>

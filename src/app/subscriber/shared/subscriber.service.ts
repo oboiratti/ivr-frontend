@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
-import { Subscriber, SubscriberGroup, SubscriberQuery } from './subscriber.model';
+import { Subscriber, SubscriberGroup, SubscriberQuery, SubscriberGroupQuery } from './subscriber.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -9,6 +9,9 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SubscriberService {
+
+  totalSubscribers = 0
+  totalGroups = 0
 
   constructor(private http: HttpClient) { }
 
@@ -34,7 +37,10 @@ export class SubscriberService {
     return this.http.post<ResponseObject<Subscriber[]>>(`${environment.baseUrl}/subscriber/query`, params)
       .pipe(
         map(res => {
-          if (res.success) { return res.data }
+          if (res.success) {
+            this.totalSubscribers = res.total
+            return res.data
+          }
         })
       )
   }
@@ -57,6 +63,18 @@ export class SubscriberService {
       .pipe(
         map(res => {
           if (res.success) { return res.data }
+        })
+      )
+  }
+
+  querySubscriberGroups(params: SubscriberGroupQuery) {
+    return this.http.post<ResponseObject<SubscriberGroup[]>>(`${environment.baseUrl}/group/query`, params)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            this.totalGroups = res.total
+            return res.data
+          }
         })
       )
   }

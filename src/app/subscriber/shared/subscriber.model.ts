@@ -28,6 +28,11 @@ export interface SubscriberQuery extends ModelQuery {
     name: string
     phone: string
     location: string
+    subscriberTypeId: number
+}
+
+export interface SubscriberGroupQuery extends ModelQuery {
+    name: string
 }
 
 export interface SubscriberUploadModel {

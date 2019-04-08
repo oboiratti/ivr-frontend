@@ -12,6 +12,12 @@ export class Interceptor implements HttpInterceptor {
 
     constructor() { }
 
+    private get QuerySuffix() { return '/query' }
+
+    private isQueryPost(url: string) {
+        return url.indexOf(this.QuerySuffix, url.length - this.QuerySuffix.length) !== -1;
+    }
+
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
          const currentUser: User = JSON.parse(localStorage.getItem('currentUser'));
         // const token = localStorage.getItem("token");
@@ -24,7 +30,7 @@ export class Interceptor implements HttpInterceptor {
             .handle(authReq)
             .pipe(
                 tap((response: HttpResponse<any>) => {
-                    if (response.status === 200 && req.method !== 'GET') {
+                    if (response.status === 200 && req.method !== 'GET' && !this.isQueryPost(response.url)) {
                         Toast.show(response.body.message, response.body.success);
                     }
                 }, err => {

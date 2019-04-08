@@ -5,6 +5,8 @@ import { CampaignComponent } from './campaign.component';
 import { AuthGuard } from '../auth-guard.service';
 import { OutboundListComponent } from './outbound-list/outbound-list.component';
 import { OutboundFormComponent } from './outbound-form/outbound-form.component';
+import { ScheduleListComponent } from './schedule-list/schedule-list.component';
+import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 
 const routes: Routes = [
   {
@@ -30,6 +32,21 @@ const routes: Routes = [
       {
         path: RouteNames.outboundFormEdit,
         component: OutboundFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.schedulesWithId,
+        component: ScheduleListComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.scheduleForm,
+        component: ScheduleFormComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.scheduleFormEdit,
+        component: ScheduleFormComponent,
         canActivate: [AuthGuard]
       }
     ]
