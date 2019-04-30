@@ -115,6 +115,10 @@ export class MediaFormComponent implements OnInit, OnDestroy {
 
   onFileChange(files: any) {
     const file = files.item(0);
+    if (file.size > (4 * 1000 * 1024)) {
+      MessageDialog.error('The size of the selected file should not be more than 4Mb.');
+      return;
+    }
     this.readThis(file);
   }
   readThis(file: any) {
