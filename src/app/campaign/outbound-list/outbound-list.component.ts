@@ -66,6 +66,10 @@ export class OutboundListComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${id}/${RouteNames.schedules}`)
   }
 
+  results(id: number) {
+    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outboundResults}/${id}`)
+  }
+
   pageChanged(page: number) {
     this.currentPage = page;
     this.lastFilter.pager.page = page;

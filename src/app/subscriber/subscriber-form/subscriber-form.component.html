@@ -116,7 +116,7 @@
 
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
-              <label>Town</label>
+              <label>Community</label>
               <input type="text" class="form-control" formControlName="location"
                 [class.is-invalid]="location.dirty && location.invalid">
               <div class="invalid-feedback" *ngIf="location.dirty && location.invalid">
@@ -172,7 +172,7 @@
             </div>
 
             <div class="form-group col-sm-12 col-md-6">
-              <label>Land Size (in acres)</label>
+              <label>Land Size (in hectares)</label>
               <input type="number" class="form-control" min="0" formControlName="landSize"
                 [class.is-invalid]="landSize.dirty && landSize.invalid">
               <div class="invalid-feedback" *ngIf="landSize.dirty && landSize.invalid">

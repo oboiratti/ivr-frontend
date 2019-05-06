@@ -95,6 +95,14 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
     this.getSubscribers(this.filter)
   }
 
+  setStatusColor(status: string) {
+    switch (status) {
+      case 'Active': return 'badge badge-success'
+      case 'Inactive': return 'badge badge-secondary'
+      default: return 'badge badge-danger'
+    }
+  }
+
   private loadSubscriberTypes() {
     this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
   }
