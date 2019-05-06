@@ -49,7 +49,9 @@ export class MediaFormComponent implements OnInit, OnDestroy {
 
   save(formData: any) {
     const params = formData;
-    params.tags = params.tagsList.join();
+    if (params.tagsList) {
+      params.tags = params.tagsList.join();
+    }
     this.blockUi.start('Uploading Media...');
     this.saveSubscription = this.mediaService.saveMedia(params).subscribe(res => {
       this.blockUi.stop();
@@ -113,6 +115,10 @@ export class MediaFormComponent implements OnInit, OnDestroy {
 
   onFileChange(files: any) {
     const file = files.item(0);
+    if (file.size > (4 * 1000 * 1024)) {
+      MessageDialog.error('The size of the selected file should not be more than 4Mb.');
+      return;
+    }
     this.readThis(file);
   }
   readThis(file: any) {

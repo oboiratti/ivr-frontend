@@ -1,22 +1,13 @@
-<!--<div class="row">
-    <div class="col-sm-12">
-        <div class="p-2 text-uppercase form-header-text">Media Form</div>
-    </div>
-</div>-->
-<hr>
 <div class="row">
     <div class="col-sm-12 col-md-8 offset-md-2">
         <form [formGroup]="form">
             <div class="card">
-                <div class="card-header">
-                    <div class="p-2 text-uppercase form-header-text">{{formType}} Media Form</div>
-                </div>
                 <div class="card-body">
+                    <div class="p-3 text-uppercase form-header-text">{{formType}} Media Form</div>
                     <div class="form-row">
                         <div class="form-group col-sm-12 col-md-12">
                             <label class="btn btn-secondary btn-file">Select File <i class="fa fa-asterisk color-maroon"></i>
                             <input type="file" class="form-control"  accept=".mp3, .wav, .aac, .ogg, .wma" (change)="onFileChange($event.target.files)">
-                            <!--<input type="hidden" name="fileHidden" formControlName="filePath" [class.is-invalid]="filePath.dirty && filePath.invalid" fileread="filePath"/>-->
                           </label>
                             <div class="invalid-feedback" *ngIf="filePath.dirty && filePath.invalid">
                                 <div *ngIf="filePath.errors.required">
@@ -26,18 +17,18 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-sm-12 col-md-8">
+                        <div class="form-group col-sm-12 col-md-6">
                             <label>Title <i class="fa fa-asterisk color-maroon"></i></label>
-                            <input type="text" class="form-control" formControlName="title" [class.is-invalid]="title.dirty && title.invalid">
+                            <input type="text" class="form-control" formControlName="title" [class.is-invalid]="title.dirty && title.invalid" placeholder="Live Test">
                             <div class="invalid-feedback" *ngIf="title.dirty && title.invalid">
                                 <div *ngIf="title.errors.required">
                                     This field is required
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-sm-12 col-md-4">
+                        <div class="form-group col-sm-12 col-md-6">
                             <label>Language <i class="fa fa-asterisk color-maroon"></i></label>
-                            <select class="form-control" formControlName="languageId" [class.is-invalid]="languageId.dirty && languageId.invalid">
+                            <select class="form-control" formControlName="languageId" [class.is-invalid]="languageId.dirty && languageId.invalid" placeholder="Twi">
                 <option *ngFor="let language of languages$ | async" [ngValue]="language.id">{{language.name}}</option>
               </select>
                             <div class="invalid-feedback" *ngIf="languageId.dirty && languageId.invalid">
@@ -48,10 +39,10 @@
                         </div>
                         <div class="form-group col-sm-12 col-md-12">
                             <label>Description</label>
-                            <textarea class="form-control" formControlName="description" rows="3"></textarea>
+                            <textarea class="form-control" formControlName="description" rows="3" placeholder="Hello World"></textarea>
                         </div>
 
-                        <div class="form-group col-sm-12 col-md-4">
+                        <div class="form-group col-sm-12 col-md-6">
                             <label>Type <i class="fa fa-asterisk color-maroon"></i></label><br>
                             <div class="custom-control custom-radio custom-control-inline">
                                 <input type="radio" id="customRadioInline1" class="custom-control-input" value="Message" formControlName="type">
@@ -62,19 +53,20 @@
                                 <label class="custom-control-label" for="customRadioInline2">Survey</label>
                             </div>
                         </div>
-                        <div class="form-group col-sm-12 col-md-8">
+                        <div class="form-group col-sm-12 col-md-6">
                             <label>Tags</label>
                             <ng-select [items]="tags$ | async" bindLabel="name" bindValue="name" placeholder="Select Tags" [clearable]="true" [multiple]="true" formControlName="tagsList" [class.is-invalid]="tagsList.dirty && tagsList.invalid"></ng-select>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer clearfix">
-                    <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form" (valid)="save(form.value)" [disabled]="form.invalid">
-                                <i class="fa fa-upload"></i> Upload Media
-                              </button>
-                    <button type="button" class="btn float-right border border-dark" (click)="closeForm()">
-                                <i class="fa fa-close"></i> Cancel
-                              </button>
+                    <div class="form-row float-right">
+                        <button type="button" class="btn border border-dark" (click)="closeForm()">
+                                    <i class="fa fa-close"></i> Cancel
+                                  </button>
+                        <button type="submit" class="btn btn-primary-custom border border-dark" [validate-form]="form" (valid)="save(form.value)" [disabled]="form.invalid">
+                                    <i class="fa fa-upload"></i> Upload Media
+                                  </button>
+
+                    </div>
                 </div>
             </div>
         </form>

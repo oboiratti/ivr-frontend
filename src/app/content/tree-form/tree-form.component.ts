@@ -48,7 +48,9 @@ export class TreeFormComponent implements OnInit, OnDestroy {
 
   save(formData: any) {
     const params = formData;
-    params.tags = params.tagsList.join();
+    if (params.tagsList) {
+      params.tags = params.tagsList.join();
+    }
     this.blockUi.start('Saving Tree...');
     this.saveSubscription = this.treeService.saveTree(params).subscribe(res => {
       this.blockUi.stop();
