@@ -1,0 +1,25 @@
+.header-content {
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 500;   
+}
+
+.border{
+    border-color: #e6dcb8 !important;
+}
+
+.font-11 {
+    font-size: 11px!important;
+}
+
+.font-12 {
+    font-size: 12px!important;
+}
+
+.progress-height {
+    height: 10px;
+}
+
+.fixed-card-height {
+    height: 300px;
+}
