@@ -108,6 +108,15 @@ export class SubscriberService {
       )
   }
 
+  fetchProgramsByCommodity(commodityId: number) {
+    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/program/getprograms?commodityId=${commodityId}`)
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
+  }
+
   downloadTemplate() {
     return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/subscriber/downloaduploadtemplate`)
       .pipe(

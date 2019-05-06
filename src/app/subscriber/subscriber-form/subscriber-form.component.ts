@@ -25,6 +25,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   educationalLevels$: Observable<Lookup[]>
   subscriberTypes$: Observable<Lookup[]>
   commodities$: Observable<Lookup[]>
+  programs$: Observable<Lookup[]>
   groups$: Observable<SubscriberGroup[]>
   unsubscribe$ = new Subject<void>();
   @BlockUI() blockUi: NgBlockUI
@@ -35,6 +36,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   loadingSubscriberTypes: boolean
   loadingCommodities: boolean
   loadingGroups: boolean
+  loadingPrograms: boolean
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -174,6 +176,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   get primaryCommodity() { return this.form.get('primaryCommodity') }
   get otherCommodities() { return this.form.get('otherCommodities') }
   get landSize() { return this.form.get('landSize') }
+  get program() { return this.form.get('program') }
 
   private setupForm() {
     this.form = this.fb.group({
@@ -200,6 +203,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       subscriberTypeId: new FormControl(null, Validators.required),
       primaryCommodity: new FormControl(null, Validators.required),
       otherCommodities: new FormControl([]),
+      program: new FormControl(null),
       landSize: new FormControl(null),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -253,6 +257,13 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     )
   }
 
+  private loadPrograms(commodityId: number) {
+    this.loadingPrograms = true
+    this.programs$ = this.subscriberService.fetchProgramsByCommodity(commodityId).pipe(
+      finalize(() => this.loadingPrograms = false)
+    )
+  }
+
   private findSubscriber(id: number) {
     this.blockUi.start('Loading...')
     this.subscriberService.findSubscriber(id)
@@ -287,6 +298,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       this.primaryCommodity.disable()
       this.otherCommodities.disable()
     }
+    if (!this.primaryCommodity.value) { this.program.disable() }
   }
 
   private regionValueChangeListener() {
@@ -340,6 +352,10 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
             MessageDialog.warning(`${match.name} has been removed from other commodities`)
             this.patchOtherCommodities(match.id, { emitEvent: false })
           }
+        }
+        if (value) {
+          this.loadPrograms(value)
+          this.program.enable()
         }
       })
   }

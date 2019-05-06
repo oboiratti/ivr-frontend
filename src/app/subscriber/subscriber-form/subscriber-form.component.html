@@ -10,7 +10,7 @@
     <form [formGroup]="form">
       <div class="card">
         <div class="card-body">
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Phone Number</label>
               <input type="text" class="form-control" formControlName="phoneNumber"
@@ -37,7 +37,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Preferred Language</label>
               <select class="form-control" formControlName="languageId"
@@ -66,7 +66,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Date of Birth</label>
               <input type="date" class="form-control" formControlName="dateOfBirth"
@@ -92,7 +92,7 @@
           </div>
           <hr>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Region</label>
               <ng-select [items]="regions$ | async" bindLabel="name" bindValue="id" placeholder="Select Region"
@@ -114,7 +114,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Community</label>
               <input type="text" class="form-control" formControlName="location"
@@ -128,11 +128,12 @@
           </div>
           <hr>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Subscriber Type</label>
               <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id"
-                placeholder="Select Subscriber Type" [clearable]="false" [loading]="loadingSubscriberTypes" formControlName="subscriberTypeId"
+                placeholder="Select Subscriber Type" [clearable]="false" [loading]="loadingSubscriberTypes"
+                formControlName="subscriberTypeId"
                 [class.invalid-input]="subscriberTypeId.dirty && subscriberTypeId.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="subscriberTypeId.dirty && subscriberTypeId.errors">
                 This field is required
@@ -142,7 +143,8 @@
             <div class="form-group col-sm-12 col-md-6">
               <label>Primary Commodity</label>
               <ng-select [items]="commodities$ | async" bindLabel="name" bindValue="id"
-                placeholder="Select Primary Commodity" [clearable]="false" [loading]="loadingCommodities" formControlName="primaryCommodity"
+                placeholder="Select Primary Commodity" [clearable]="false" [loading]="loadingCommodities"
+                formControlName="primaryCommodity"
                 [class.invalid-input]="primaryCommodity.dirty && primaryCommodity.invalid"></ng-select>
               <div class="invalid-msg" *ngIf="primaryCommodity.dirty && primaryCommodity.errors">
                 This field is required
@@ -150,7 +152,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Other Commodities</label>
               <ng-select [items]="commodities$ | async" bindLabel="name" placeholder="Select Other Commodities"
@@ -172,6 +174,18 @@
             </div>
 
             <div class="form-group col-sm-12 col-md-6">
+              <label>Program</label>
+              <ng-select [items]="programs$ | async" bindLabel="name" bindValue="id"
+                placeholder="Select Program" [clearable]="false" [loading]="loadingPrograms"
+                formControlName="program"
+                [class.invalid-input]="program.dirty && program.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="program.dirty && program.errors">
+                This field is required
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm12 col-md-6">
               <label>Land Size (in hectares)</label>
               <input type="number" class="form-control" min="0" formControlName="landSize"
                 [class.is-invalid]="landSize.dirty && landSize.invalid">
@@ -184,7 +198,7 @@
           </div>
           <hr>
 
-          <div class="form-row">
+          <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Start Date</label>
               <input type="date" class="form-control" formControlName="startDate"
@@ -211,7 +225,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="row">
             <!-- <div class="form-group col-sm-12 col-md-6">
               <label>Comments</label>
               <input type="text" class="form-control" formControlName="comments">
@@ -242,7 +256,7 @@
               (valid)="save(form.value)">
               <i class="fa fa-save"></i> Save
             </button>
-            <button type="button" class="btn float-right" (click)="closeForm()">
+            <button type="button" class="btn btn-light border border-dark float-right" (click)="closeForm()">
               <i class="fa fa-close"></i> Cancel
             </button>
           </div>
