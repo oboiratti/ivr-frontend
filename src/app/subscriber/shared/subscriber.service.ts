@@ -142,4 +142,8 @@ export class SubscriberService {
   removeGroupBySubscriberId(subscriberId: number, groupId: number) {
     return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/group/removesubscriberbyid?subscriberId=${subscriberId}&groupId=${groupId}`)
   }
+
+  toggleStatus(id: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/subscriber/updatestatus?id=${id}`)
+  }
 }

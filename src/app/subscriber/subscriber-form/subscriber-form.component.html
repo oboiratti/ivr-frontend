@@ -177,9 +177,9 @@
               <label>Program</label>
               <ng-select [items]="programs$ | async" bindLabel="name" bindValue="id"
                 placeholder="Select Program" [clearable]="false" [loading]="loadingPrograms"
-                formControlName="program"
-                [class.invalid-input]="program.dirty && program.invalid"></ng-select>
-              <div class="invalid-msg" *ngIf="program.dirty && program.errors">
+                formControlName="programId"
+                [class.invalid-input]="programId.dirty && programId.invalid"></ng-select>
+              <div class="invalid-msg" *ngIf="programId.dirty && programId.errors">
                 This field is required
               </div>
             </div>
@@ -252,6 +252,8 @@
           </div>
 
           <div>
+            <button type="button" class="btn btn-outline-success" *ngIf="id.value && status.value === 'Inactive'" (click)="toggleStatus(id.value, 'Activate')">Activate</button>
+            <button type="button" class="btn btn-outline-danger" *ngIf="id.value && status.value === 'Active'" (click)="toggleStatus(id.value, 'Deactivate')">Deactivate</button>
             <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
               (valid)="save(form.value)">
               <i class="fa fa-save"></i> Save

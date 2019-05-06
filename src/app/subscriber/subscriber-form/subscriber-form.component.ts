@@ -157,6 +157,22 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
     })
   }
 
+  toggleStatus(id: number, action: string) {
+    MessageDialog.confirm(`${action} Subscriber`, `Are you sure you want to ${action} this subscriber?`).then(confirm => {
+      if (confirm.value) {
+        this.blockUi.start('Please wait...')
+        this.subscriberService.toggleStatus(id)
+          .pipe(
+            takeUntil(this.unsubscribe$),
+            finalize(() => this.blockUi.stop())
+          )
+          .subscribe(res => {
+            if (res.success) { this.closeForm() }
+          })
+      }
+    })
+  }
+
   get id() { return this.form.get('id') }
   get phoneNumber() { return this.form.get('phoneNumber') }
   get name() { return this.form.get('name') }
@@ -176,7 +192,8 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   get primaryCommodity() { return this.form.get('primaryCommodity') }
   get otherCommodities() { return this.form.get('otherCommodities') }
   get landSize() { return this.form.get('landSize') }
-  get program() { return this.form.get('program') }
+  get programId() { return this.form.get('programId') }
+  get status() { return this.form.get('status') }
 
   private setupForm() {
     this.form = this.fb.group({
@@ -203,7 +220,8 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       subscriberTypeId: new FormControl(null, Validators.required),
       primaryCommodity: new FormControl(null, Validators.required),
       otherCommodities: new FormControl([]),
-      program: new FormControl(null),
+      status: new FormControl(null),
+      programId: new FormControl(null),
       landSize: new FormControl(null),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -298,7 +316,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
       this.primaryCommodity.disable()
       this.otherCommodities.disable()
     }
-    if (!this.primaryCommodity.value) { this.program.disable() }
+    if (!this.primaryCommodity.value) { this.programId.disable() }
   }
 
   private regionValueChangeListener() {
@@ -355,7 +373,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
         }
         if (value) {
           this.loadPrograms(value)
-          this.program.enable()
+          this.programId.enable()
         }
       })
   }
