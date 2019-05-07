@@ -115,6 +115,7 @@
                         <th *ngIf="modelName === 'commodity'">Subscriber Type</th>
                         <th *ngIf="modelName === 'district'">Region</th>
                         <th *ngIf="modelName === 'topic'">Pillar</th>
+                        <th *ngIf="modelName === 'program'">Commodity</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -125,6 +126,7 @@
                         <td *ngIf="modelName === 'commodity'">{{record.subscriberType.name}}</td>
                         <td *ngIf="modelName === 'district'">{{record.region.name}}</td>
                         <td *ngIf="modelName === 'topic'">{{record.pillar.name}}</td>
+                        <td *ngIf="modelName === 'program'">{{record.commodity.name}}</td>
                         <td>{{record.notes}}</td>
                     </tr>
                 </tbody>

@@ -304,7 +304,8 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
           subscriberTypeId: data.subscriberType.subscriberTypeId,
           subscriberGroups: this.subscriberGroupsCopy,
           primaryCommodity: data.primaryComodity.commodityId,
-          otherCommodities: this.otherCommoditiesCopy
+          otherCommodities: this.otherCommoditiesCopy,
+          programId: data.program.id
         })
       }, () => this.blockUi.stop())
   }

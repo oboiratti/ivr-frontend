@@ -1,12 +1,13 @@
 <div class="row">
-    <div class="col-sm-8"><button type="button" class="btn btn-primary-custom border border-dark" routerLink="form"><i
-                class="fa fa-plus"></i> New Tree</button></div>
     <div class="col-sm-4">
         <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getTree(lastFilter)">
+            <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title"
+                (keyup.enter)="getTree(lastFilter)">
             <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary" (click)="getTree(lastFilter)" style="margin-right: 0px;"><i class="fa fa-search"></i></button>
-                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0px;">
+                <button type="button" class="btn btn-outline-secondary" (click)="getTree(lastFilter)"
+                    style="margin-right: 0px;"><i class="fa fa-search"></i></button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 0px;">
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu" style="padding: 10px" (click)="$event.stopPropagation()">
@@ -21,16 +22,22 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Description" [(ngModel)]="lastFilter.description">
+                        <input type="text" class="form-control" placeholder="Description"
+                            [(ngModel)]="lastFilter.description">
                     </div>
                     <div>
-                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm" (click)="getTree(lastFilter)">
+                        <button class="btn btn-primary-custom border border-dark btn-block btn-sm"
+                            (click)="getTree(lastFilter)">
                             Search
                         </button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-sm-8">
+        <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New
+            Tree</button>
     </div>
 </div>
 <div class="row" style="margin-top:10px;">
@@ -56,7 +63,7 @@
                             <td>{{x.code}}</td>
                             <td>
                                 {{x.title}} <br />
-                                <span class="badge badge-info" style="font-size: inherit">{{x.tags}}</span>
+                                <span class="badge badge-info">{{x.tags}}</span>
                             </td>
                             <td>{{x.language}}</td>
                             <td>{{x.blocks}}</td>

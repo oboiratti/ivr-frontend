@@ -1,15 +1,16 @@
-<div class="row">
+<!-- <div class="row">
   <div class="col-sm-12">
     <div class="p-2 text-uppercase form-header-text">Subscriber Form</div>
   </div>
 </div>
-<hr>
+<hr> -->
 
 <div class="row">
   <div class="col-sm-12 col-md-10 offset-md-1">
     <form [formGroup]="form">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body mx-md-4">
+          <h5 class="card-title text-uppercase text-muted ml-md-n4">Subscriber Form</h5><br>
           <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Phone Number</label>
@@ -252,7 +253,7 @@
           </div>
 
           <div>
-            <button type="button" class="btn btn-outline-success" *ngIf="id.value && status.value === 'Inactive'" (click)="toggleStatus(id.value, 'Activate')">Activate</button>
+            <button type="button" class="btn btn-outline-success" *ngIf="id.value && status.value === 'InActive'" (click)="toggleStatus(id.value, 'Activate')">Activate</button>
             <button type="button" class="btn btn-outline-danger" *ngIf="id.value && status.value === 'Active'" (click)="toggleStatus(id.value, 'Deactivate')">Deactivate</button>
             <button type="submit" class="btn btn-primary-custom border border-dark float-right" [validate-form]="form"
               (valid)="save(form.value)">
