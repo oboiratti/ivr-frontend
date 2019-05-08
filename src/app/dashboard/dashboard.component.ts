@@ -19,10 +19,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   subscriberTypeId: number
   subscriberTypeSummary$: Observable<any>
   subscriberSummary$: Observable<any>
+  susStatus$: Observable<any>
   @BlockUI('type') blockSubscriberType: NgBlockUI
   @BlockUI('subs') blockSubscriberSummary: NgBlockUI
   @BlockUI('commodity') blockCommodity: NgBlockUI
   @BlockUI('land') blockLand: NgBlockUI
+  @BlockUI('campaign') blockCampaign: NgBlockUI
   doughnut = {}
   @ViewChild('doughnutcanvas') doughnutcanvas: ElementRef
   @ViewChild('barcanvas') barcanvas: ElementRef
@@ -33,10 +35,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.loadSubscriberTypes()
     this.getSubscriberSummary()
+    this.getCampaignSummary()
   }
 
   ngAfterViewInit() {
-    this.subscriberCommodityDoughnut()
+    this.landAreaDoughnut()
     this.subscriberCommodityBar()
   }
 
@@ -45,6 +48,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.subscriberTypeSummary$ = this.dashboardService.getBySubscriberType(this.subscriberTypeId).pipe(
       finalize(() => this.blockSubscriberType.stop())
     )
+  }
+
+  setProgressColor(percentage: number) {
+    if (percentage >= 70 && percentage <= 100) {
+      return 'bg-success'
+    } else if (percentage >= 50 && percentage < 70) {
+      return 'bg-warning'
+    } else if (percentage >= 25 && percentage < 50) {
+      return 'bg-pink'
+    } else { return 'bg-danger' }
   }
 
   private loadSubscriberTypes() {
@@ -111,9 +124,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   }
 
-  private subscriberCommodityDoughnut() {
+  private landAreaDoughnut() {
     this.blockLand.start('Loading...')
-    this.dashboardService.getCommoditySummary().subscribe(res => {
+    this.dashboardService.getLandArea().subscribe(res => {
       this.blockLand.stop()
       if (res.success) {
         const data = [];
@@ -149,6 +162,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         })
       }
     }, () => this.blockLand.stop())
+  }
 
+  private getCampaignSummary() {
+    this.blockCampaign.start('Loading')
+    this.susStatus$ = this.dashboardService.getCampaignSummary().pipe(
+      finalize(() => this.blockCampaign.stop())
+    )
   }
 }

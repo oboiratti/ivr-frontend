@@ -22,4 +22,13 @@
 
 .fixed-card-height {
     height: 300px;
+    overflow: auto;
+}
+
+.bg-pink {
+    background-color: #e91e63 !important;
+}
+
+.text-dark-golder-rod {
+    color: #bf9500 !important;
 }

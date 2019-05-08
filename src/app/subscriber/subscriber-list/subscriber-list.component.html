@@ -34,6 +34,7 @@
               <th>Start Date</th>
               <th>Language</th>
               <th>Type</th>
+              <th>Gender</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -47,6 +48,7 @@
               <td>{{subscriber.startDate | date:'mediumDate'}}</td>
               <td>{{subscriber.language.name}}</td>
               <td>{{subscriber.subscriberType.name}}</td>
+              <td>{{subscriber.gender}}</td>
               <td><span [ngClass]="setStatusColor(subscriber.status)">{{subscriber.status}}</span></td>
               <td>
                 <a class="pointer" (click)="view(subscriber.id)"><i class="fa fa-eye"></i></a> &nbsp;

@@ -35,4 +35,21 @@ export class DashboardService {
       //   })
       // )
   }
+
+  getLandArea() {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/dashboard/landareabycommodity`)
+      // .pipe(
+      //   map(res => {
+      //     if (res.success) { return res.data }
+      //   })
+      // )
+  }
+
+  getCampaignSummary(startDate?: Date, endDate?: Date) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/dashboard/campaignsummary?startDate=${startDate}&endDate=${endDate}`).pipe(
+      map(res => {
+        if (res.success) { return res.data }
+      })
+    )
+  }
 }
