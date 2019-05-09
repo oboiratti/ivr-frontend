@@ -626,7 +626,7 @@ export class TreeStudioComponent implements OnInit {
     tosave.nodes = (tosave.nodes === null) ? tosave.nodes = [] : JSON.stringify(tosave.nodes);
     tosave.treeModel = this.diagram.model.toJson();
     tosave.connections = this.getConnections(tosave.treeModel);
-    this.findSubscription = this.treeService.saveTree(tosave).subscribe(res => {
+    this.findSubscription = this.treeService.saveNodes(tosave).subscribe(res => {
       this.blockUi.stop();
       if (res.success) { }
     }, () => this.blockUi.stop());
