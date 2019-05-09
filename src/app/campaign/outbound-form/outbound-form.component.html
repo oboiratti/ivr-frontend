@@ -1,19 +1,21 @@
-<div class="row">
+<!-- <div class="row">
   <div class="col-sm-12">
     <div class="p-2 text-uppercase form-header-text">Outbound Campaign Form</div>
   </div>
 </div>
-<hr>
+<hr> -->
 
 <div class="row">
   <div class="col-sm-12 col-md-10 offset-md-1">
     <form [formGroup]="form">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body mx-md-4">
+          <h5 class="card-title text-uppercase text-muted ml-md-n4">Outbound Campaign Form</h5><br>
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Campaign Title</label>
-              <input type="text" class="form-control" formControlName="title" [class.is-invalid]="title.dirty && title.invalid">
+              <input type="text" class="form-control" formControlName="title"
+                [class.is-invalid]="title.dirty && title.invalid">
               <div class="invalid-feedback" *ngIf="title.dirty && title.invalid">
                 <div *ngIf="title.errors.required">
                   This field is required
@@ -23,8 +25,8 @@
 
             <div class="form-group col-sm-12 col-md-6">
               <label>Campaign Area</label>
-              <ng-select [items]="areas$ | async" bindLabel="name" bindValue="id"
-                placeholder="Select Campaign Area" [clearable]="false" [loading]="loadingAreas" formControlName="areaId"
+              <ng-select [items]="areas$ | async" bindLabel="name" bindValue="id" placeholder="Select Campaign Area"
+                [clearable]="false" [loading]="loadingAreas" formControlName="areaId"
                 [class.invalid-input]="areaId.dirty && areaId.invalid">
               </ng-select>
               <div class="invalid-msg" *ngIf="areaId.dirty && areaId.invalid">
@@ -38,7 +40,8 @@
           <div class="form-row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Start Date</label>
-              <input type="date" class="form-control" formControlName="startDate" [class.invalid-input]="startDate.dirty && startDate.invalid">
+              <input type="date" class="form-control" formControlName="startDate"
+                [class.invalid-input]="startDate.dirty && startDate.invalid">
               <div class="invalid-msg" *ngIf="startDate.dirty && startDate.invalid">
                 <div *ngIf="startDate.errors.required">
                   This field is required
@@ -48,7 +51,8 @@
 
             <div class="form-group col-sm-12 col-md-6">
               <label>End Date</label>
-              <input type="date" class="form-control" formControlName="endDate" [class.invalid-input]="endDate.dirty && endDate.invalid">
+              <input type="date" class="form-control" formControlName="endDate"
+                [class.invalid-input]="endDate.dirty && endDate.invalid">
               <div class="invalid-msg" *ngIf="endDate.dirty && endDate.errors">
                 This field is required
               </div>
@@ -63,7 +67,7 @@
               (valid)="save(form.value)">
               <i class="fa fa-save"></i> Save
             </button>
-            <button type="button" class="btn float-right" (click)="closeForm()">
+            <button type="button" class="btn btn-light border border-dark float-right" (click)="closeForm()">
               <i class="fa fa-close"></i> Cancel
             </button>
           </div>

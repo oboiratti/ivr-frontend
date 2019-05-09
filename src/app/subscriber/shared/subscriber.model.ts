@@ -18,6 +18,7 @@ export interface Subscriber {
     otherCommodities: any[]
     subscriberCommodities: any[],
     subscriberGroups: SubscriberGroup[]
+    program: Lookup
 }
 
 export interface SubscriberGroup extends Lookup {

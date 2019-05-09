@@ -29,6 +29,7 @@ export class GeneralLookupComponent implements OnInit, OnDestroy {
   subscriberTypes$: Observable<Lookup[]>
   regions$: Observable<Lookup[]>
   pillars$: Observable<Lookup[]>
+  commodities$: Observable<Lookup[]>
   unsubscribe$ = new Subject<void>()
 
   constructor(private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, private settingsService: SettingsService) {
@@ -38,6 +39,7 @@ export class GeneralLookupComponent implements OnInit, OnDestroy {
       subscriberTypeId: new FormControl(''),
       regionId: new FormControl(''),
       pillarId: new FormControl(''),
+      commodityId: new FormControl(''),
       notes: new FormControl(''),
       createdAt: new FormControl(null),
       createdBy: new FormControl(null),
@@ -53,6 +55,7 @@ export class GeneralLookupComponent implements OnInit, OnDestroy {
     if (this.modelName === 'commodity') { this.loadSubscriberType() }
     if (this.modelName === 'district') { this.loadRegions() }
     if (this.modelName === 'topic') { this.loadPillars() }
+    if (this.modelName === 'program') { this.loadCommodities() }
   }
   ngOnDestroy() {
     this.unsubscribe$.next()
@@ -77,6 +80,7 @@ export class GeneralLookupComponent implements OnInit, OnDestroy {
     if (this.modelName === 'commodity') { this.formGroup.patchValue({ subscriberTypeId: record.subscriberType.id }) }
     if (this.modelName === 'district') { this.formGroup.patchValue({ regionId: record.region.id }) }
     if (this.modelName === 'topic') { this.formGroup.patchValue({ pillarId: record.pillar.id }) }
+    if (this.modelName === 'program') { this.formGroup.patchValue({ commodityId: record.commodity.id }) }
   }
 
   save() {
@@ -138,5 +142,9 @@ export class GeneralLookupComponent implements OnInit, OnDestroy {
 
   private loadPillars() {
     this.pillars$ = this.settingsService.fetch2('pillar')
+  }
+
+  private loadCommodities() {
+    this.commodities$ = this.settingsService.fetch2('commodity')
   }
 }

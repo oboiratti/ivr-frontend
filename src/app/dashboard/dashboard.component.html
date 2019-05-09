@@ -1,9 +1,146 @@
-<page-header title="Dashboard"></page-header>
+<div class="page-header">
+  <div class="header-content text-uppercase">
+    Dashboard
+  </div>
+</div>
 
-<!-- <div class="pageheader">
-    <ul class="my-breadcrumb">
-        <li><a href="">aaa</a></li>
-        <li><a href="">bbb</a></li>
-        <li>ccc</li>
-    </ul>
-</div> -->
+<div class="page-content">
+  <div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'subs'">
+        <div class="card-body">
+          <div class="card-title text-muted font-12">Subscriber Summary</div>
+          <ng-container *ngIf="subscriberSummary$ | async as summary">
+            <div class="text-muted font-11">
+              <span>Total Number of Subscribers</span>
+              <span class="float-right">{{summary.total}}</span>
+            </div>
+            <div class="progress progress-height mb-3">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100"
+                aria-valuemin="0" aria-valuemax="100">100%</div>
+            </div>
+
+            <div class="text-muted font-11">
+              <span>Active Number of Subscribers</span>
+              <span class="float-right">{{summary.active}}</span>
+            </div>
+            <div class="progress progress-height mb-3">
+              <div class="progress-bar bg-info" role="progressbar" [style.width.%]="summary.activePercentage"
+                aria-valuemin="0" aria-valuemax="100">{{summary.activePercentage}}%</div>
+            </div>
+
+            <ng-container *ngFor="let record of summary.percentageSummary">
+              <div class="text-muted font-11">
+                <span>{{record.name}}</span>
+                <span class="float-right">{{record.count}}</span>
+              </div>
+              <div class="progress progress-height mb-3">
+                <div class="progress-bar" role="progressbar" [ngClass]="setProgressColor(record.percentage)"
+                  [style.width.%]="record.percentage" aria-valuemin="0" aria-valuemax="100">{{record.percentage}}%</div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'type'">
+        <div class="card-body">
+          <div class="card-title text-muted">
+            <div class="form-group">
+              <label class=" font-12">Subscriber Type Summary</label>
+              <!-- <div class="col-sm-12 col-md-6"> -->
+              <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id"
+                placeholder="Select Subscriber Type" [clearable]="false" [loading]="loadingSubscriberTypes"
+                [(ngModel)]="subscriberTypeId" (ngModelChange)="subscriberTypeOnChange()" class="form-control-sm">
+              </ng-select>
+              <!-- </div> -->
+            </div><br>
+          </div>
+
+          <ng-container *ngIf="subscriberTypeSummary$ | async as summary">
+            <div class="row text-center">
+              <div class="col-6">
+                <div class="text-muted font-11">Male</div>
+                <div class="h4 text-secondary ml-2">{{summary.maleSubscribers}}</div>
+              </div>
+              <div class="col-6">
+                <div class="text-muted font-11">Female</div>
+                <div class="h4 text-secondary ml-2">{{summary.femaleSubscribers}}</div>
+              </div>
+            </div>
+
+            <div class="row text-center">
+              <div class="col-6">
+                <div class="text-muted font-11">Average Age</div>
+                <div class="h4 text-secondary ml-2">{{summary.averageMaleAge}}</div>
+              </div>
+              <div class="col-6">
+                <div class="text-muted font-11">Average Age</div>
+                <div class="h4 text-secondary ml-2">{{summary.averageFemaleAge}}</div>
+              </div>
+            </div>
+
+            <div class="row text-center">
+              <div class="col-sm-6">
+                <div class="text-muted font-11">Average Land Area</div>
+                <div class="h4 text-secondary">{{summary.averageMaleLandArea}}</div>
+              </div>
+              <div class="col-sm-6">
+                <div class="text-muted font-11">Average Land Area</div>
+                <div class="h4 text-secondary">{{summary.averageFemaleLandArea}}</div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'commodity'">
+        <div class="card-body">
+          <div class="card-title text-muted font-12">Subscriber Commodity Summary</div>
+          <div class="chart-container" *ngIf="doughnut">
+            <canvas class="m-auto" #barcanvas>{{ doughnut }}</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'land'">
+        <div class="card-body">
+          <div class="card-title text-muted font-12">Land Size Summary</div>
+          <div class="chart-container" *ngIf="doughnut">
+            <canvas class="m-auto" #doughnutcanvas>{{ doughnut }}</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-md-8">
+      <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'campaign'">
+        <div class="card-body">
+          <div class="card-title text-muted font-12">Sustainability Status</div>
+          <div class="row" *ngIf="susStatus$ | async as sus">
+            <div class="col-sm-3 text-center text-muted">
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Campaigns <br> <h4>{{sus.total}}</h4>
+            </div>
+            <div class="col-sm-3 text-center text-muted">
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Active Campaigns <br> <h4>{{sus.active}}</h4>
+            </div>
+            <div class="col-sm-3 text-center text-muted">
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Schedules <br> <h4>{{sus.totalSchedules}}</h4>
+            </div>
+            <div class="col-sm-3 text-center text-muted">
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Active Campaigns <br> <h4>{{sus.activeSchedules}}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
