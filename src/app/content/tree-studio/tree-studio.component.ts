@@ -131,8 +131,16 @@ export class TreeStudioComponent implements OnInit {
       }
     });
 
-    this.diagram.addDiagramListener('ChangingSelection', (e: go.DiagramEvent)  => {
+    this.diagram.commandHandler.copySelection()
+
+    this.diagram.addDiagramListener('ClipboardChanged', (e: go.DiagramEvent)  => {
       // const copiedNode = this.diagram.copyParts(go.Node, null, true).[0];
+      console.log('Copied Nodes => ' )
+    });
+
+    this.diagram.addDiagramListener('ClipboardPasted', (e: go.DiagramEvent)  => {
+      // const copiedNode = this.diagram.copyParts(go.Node, null, true).[0];
+      // console.log('Pasted', e)
     });
 
     this.diagram.addDiagramListener('LinkDrawn', (e: go.DiagramEvent) => {
@@ -192,6 +200,9 @@ export class TreeStudioComponent implements OnInit {
       linkToPortIdProperty: 'toPort',
     });
 
+    const deselectedColor = $( go.Brush, 'Linear', { 0.0: '#fff', 0.80: '#e7e7e7', 0.90: '#f5f5f5' })
+    const selectedColor = $( go.Brush, 'Linear', { 0.0: '#531944', 0.90: '#240b1d'})
+
     // MESSAGE
     this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.message,
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
@@ -203,7 +214,12 @@ export class TreeStudioComponent implements OnInit {
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
-        }, new go.Binding('portId', 'toPortId')),
+        }, new go.Binding('portId', 'toPortId')), /* {
+          selectionChanged: function(part) {
+              const shape = part.elt(0);
+              shape.fill = part.isSelected ? selectedColor : deselectedColor;
+            }
+          },*/
         $(go.TextBlock,
           { margin: 4, text: 'Message', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
             font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
@@ -218,7 +234,12 @@ export class TreeStudioComponent implements OnInit {
                   text = text.substring(0, 75).concat('...');
                 }
                 return text;
-            })
+            }), /* {
+              selectionChanged: function(part) {
+                const shape = part.elt(0);
+                shape.color = part.isSelected ? '#fff' : '#4f4f4f';
+              }
+            } */
           )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
@@ -608,6 +629,10 @@ export class TreeStudioComponent implements OnInit {
   }
   copyNode() {
     // TODO :add copy code
+    this.diagram.startTransaction('copynode(s)');
+    this.diagram.commandHandler.copySelection()
+    
+    this.diagram.commitTransaction('copynode(s)');
     console.log('copy node')
   }
 
