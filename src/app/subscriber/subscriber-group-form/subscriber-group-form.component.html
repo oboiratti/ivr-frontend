@@ -1,16 +1,17 @@
-<div class="row">
+<!-- <div class="row">
   <div class="col-sm-12">
     <div class="p-2 text-uppercase form-header-text">Group Form</div>
   </div>
 </div>
-<hr>
+<hr> -->
 
 <div class="row">
   <div class="col-sm-12 col-md-10 offset-md-1">
     <form [formGroup]="form">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body mx-md-4">
           <div class="form-row">
+            <h5 class="card-title text-uppercase text-muted ml-md-n4">Group Form</h5><br>
             <div class="form-group col-sm-12">
               <label>Name</label>
               <input type="text" class="form-control" formControlName="name"
@@ -46,7 +47,8 @@
                 </ng-template>
                 <ng-template ng-label-tmp let-item="item">
                   <div class="ng-value-wrapper default">
-                    <span class="ng-value-icon left" (click)="removeSubscriber(item)" *ngIf="item.disabled !== true">×</span>
+                    <span class="ng-value-icon left" (click)="removeSubscriber(item)"
+                      *ngIf="item.disabled !== true">×</span>
                     <span class="ng-value-label">{{ item.name  + ' - ' + item.phoneNumber}}</span>
                   </div>
                 </ng-template>
@@ -59,7 +61,7 @@
               (valid)="save(form.value)">
               <i class="fa fa-save"></i> Save
             </button>
-            <button type="button" class="btn float-right" (click)="closeForm()">
+            <button type="button" class="btn btn-light border border-dark float-right" (click)="closeForm()">
               <i class="fa fa-close"></i> Cancel
             </button>
           </div>

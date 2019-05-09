@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { CampaignQuery, CampaignScheduleQuery } from '../shared/campaign.models';
+import { CampaignQuery, CampaignScheduleQuery, Campaign } from '../shared/campaign.models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
@@ -31,6 +31,7 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
   topics$: Observable<Lookup>
   recipientTypes = ['AllSubscribers', 'SelectedGroups', 'SelectedSubscribers']
   scheduleTypes = ['Now', 'FixedDate', 'Repeating']
+  campaign: Campaign
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -39,7 +40,10 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
-    if (this.campaignId) { this.getCampaignSchedules(<CampaignScheduleQuery>{}) }
+    if (this.campaignId) {
+      this.findCampaign(this.campaignId)
+      this.getCampaignSchedules(<CampaignScheduleQuery>{})
+    }
     this.loadTopics()
   }
 
@@ -101,5 +105,15 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
 
   private loadTopics() {
     this.topics$ = this.settingsService.fetch2('pillar')
+  }
+
+  private findCampaign(id: number) {
+    this.campaignService.findCampaign(id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(res => {
+        if (res.success) {
+          this.campaign = res.data
+        }
+      })
   }
 }

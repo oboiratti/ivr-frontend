@@ -46,8 +46,8 @@
               <td>{{campaign.endDate | date:'mediumDate'}}</td>
               <td>
                 <a class="pointer" (click)="editForm(campaign.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="gotoSchedule(campaign.id)" title="Schedule"><i
-                    class="fa fa-clock-o"></i></a> &nbsp;
+                <a class="pointer" (click)="gotoSchedule(campaign.id)" title="Schedule"><i class="fa fa-clock-o"></i></a> &nbsp;
+                <a class="pointer" (click)="results(campaign.id)" title="Results"><i class="fa fa-bar-chart"></i></a> &nbsp;
                 <a class="pointer" (click)="delete(campaign.id)" title="Delete"><i class="fa fa-trash"></i></a>
               </td>
             </tr>
