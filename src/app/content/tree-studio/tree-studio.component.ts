@@ -1,5 +1,5 @@
 import * as go from 'gojs';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import {
   Component,
@@ -8,21 +8,18 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  Renderer2
   } from '@angular/core';
-import { finalize } from 'rxjs/operators';
 import { GuidedDraggingTool } from 'gojs/extensionsTS/GuidedDraggingTool';
 import { Lookup } from 'src/app/shared/common-entities.model';
 import { Media, MediaQuery } from '../shared/media.model';
 import { MediaService } from '../shared/media.service';
-import { MessageDialog } from 'src/app/shared/message_helper';
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { RouteNames } from 'src/app/shared/constants';
 import { TreeConfig } from '../tree-config';
 import { TreeService } from '../shared/tree.service';
-import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
-import { stringify } from 'querystring';
-import { keyframes } from '@angular/animations';
+import { BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -37,12 +34,12 @@ import { keyframes } from '@angular/animations';
 export class TreeStudioComponent implements OnInit {
 
   private diagram: go.Diagram = new go.Diagram();
-  private palette: go.Palette = new go.Palette();
   private $: any;
 
   private phoneKeys: Array<string>;
   private repeatDelay: Array<string>;
   private repeatNumber: Array<string>;
+  audioControl: any;
   languages: Observable<Lookup[]>;
   tags: Observable<Lookup[]>;
   audios: Array<Media>;
@@ -51,9 +48,6 @@ export class TreeStudioComponent implements OnInit {
   hasSelected: boolean;
 
   private currentNode: BlockNode;
-  private multiNode: Multichoice;
-  private numericNode: Numeric;
-  private openNode: Openended;
 
   messageForm: boolean;
   multiForm: boolean;
@@ -69,12 +63,6 @@ export class TreeStudioComponent implements OnInit {
   @ViewChild('diagramDiv')
   private diagramRef: ElementRef;
 
-  @ViewChild('SaveButton')
-  private SaveButton: ElementRef;
-
-  // @ViewChild('paletteDiv')
-  // private paletteRef: ElementRef;
-
   @Input()
   get model(): go.Model { return this.diagram.model; }
   set model(val: go.Model) { this.diagram.model = val; }
@@ -89,7 +77,7 @@ export class TreeStudioComponent implements OnInit {
   private file: string;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
-    private treeService: TreeService, private mediaService: MediaService ) {
+    private treeService: TreeService, private mediaService: MediaService, renderer: Renderer2 ) {
 
     // Form init
     this.phoneKeys = TreeConfig.phoneKeys;
@@ -618,7 +606,17 @@ export class TreeStudioComponent implements OnInit {
     const selectedNodeData = node.data;
     if (!selectedNodeData.key) { return ; }
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
-    this.showForm(this.currentNode.key);
+    this.resetAudioControl();
+    // this.audioPlayerRef.nativeElement.src = this.currentNode.audio.fileName;
+    // this.showForm(this.currentNode.key);
+  }
+
+  resetAudioControl() {
+    const audioControl: any = document.getElementById(this.currentNode.key);
+    console.log(audioControl)
+    if (audioControl) {
+      audioControl.src = (this.currentNode.audio) ?  this.currentNode.audio.fileName : '';
+    }
   }
 
   updateMessageTitle() {

@@ -58,7 +58,7 @@
           </div>
           <div class="col-sm-3">
             <div class="row">
-              <h3>Highest Posible Score = {{tree.highestScore}}</h3>
+              <h3>Highest Posible Score = {{tree.highestScore || '0'}}</h3>
             </div>
           </div>
         </div>
@@ -274,7 +274,6 @@
                       </select>
                     </div>
                   </div>
-
                   <!-- STANDAR BLOCK PROPERTIES -->
                   <div id="STANDARD" *ngIf="!treeForm">
                     <div class="card inner-card" style="margin-bottom: 10px;">
@@ -286,7 +285,7 @@
                         <div *ngIf="currentNode.audio != null" class="card-header inner-card"
                           style="margin-bottom: 30px;">
                           <label>{{currentNode.audio.title}}</label>
-                          <audio controls>
+                          <audio controls [attr.id]="currentNode.key">
                             <source src="{{currentNode.audio.fileUrl}}">
                           </audio>
                         </div>
