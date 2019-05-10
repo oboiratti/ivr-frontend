@@ -27,7 +27,7 @@
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
     "gojs": "^2.0.3",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "ng-block-ui": "^2.1.1",
     "ngx-virtual-scroller": "^1.0.16",
     "popper.js": "^1.14.3",
@@ -38,7 +38,7 @@
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.13.4",
+    "@angular-devkit/build-angular": "^0.13.9",
     "@angular/cli": "~7.3.1",
     "@angular/compiler-cli": "^7.2.7",
     "@angular/language-service": "^7.2.4",
