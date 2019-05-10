@@ -4,6 +4,7 @@ import { startWith, delay, filter } from 'rxjs/operators';
 import { AuthService } from './auth/auth.service';
 import { RouteNames } from './shared/constants';
 import { IMenuItem } from './shared/common-entities.model';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 declare var $: any;
 
@@ -18,6 +19,7 @@ export class AppComponent implements OnInit {
   loading: boolean;
   isLoggedIn: boolean;
   name: string;
+  @BlockUI() blockUi: NgBlockUI
 
   constructor(private router: Router,
     private authService: AuthService) { }
@@ -39,15 +41,15 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.loading = true;
+    this.blockUi.start('Logging Out...')
     this.authService.invalidate().subscribe((res) => {
-      this.loading = false;
+      this.blockUi.stop()
       if (res.success) {
         this.isLoggedIn = false;
         this.authService.removeUser();
         this.router.navigate(['/login']);
       }
-    });
+    }, () => this.blockUi.stop());
   }
 
   setName() {
@@ -56,12 +58,12 @@ export class AppComponent implements OnInit {
 
   private setMenuItems() {
     this.menus = [
-      { label: "Dashboard", route: RouteNames.dashboard, icon: "fa fa-home fa-lg" },
-      { label: "Subscribers", route: RouteNames.subscriber, icon: "fa fa-users fa-lg" },
-      { label: "Content", route: RouteNames.content, icon: "fa fa-object-group fa-lg" },
-      { label: "Campaigns", route: RouteNames.campaign, icon: "fa fa-bullhorn fa-lg" },
-      { label: "Account", route: RouteNames.admin, icon: "fa fa-user fa-lg" },
-      { label: "Settings", route: RouteNames.appSettings, icon: "fa fa-gear fa-lg" }
+      { label: 'Dashboard', route: RouteNames.dashboard, icon: 'fa fa-home fa-lg' },
+      { label: 'Subscribers', route: RouteNames.subscriber, icon: 'fa fa-users fa-lg' },
+      { label: 'Content', route: RouteNames.content, icon: 'fa fa-object-group fa-lg' },
+      { label: 'Campaigns', route: RouteNames.campaign, icon: 'fa fa-bullhorn fa-lg' },
+      { label: 'Account', route: RouteNames.admin, icon: 'fa fa-user fa-lg' },
+      { label: 'Settings', route: RouteNames.appSettings, icon: 'fa fa-gear fa-lg' }
     ];
   }
 }

@@ -125,18 +125,42 @@
       <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'campaign'">
         <div class="card-body">
           <div class="card-title text-muted font-12">Sustainability Status</div>
+          <div class="form-inline mb-3 ml-3">
+            <div class="input-group input-group-sm mr-2 mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  Start Date
+                </div>
+              </div>
+              <input type="date" class="form-control" name="startDate" [(ngModel)]="startDate">
+            </div>
+            <div class="input-group input-group-sm mr-2 mb-2">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  End Date
+                </div>
+              </div>
+              <input type="date" class="form-control" name="endDate" [(ngModel)]="endDate">
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" (click)="getCampaignSummary(startDate, endDate)">Submit</button>
+          </div>
+          
           <div class="row" *ngIf="susStatus$ | async as sus">
             <div class="col-sm-3 text-center text-muted">
-              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Campaigns <br> <h4>{{sus.total}}</h4>
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Campaigns <br>
+              <h4>{{sus.total}}</h4>
             </div>
             <div class="col-sm-3 text-center text-muted">
-              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Active Campaigns <br> <h4>{{sus.active}}</h4>
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Active Campaigns <br>
+              <h4>{{sus.active}}</h4>
             </div>
             <div class="col-sm-3 text-center text-muted">
-              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Schedules <br> <h4>{{sus.totalSchedules}}</h4>
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Schedules <br>
+              <h4>{{sus.totalSchedules}}</h4>
             </div>
             <div class="col-sm-3 text-center text-muted">
-              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Active Campaigns <br> <h4>{{sus.activeSchedules}}</h4>
+              <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Active Campaigns <br>
+              <h4>{{sus.activeSchedules}}</h4>
             </div>
           </div>
         </div>

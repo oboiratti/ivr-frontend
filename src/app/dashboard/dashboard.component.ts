@@ -28,14 +28,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   doughnut = {}
   @ViewChild('doughnutcanvas') doughnutcanvas: ElementRef
   @ViewChild('barcanvas') barcanvas: ElementRef
+  startDate: string
+  endDate: string
 
   constructor(private settingsService: SettingsService,
     private dashboardService: DashboardService) { }
 
   ngOnInit() {
+    this.initDates()
     this.loadSubscriberTypes()
     this.getSubscriberSummary()
-    this.getCampaignSummary()
+    this.getCampaignSummary(this.startDate, this.endDate)
   }
 
   ngAfterViewInit() {
@@ -158,16 +161,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             responsive: true,
             maintainAspectRatio: false
+          },
+          centerText: {
+            display: true,
+            text: 20
           }
         })
       }
     }, () => this.blockLand.stop())
   }
 
-  private getCampaignSummary() {
+  private getCampaignSummary(startDate: string, endDate: string) {
     this.blockCampaign.start('Loading')
-    this.susStatus$ = this.dashboardService.getCampaignSummary().pipe(
+    this.susStatus$ = this.dashboardService.getCampaignSummary(startDate, endDate).pipe(
       finalize(() => this.blockCampaign.stop())
     )
+  }
+
+  private increaseMonth(date: Date, increament: number) {
+    date.setMonth(date.getMonth() + increament)
+    return date
+  }
+
+  private initDates() {
+    this.startDate = new Date().toISOString().substring(0, 10)
+    this.endDate = this.increaseMonth(new Date(), 1).toISOString().substring(0, 10)
   }
 }
