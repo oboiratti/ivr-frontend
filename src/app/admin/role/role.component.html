@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" *ngIf="!showForm">
     <div class="col-sm-12">
         <div class="p-2 text-uppercase form-header-text" *ngIf="showForm">Role Form</div>
         <button type="button" class="btn btn-primary-custom border border-dark float-right" *ngIf="!showForm"
@@ -6,7 +6,7 @@
             Role</button>
     </div>
 </div>
-<hr>
+<hr *ngIf="!showForm">
 
 <!-- <div class="row"> -->
 <div *ngIf="showForm">
@@ -14,7 +14,8 @@
         <div class="row">
             <div class="col-sm-12 col-md-10 offset-md-1">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body mx-md-4">
+                        <h5 class="card-title text-uppercase text-muted ml-md-n4">Role Form</h5><br>
                         <div class="form-group">
                             <label>Name</label>
                             <input type="text" class="form-control" name="name" [(ngModel)]="role.name" required>
@@ -32,11 +33,11 @@
                         <div>
                             <button type="submit" class="btn btn-primary-custom border border-dark float-right">
                                 <i class="fa fa-save"></i> Save</button>
-                            <button type="button" class="btn float-right" (click)="closeForm()">
+                            <button type="button" class="btn btn-light border border-dark float-right" (click)="closeForm()">
                                 <i class="fa fa-close"></i> Cancel</button>
                             <button type="button" class="btn btn-danger float-left" (click)="remove(role.id)"
-                                    *ngIf="role.id">
-                                    <i class="fa fa-trash"></i> Delete</button>
+                                *ngIf="role.id">
+                                <i class="fa fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 </div>

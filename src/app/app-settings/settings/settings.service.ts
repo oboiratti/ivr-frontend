@@ -14,6 +14,7 @@ export class LookUps {
       {label: 'Subscriber Type', description: 'Add, Edit and Delete Subscriber Types', name: 'subscriberType', icon: 'fa fa-address-book'},
       {label: 'Educational Level', description: 'Add, Edit and Delete Educational Levels', name: 'educationalLevel', icon: 'fa fa-graduation-cap'},
       {label: 'Commodity', description: 'Add, Edit and Delete Commodities', name: 'commodity', icon: 'fa fa-th-list'},
+      {label: 'Program', description: 'Add, Edit and Delete Programs', name: 'program', icon: 'fa fa-bandcamp'},
       {label: 'Area', description: 'Add, Edit and Delete Areas', name: 'area', icon: 'fa fa-square'},
       {label: 'Pillar', description: 'Add, Edit and Delete Pillars', name: 'pillar', icon: 'fa fa-paragraph'},
       {label: 'Topic', description: 'Add, Edit and Delete Topics', name: 'topic', icon: 'fa fa-align-center'}

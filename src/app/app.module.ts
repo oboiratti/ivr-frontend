@@ -22,13 +22,14 @@ import { CampaignModule } from './campaign/campaign.module';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { AppSettingsModule } from './app-settings/app-settings.module';
 import { SettingsService } from './app-settings/settings/settings.service';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoadingComponent,
-    DashboardComponent,
+    // DashboardComponent,
     // SettingsComponent,
     PageNotFoundComponent,
     LoginComponent,
@@ -48,6 +49,7 @@ import { SettingsService } from './app-settings/settings/settings.service';
     ContentModule,
     CampaignModule,
     AppSettingsModule,
+    DashboardModule,
     CoreModule,
     BlockUIModule.forRoot()
   ],

@@ -1,6 +1,4 @@
 <div class="row">
-    <div class="col-sm-8"><button type="button" class="btn btn-primary-custom border border-dark" routerLink="form"><i
-                class="fa fa-plus"></i> New Tree</button></div>
     <div class="col-sm-4">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Search by Title" [(ngModel)]="lastFilter.title" (keyup.enter)="getTree(lastFilter)">
@@ -32,6 +30,10 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-8">
+        <button type="button" class="btn btn-primary-custom border border-dark float-right" routerLink="form">New
+            Tree</button>
+    </div>
 </div>
 <div class="row" style="margin-top:10px;">
     <div class="col">
@@ -56,7 +58,7 @@
                             <td>{{x.code}}</td>
                             <td>
                                 {{x.title}} <br />
-                                <span class="badge badge-info" style="font-size: inherit">{{x.tags}}</span>
+                                <span class="badge badge-info">{{x.tags}}</span>
                             </td>
                             <td>{{x.language}}</td>
                             <td>{{x.blocks}}</td>

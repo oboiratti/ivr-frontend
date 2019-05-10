@@ -34,7 +34,8 @@
               <th>Start Date</th>
               <th>Language</th>
               <th>Type</th>
-              <!-- <th>Receive Outgoing Calls</th> -->
+              <th>Gender</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -47,11 +48,12 @@
               <td>{{subscriber.startDate | date:'mediumDate'}}</td>
               <td>{{subscriber.language.name}}</td>
               <td>{{subscriber.subscriberType.name}}</td>
-              <!-- <td>Yes</td> -->
+              <td>{{subscriber.gender}}</td>
+              <td><span [ngClass]="setStatusColor(subscriber.status)">{{subscriber.status}}</span></td>
               <td>
                 <a class="pointer" (click)="view(subscriber.id)"><i class="fa fa-eye"></i></a> &nbsp;
                 <a class="pointer" (click)="editForm(subscriber.id)"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="delete(subscriber.id)"><i class="fa fa-trash"></i></a>
+                <a class="pointer text-danger" (click)="delete(subscriber.id)"><i class="fa fa-trash"></i></a>
               </td>
             </tr>
           </tbody>
