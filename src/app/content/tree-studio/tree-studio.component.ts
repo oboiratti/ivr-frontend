@@ -132,7 +132,7 @@ export class TreeStudioComponent implements OnInit {
     });
 
     this.diagram.addDiagramListener('ChangingSelection', (e: go.DiagramEvent)  => {
-      // this.showTreeForm();
+      // const copiedNode = this.diagram.copyParts(go.Node, null, true).[0];
     });
 
     this.diagram.addDiagramListener('LinkDrawn', (e: go.DiagramEvent) => {
