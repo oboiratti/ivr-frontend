@@ -14,42 +14,51 @@
     <div class="card">
       <div class="card-header">
         <div class="row">
-          <div class="col-sm-8">
-            <div class="btn-group float-left" role="group">
-              <button class="btn btn-light btn text-dark border rounded" type="button" style="margin-right: 3px;"
-                [ngClass]="{'active': !isEdit}" (click)="setDiagramToReadOnly(true)">Tree View</button>
-                <button class="btn btn-light btn text-dark border rounded float-left" type="button" style="margin-right: 5px;"
-              [ngClass]="{'active': isEdit}" (click)="setDiagramToReadOnly(false)">Edit Tree</button>
-              <!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
-            </div>
-            <button 
-              class="btn btn-light btn text-dark border rounded float-left" type="button"
-              [disabled] = "!hasSelected"
-              style="margin-right: 5px;">Duplicate</button>
-            <button 
-              class="btn btn-light btn text-dark border rounded float-left" type="button"
-              (click)="deleteNode()" 
-              [disabled] = "!hasSelected"
-              style="margin-right: 3px;">Delete</button>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle border rounded float-left" data-toggle="dropdown"
-                aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
-              <div class="dropdown-menu multi-level" role="menu">
-                <a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
-                <div class="dropdown-divider" role="presentation"></div>
-                <a class="dropdown-item" role="presentation" (click)="addMultiChoice()">Multiple Choice Question</a>
-                <a class="dropdown-item" role="presentation" (click)="addNumeric()">Numeric Question</a>
-                <a class="dropdown-item dropdown-submenu" role="presentation" (click)="addOpenEnded()">Open-ended
-                  Question</a>
-                <div class="dropdown-divider" role="presentation"></div>
+          <div class="col-sm-9">
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="btn-group float-left" role="group">
+                  <button class="btn btn-light btn text-dark border rounded" type="button" style="margin-right: 3px;"
+                    [ngClass]="{'active': !isEdit}" (click)="setDiagramToReadOnly(true)">Tree View</button>
+                    <button class="btn btn-light btn text-dark border rounded float-left" type="button" style="margin-right: 5px;"
+                  [ngClass]="{'active': isEdit}" (click)="setDiagramToReadOnly(false)">Edit Tree</button>
+                  <!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
+                </div>
+                <button 
+                  class="btn btn-light btn text-dark border rounded float-left" type="button"
+                  [disabled] = "!hasSelected"
+                  style="margin-right: 5px;">Duplicate</button>
+                <button 
+                  class="btn btn-light btn text-dark border rounded float-left" type="button"
+                  (click)="deleteNode()" 
+                  [disabled] = "!hasSelected"
+                  style="margin-right: 3px;">Delete</button>
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle border rounded float-left" data-toggle="dropdown"
+                    aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
+                  <div class="dropdown-menu multi-level" role="menu">
+                    <a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
+                    <div class="dropdown-divider" role="presentation"></div>
+                    <a class="dropdown-item" role="presentation" (click)="addMultiChoice()">Multiple Choice Question</a>
+                    <a class="dropdown-item" role="presentation" (click)="addNumeric()">Numeric Question</a>
+                    <a class="dropdown-item dropdown-submenu" role="presentation" (click)="addOpenEnded()">Open-ended
+                      Question</a>
+                    <div class="dropdown-divider" role="presentation"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="btn-group btn-group" role="group">
+                  <button class="btn btn-primary-custom" type="button" (click)="saveTree()"> <i class="fa fa-save"></i>
+                    Save</button>
+                  <!-- <button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button> -->
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-sm-4">
-            <div class="btn-group btn-group" role="group">
-              <button class="btn btn-primary-custom" type="button" (click)="saveTree()"> <i class="fa fa-save"></i>
-                Save</button>
-              <!-- <button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button> -->
+          <div class="col-sm-3">
+            <div class="row">
+              <h3>Highest Posible Score = {{tree.highestScore}}</h3>
             </div>
           </div>
         </div>
@@ -162,9 +171,13 @@
                           name="currentNode.custom.choices[{{i}}].value" (ngModelChange)="addChoice(i+1)">
                         <div class="input-group-prepend" *ngIf="(i !== currentNode.custom.choices.length - 1 )"><span
                             class="input-group-text">=</span></div>
-                        <input class="form-control" type="number" [(ngModel)]="currentNode.custom.choices[i].weight"
-                          name="currentNode.custom.choices[{{i}}].weight" (ngModelChange)="addChoice(i+1)"
-                          *ngIf="(i !== currentNode.custom.choices.length - 1 )">
+                        <input class="form-control" type="number" 
+                          [(ngModel)]="currentNode.custom.choices[i].weight"
+                          name="currentNode.custom.choices[{{i}}].weight" 
+                          (ngModelChange)="addChoice(i+1)"
+                          (ngModelChange)="calculateHighestPossibleScore()"
+                          *ngIf="(i !== currentNode.custom.choices.length - 1 )"
+                          >
                         <div class="input-group-append">
                           <button class="btn btn-secondary" type="button" (click)="removeChoice(i)"
                             [disabled]="(i === currentNode.custom.choices.length - 1 || i !== currentNode.custom.choices.length - 2 )">X</button>

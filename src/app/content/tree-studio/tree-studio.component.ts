@@ -410,6 +410,21 @@ export class TreeStudioComponent implements OnInit {
     ))
   }
 
+  calculateHighestPossibleScore() {
+    console.log('am in')
+    let score = 0;
+    this.tree.nodes.forEach(node => {
+      if (node.type === TreeConfig.nodeTypes.multichoice) {
+        const weights = [];
+        node.custom.choices.forEach(choice => {
+          weights.push(choice.weight)
+        });
+        score = score + Math.max(...weights);
+      }
+    });
+    this.tree.highestScore = score;
+  }
+
   generateNodeId() {
     // Generate globally unique identifyer for node
     return this.tree.id + '_' + Math.random().toString(36).substr(2, 9);
@@ -627,6 +642,7 @@ export class TreeStudioComponent implements OnInit {
       this.diagram.commitTransaction('deleted node => ' + this.currentNode.key);
     }
   }
+
   copyNode() {
     // TODO :add copy code
     this.diagram.startTransaction('copynode(s)');

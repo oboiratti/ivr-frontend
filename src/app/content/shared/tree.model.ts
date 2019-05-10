@@ -18,6 +18,7 @@ export interface Tree {
     nodes: any;
     connections: any;
     treeModel: any;
+    highestScore: number;
 }
 
 export interface ServerTree {
