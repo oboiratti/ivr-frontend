@@ -58,7 +58,7 @@
                             <td>{{x.code}}</td>
                             <td>
                                 {{x.title}} <br />
-                                <span class="badge badge-info">{{x.tags}}</span>
+                                <span class="badge badge-info" *ngFor="let tag of x.tagsList">{{x}}</span>
                             </td>
                             <td>{{x.language}}</td>
                             <td>{{x.blocks}}</td>

@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @BlockUI('land') blockLand: NgBlockUI
   @BlockUI('campaign') blockCampaign: NgBlockUI
   doughnut = {}
+  pie = {}
   @ViewChild('doughnutcanvas') doughnutcanvas: ElementRef
   @ViewChild('barcanvas') barcanvas: ElementRef
   startDate: string
@@ -43,7 +44,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.landAreaDoughnut()
-    this.subscriberCommodityBar()
+    this.subscriberCommodityPie()
   }
 
   subscriberTypeOnChange() {
@@ -82,7 +83,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     )
   }
 
-  private subscriberCommodityBar() {
+  private subscriberCommodityPie() {
     this.blockCommodity.start('Loading...')
     this.dashboardService.getCommoditySummary().subscribe(res => {
       this.blockCommodity.stop()
@@ -95,31 +96,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         })
 
         // const data = [20, 30, 40, 50]
-        this.doughnut = new Chart(this.barcanvas.nativeElement, {
-          type: 'bar',
+        this.pie = new Chart(this.barcanvas.nativeElement, {
+          type: 'pie',
           data: {
             labels: labels,
             datasets: [
               {
                 data: data,
-                backgroundColor: '#a3a0fb'
+                backgroundColor: ['#7a401b', '#d81d1e', '#ffc800', '#a3a0fb']
               }
             ]
           },
           options: {
             legend: {
-              display: false
+              position: 'bottom',
+              labels: {
+                boxWidth: 10
+              }
             },
-            scales: {
-              xAxes: [{
-                barPercentage: 0.5,
-              }],
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            }
+            responsive: true,
+            maintainAspectRatio: false
           }
         })
       }
@@ -136,7 +132,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const labels = [];
         (res.data as Array<any>).map(elm => {
           data.push(elm.subscriberCount)
-          labels.push(elm.commodity)
+          labels.push(elm.commodity + ' ' + elm.subscriberCount)
         })
 
         // const data = [20, 30, 40, 50]
@@ -161,10 +157,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             },
             responsive: true,
             maintainAspectRatio: false
-          },
-          centerText: {
-            display: true,
-            text: 20
           }
         })
       }
