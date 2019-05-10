@@ -282,9 +282,17 @@
                         <p style="font-size: 14px;">Voice Content</p>
                       </div>
                       <div class="card-body inner-card" style="max-height: 250px;">
-                        <div *ngIf="currentNode.audio != null" class="card-header inner-card"
+                        <div *ngIf="currentNode.audio != null && !isCurrentAudio" class="card-header inner-card"
                           style="margin-bottom: 30px;">
-                          <label>{{currentNode.audio.title}}</label>
+                          <label>{{currentNode.audio.title}} not </label>
+                          <audio controls [attr.id]="currentNode.key">
+                            <source src="{{currentNode.audio.fileUrl}}">
+                          </audio>
+                        </div>
+
+                        <div *ngIf="currentNode.audio != null && isCurrentAudio" class="card-header inner-card"
+                          style="margin-bottom: 30px;">
+                          <label>{{currentNode.audio.title}} is</label>
                           <audio controls [attr.id]="currentNode.key">
                             <source src="{{currentNode.audio.fileUrl}}">
                           </audio>

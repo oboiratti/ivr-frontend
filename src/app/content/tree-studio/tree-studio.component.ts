@@ -46,6 +46,7 @@ export class TreeStudioComponent implements OnInit {
   tree: Tree;
   isEdit: boolean;
   hasSelected: boolean;
+  isCurrentAudio = true;
 
   private currentNode: BlockNode;
 
@@ -606,12 +607,12 @@ export class TreeStudioComponent implements OnInit {
     const selectedNodeData = node.data;
     if (!selectedNodeData.key) { return ; }
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
-    this.resetAudioControl();
-    // this.audioPlayerRef.nativeElement.src = this.currentNode.audio.fileName;
-    // this.showForm(this.currentNode.key);
+    this.isCurrentAudio = !this.isCurrentAudio;
   }
 
   resetAudioControl() {
+    console.log('reseting audio in ' + this.currentNode.key)
+    console.log(document)
     const audioControl: any = document.getElementById(this.currentNode.key);
     console.log(audioControl)
     if (audioControl) {
@@ -645,7 +646,6 @@ export class TreeStudioComponent implements OnInit {
     // TODO :add copy code
     this.diagram.startTransaction('copynode(s)');
     this.diagram.commandHandler.copySelection()
-    
     this.diagram.commitTransaction('copynode(s)');
     console.log('copy node')
   }
