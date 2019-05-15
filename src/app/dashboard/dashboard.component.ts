@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   doughnut = {}
   pie = {}
   @ViewChild('doughnutcanvas') doughnutcanvas: ElementRef
-  @ViewChild('barcanvas') barcanvas: ElementRef
+  @ViewChild('piecanvas') piecanvas: ElementRef
   startDate: string
   endDate: string
 
@@ -96,14 +96,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         })
 
         // const data = [20, 30, 40, 50]
-        this.pie = new Chart(this.barcanvas.nativeElement, {
+        this.pie = new Chart(this.piecanvas.nativeElement, {
           type: 'pie',
           data: {
             labels: labels,
             datasets: [
               {
                 data: data,
-                backgroundColor: ['#7a401b', '#d81d1e', '#ffc800', '#a3a0fb']
+                backgroundColor: ['#7a401b', '#ffc800', '#d81d1e', '#a3a0fb']
               }
             ]
           },
@@ -131,8 +131,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const data = [];
         const labels = [];
         (res.data as Array<any>).map(elm => {
-          data.push(elm.subscriberCount)
-          labels.push(elm.commodity + ' ' + elm.subscriberCount)
+          data.push(elm.landArea)
+          labels.push(elm.commodity + ' ' + elm.landArea + ' Hectares')
         })
 
         // const data = [20, 30, 40, 50]
@@ -143,7 +143,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             datasets: [
               {
                 data: data,
-                backgroundColor: ['#7a401b', '#d81d1e', '#ffc800', '#a3a0fb']
+                backgroundColor: ['#7a401b', '#ffc800', '#d81d1e', '#a3a0fb']
               }
             ]
           },
