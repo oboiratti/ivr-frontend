@@ -1,5 +1,5 @@
 import * as go from 'gojs';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import {
   Component,
@@ -8,21 +8,18 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  Renderer2
   } from '@angular/core';
-import { finalize } from 'rxjs/operators';
 import { GuidedDraggingTool } from 'gojs/extensionsTS/GuidedDraggingTool';
 import { Lookup } from 'src/app/shared/common-entities.model';
 import { Media, MediaQuery } from '../shared/media.model';
 import { MediaService } from '../shared/media.service';
-import { MessageDialog } from 'src/app/shared/message_helper';
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { RouteNames } from 'src/app/shared/constants';
 import { TreeConfig } from '../tree-config';
 import { TreeService } from '../shared/tree.service';
-import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
-import { stringify } from 'querystring';
-import { keyframes } from '@angular/animations';
+import { BlockNode , Connection, Tree, Choice } from '../shared/tree.model';
 
 // This requires us to include
 // 'node_modules/gojs/extensionsTS/*'
@@ -37,23 +34,21 @@ import { keyframes } from '@angular/animations';
 export class TreeStudioComponent implements OnInit {
 
   private diagram: go.Diagram = new go.Diagram();
-  private palette: go.Palette = new go.Palette();
   private $: any;
 
   private phoneKeys: Array<string>;
   private repeatDelay: Array<string>;
   private repeatNumber: Array<string>;
+  audioControl: any;
   languages: Observable<Lookup[]>;
   tags: Observable<Lookup[]>;
   audios: Array<Media>;
   tree: Tree;
   isEdit: boolean;
   hasSelected: boolean;
+  isCurrentAudio = true;
 
   private currentNode: BlockNode;
-  private multiNode: Multichoice;
-  private numericNode: Numeric;
-  private openNode: Openended;
 
   messageForm: boolean;
   multiForm: boolean;
@@ -69,12 +64,6 @@ export class TreeStudioComponent implements OnInit {
   @ViewChild('diagramDiv')
   private diagramRef: ElementRef;
 
-  @ViewChild('SaveButton')
-  private SaveButton: ElementRef;
-
-  // @ViewChild('paletteDiv')
-  // private paletteRef: ElementRef;
-
   @Input()
   get model(): go.Model { return this.diagram.model; }
   set model(val: go.Model) { this.diagram.model = val; }
@@ -89,7 +78,7 @@ export class TreeStudioComponent implements OnInit {
   private file: string;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
-    private treeService: TreeService, private mediaService: MediaService ) {
+    private treeService: TreeService, private mediaService: MediaService, renderer: Renderer2 ) {
 
     // Form init
     this.phoneKeys = TreeConfig.phoneKeys;
@@ -131,8 +120,16 @@ export class TreeStudioComponent implements OnInit {
       }
     });
 
-    this.diagram.addDiagramListener('ChangingSelection', (e: go.DiagramEvent)  => {
+    this.diagram.commandHandler.copySelection()
+
+    this.diagram.addDiagramListener('ClipboardChanged', (e: go.DiagramEvent)  => {
       // const copiedNode = this.diagram.copyParts(go.Node, null, true).[0];
+      console.log('Copied Nodes => ' )
+    });
+
+    this.diagram.addDiagramListener('ClipboardPasted', (e: go.DiagramEvent)  => {
+      // const copiedNode = this.diagram.copyParts(go.Node, null, true).[0];
+      // console.log('Pasted', e)
     });
 
     this.diagram.addDiagramListener('LinkDrawn', (e: go.DiagramEvent) => {
@@ -192,6 +189,9 @@ export class TreeStudioComponent implements OnInit {
       linkToPortIdProperty: 'toPort',
     });
 
+    const deselectedColor = $( go.Brush, 'Linear', { 0.0: '#fff', 0.80: '#e7e7e7', 0.90: '#f5f5f5' })
+    const selectedColor = $( go.Brush, 'Linear', { 0.0: '#531944', 0.90: '#240b1d'})
+
     // MESSAGE
     this.diagram.nodeTemplateMap.add(TreeConfig.nodeTypes.message,
       $(go.Node, 'Auto', { isShadowed: true, shadowBlur: 10, shadowOffset: new go.Point(3, 3), shadowColor: '#e8e8e8'},
@@ -203,7 +203,12 @@ export class TreeStudioComponent implements OnInit {
           stroke: '#aaa', strokeWidth: 1, cursor: 'pointer',
           // allow many kinds of links
           toLinkable: true, toLinkableDuplicates: false, toSpot: go.Spot.TopCenter
-        }, new go.Binding('portId', 'toPortId')),
+        }, new go.Binding('portId', 'toPortId')), /* {
+          selectionChanged: function(part) {
+              const shape = part.elt(0);
+              shape.fill = part.isSelected ? selectedColor : deselectedColor;
+            }
+          },*/
         $(go.TextBlock,
           { margin: 4, text: 'Message', height: 15, textAlign: 'left', alignment: go.Spot.TopLeft,
             font: '9px Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif'
@@ -218,7 +223,12 @@ export class TreeStudioComponent implements OnInit {
                   text = text.substring(0, 75).concat('...');
                 }
                 return text;
-            })
+            }), /* {
+              selectionChanged: function(part) {
+                const shape = part.elt(0);
+                shape.color = part.isSelected ? '#fff' : '#4f4f4f';
+              }
+            } */
           )
         ),
         $(go.Panel, 'Horizontal', { alignment: go.Spot.BottomLeft, stretch: go.GraphObject.Fill },
@@ -387,6 +397,21 @@ export class TreeStudioComponent implements OnInit {
           }
         )
     ))
+  }
+
+  calculateHighestPossibleScore() {
+    console.log('am in')
+    let score = 0;
+    this.tree.nodes.forEach(node => {
+      if (node.type === TreeConfig.nodeTypes.multichoice) {
+        const weights = [];
+        node.custom.choices.forEach(choice => {
+          weights.push(choice.weight)
+        });
+        score = score + Math.max(...weights);
+      }
+    });
+    this.tree.highestScore = score;
   }
 
   generateNodeId() {
@@ -582,7 +607,17 @@ export class TreeStudioComponent implements OnInit {
     const selectedNodeData = node.data;
     if (!selectedNodeData.key) { return ; }
     this.currentNode = this.tree.nodes.filter(x => x.key === selectedNodeData.key)[0];
-    this.showForm(this.currentNode.key);
+    this.isCurrentAudio = !this.isCurrentAudio;
+  }
+
+  resetAudioControl() {
+    console.log('reseting audio in ' + this.currentNode.key)
+    console.log(document)
+    const audioControl: any = document.getElementById(this.currentNode.key);
+    console.log(audioControl)
+    if (audioControl) {
+      audioControl.src = (this.currentNode.audio) ?  this.currentNode.audio.fileName : '';
+    }
   }
 
   updateMessageTitle() {
@@ -606,8 +641,12 @@ export class TreeStudioComponent implements OnInit {
       this.diagram.commitTransaction('deleted node => ' + this.currentNode.key);
     }
   }
+
   copyNode() {
     // TODO :add copy code
+    this.diagram.startTransaction('copynode(s)');
+    this.diagram.commandHandler.copySelection()
+    this.diagram.commitTransaction('copynode(s)');
     console.log('copy node')
   }
 

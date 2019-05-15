@@ -1,51 +1,71 @@
 <div class="">
+    <div class="row">
+        <div class="col-sm-9">
+          <h5 class="card-title alert alert-info" *ngIf="!isEdit"> Viewing Tree : {{ tree.title }}</h5>
+          <h5 class="card-title alert alert-warning" *ngIf="isEdit"> Editing Tree : {{ tree.title }}</h5>
+        </div>
+        <div class="col-sm-3">
+          <a class="btn btn-outline-secondary float-right" routerLink="/content/trees" style="margin-top:10px;">
+            <i class="fa fa-arrow-left"></i> Back
+          </a>
+        </div>
+      </div>
   <div class="container-fluid" style="padding:0px;">
     <div class="card">
       <div class="card-header">
-				<h5 class="card-title alert alert-secondary">
-					<span *ngIf="!isEdit" >Viewing</span> 
-					<span *ngIf="isEdit" >Editing</span> 
-					Tree : {{tree.title }}</h5>
-        <div class="btn-group float-left" role="group">
-          <button class="btn btn-light btn text-dark border rounded" type="button" style="margin-right: 3px;"
-            [ngClass]="{'active': !isEdit}" (click)="setDiagramToReadOnly(true)">Tree View</button>
-          <!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
-        </div>
-
-				<button 
-					class="btn btn-light btn text-dark border rounded float-left" type="button"
-					[disabled] = "!hasSelected"
-          style="margin-right: 5px;">Duplicate</button>
-				<button 
-					class="btn btn-light btn text-dark border rounded float-left" type="button"
-					(click)="deleteNode()" 
-					[disabled] = "!hasSelected"
-          style="margin-right: 3px;">Delete</button>
-
-        <button class="btn btn-light btn text-dark border rounded float-left" type="button" style="margin-right: 5px;"
-          [ngClass]="{'active': isEdit}" (click)="setDiagramToReadOnly(false)">Edit Tree</button>
-        <div class="dropdown">
-          <button class="btn btn-primary btn-lg dropdown-toggle border rounded float-left" data-toggle="dropdown"
-            aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
-          <div class="dropdown-menu multi-level" role="menu">
-            <a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
-            <div class="dropdown-divider" role="presentation"></div>
-            <a class="dropdown-item" role="presentation" (click)="addMultiChoice()">Multiple Choice Question</a>
-            <a class="dropdown-item" role="presentation" (click)="addNumeric()">Numeric Question</a>
-            <a class="dropdown-item dropdown-submenu" role="presentation" (click)="addOpenEnded()">Open-ended
-              Question</a>
-            <div class="dropdown-divider" role="presentation"></div>
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="btn-group float-left" role="group">
+                  <button class="btn btn-light btn text-dark border rounded" type="button" style="margin-right: 3px;"
+                    [ngClass]="{'active': !isEdit}" (click)="setDiagramToReadOnly(true)">Tree View</button>
+                    <button class="btn btn-light btn text-dark border rounded float-left" type="button" style="margin-right: 5px;"
+                  [ngClass]="{'active': isEdit}" (click)="setDiagramToReadOnly(false)">Edit Tree</button>
+                  <!-- <button class="btn btn-light btn-sm text-dark border rounded" type="button" style="margin-right: 10px;">Resource View</button> -->
+                </div>
+                <button 
+                  class="btn btn-light btn text-dark border rounded float-left" type="button"
+                  [disabled] = "!hasSelected"
+                  style="margin-right: 5px;">Duplicate</button>
+                <button 
+                  class="btn btn-light btn text-dark border rounded float-left" type="button"
+                  (click)="deleteNode()" 
+                  [disabled] = "!hasSelected"
+                  style="margin-right: 3px;">Delete</button>
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle border rounded float-left" data-toggle="dropdown"
+                    aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
+                  <div class="dropdown-menu multi-level" role="menu">
+                    <a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
+                    <div class="dropdown-divider" role="presentation"></div>
+                    <a class="dropdown-item" role="presentation" (click)="addMultiChoice()">Multiple Choice Question</a>
+                    <a class="dropdown-item" role="presentation" (click)="addNumeric()">Numeric Question</a>
+                    <a class="dropdown-item dropdown-submenu" role="presentation" (click)="addOpenEnded()">Open-ended
+                      Question</a>
+                    <div class="dropdown-divider" role="presentation"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="btn-group btn-group" role="group">
+                  <button class="btn btn-primary-custom" type="button" (click)="saveTree()"> <i class="fa fa-save"></i>
+                    Save</button>
+                  <!-- <button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button> -->
+                </div>
+              </div>
+            </div>
           </div>
-				</div>
-        <div class="btn-group btn-group-lg float-right" role="group">
-          <button class="btn btn-primary btn-lg" type="button" (click)="saveTree()"> <i class="fa fa-save"></i>
-            Save</button>
-          <!-- <button class="btn btn-success btn-sm" type="button" (click)="loadTree()">Load</button> -->
+          <div class="col-sm-3">
+            <div class="row">
+              <h3>Highest Posible Score = {{tree.highestScore || '0'}}</h3>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card-body">
         <div class="row">
-          <div #diagramDiv class="col-9 diagramDiv border"></div>
+          <div #diagramDiv class="col-9 diagramDiv"></div>
           <div #sidebar class="col-3 tree-sidebar border">
             <!--Main Form-->
             <div class="card" style="padding: 10px; margin-bottom: 20px; margin-top: -30px">
@@ -100,7 +120,7 @@
                       </div>
                     </div>
                     <div *ngIf="currentNode.custom.repeat">
-                      <a class="text-muted" href="">
+                      <a class="text-muted">
                         <br>For the best user experience, please provide an audio prompt that says,&nbsp;
                         <em>"If you'd like to repeat this message, please press 2 now."</em>
                       </a>
@@ -150,10 +170,14 @@
                         <input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value"
                           name="currentNode.custom.choices[{{i}}].value" (ngModelChange)="addChoice(i+1)">
                         <div class="input-group-prepend" *ngIf="(i !== currentNode.custom.choices.length - 1 )"><span
-                            class="input-group-text">Score</span></div>
-                        <input class="form-control" type="number" [(ngModel)]="currentNode.custom.choices[i].weight"
-                          name="currentNode.custom.choices[{{i}}].weight" (ngModelChange)="addChoice(i+1)"
-                          *ngIf="(i !== currentNode.custom.choices.length - 1 )">
+                            class="input-group-text">=</span></div>
+                        <input class="form-control" type="number" 
+                          [(ngModel)]="currentNode.custom.choices[i].weight"
+                          name="currentNode.custom.choices[{{i}}].weight" 
+                          (ngModelChange)="addChoice(i+1)"
+                          (ngModelChange)="calculateHighestPossibleScore()"
+                          *ngIf="(i !== currentNode.custom.choices.length - 1 )"
+                          >
                         <div class="input-group-append">
                           <button class="btn btn-secondary" type="button" (click)="removeChoice(i)"
                             [disabled]="(i === currentNode.custom.choices.length - 1 || i !== currentNode.custom.choices.length - 2 )">X</button>
@@ -250,7 +274,6 @@
                       </select>
                     </div>
                   </div>
-
                   <!-- STANDAR BLOCK PROPERTIES -->
                   <div id="STANDARD" *ngIf="!treeForm">
                     <div class="card inner-card" style="margin-bottom: 10px;">
@@ -259,10 +282,18 @@
                         <p style="font-size: 14px;">Voice Content</p>
                       </div>
                       <div class="card-body inner-card" style="max-height: 250px;">
-                        <div *ngIf="currentNode.audio != null" class="card-header inner-card"
+                        <div *ngIf="currentNode.audio != null && !isCurrentAudio" class="card-header inner-card"
                           style="margin-bottom: 30px;">
-                          <label>{{currentNode.audio.title}}</label>
-                          <audio controls>
+                          <label>{{currentNode.audio.title}} not </label>
+                          <audio controls [attr.id]="currentNode.key">
+                            <source src="{{currentNode.audio.fileUrl}}">
+                          </audio>
+                        </div>
+
+                        <div *ngIf="currentNode.audio != null && isCurrentAudio" class="card-header inner-card"
+                          style="margin-bottom: 30px;">
+                          <label>{{currentNode.audio.title}} is</label>
+                          <audio controls [attr.id]="currentNode.key">
                             <source src="{{currentNode.audio.fileUrl}}">
                           </audio>
                         </div>
