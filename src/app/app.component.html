@@ -1,4 +1,4 @@
 <block-ui>
   <!-- <app-navbar [name]="name" [submenus]="submenus" [authenticated]="isLoggedIn" (logout)="logout()" (toggle)="appsidenav.toggle()"></app-navbar> -->
-  <app-sidenav #appsidenav [menus]="menus" [authenticated]="isLoggedIn"></app-sidenav>
+  <app-sidenav #appsidenav [menus]="menus" [authenticated]="isLoggedIn" (logout)="logout()"></app-sidenav>
 </block-ui>

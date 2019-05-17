@@ -45,7 +45,7 @@ export class DashboardService {
       // )
   }
 
-  getCampaignSummary(startDate?: Date, endDate?: Date) {
+  getCampaignSummary(startDate?: string, endDate?: string) {
     return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/dashboard/campaignsummary?startDate=${startDate}&endDate=${endDate}`).pipe(
       map(res => {
         if (res.success) { return res.data }
