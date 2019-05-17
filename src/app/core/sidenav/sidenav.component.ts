@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, HostListener, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { IMenuItem } from 'src/app/shared/common-entities.model';
 
@@ -18,6 +18,7 @@ export class SidenavComponent implements OnInit {
   username: string;
   email: string;
   version: string
+  @Output() logout = new EventEmitter()
 
   constructor(private authService: AuthService, private renderer: Renderer2) { }
 
@@ -57,7 +58,11 @@ export class SidenavComponent implements OnInit {
     }
   }
 
+  doLogout() {
+    this.logout.emit()
+  }
+
   private setVersion() {
-    this.version = 'v0.0.6'
+    this.version = 'v0.0.7'
   }
 }
