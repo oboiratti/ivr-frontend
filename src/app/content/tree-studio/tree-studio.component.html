@@ -35,7 +35,7 @@
                   style="margin-right: 3px;">Delete</button>
                 <div class="dropdown">
                   <button class="btn btn-secondary dropdown-toggle border rounded float-left" data-toggle="dropdown"
-                    aria-expanded="false" type="button" style="margin-right: 5px;">Add Block&nbsp;</button>
+                    aria-expanded="false" type="button" style="margin-right: 5px;" [disabled]="!isEdit">Add Block&nbsp;</button>
                   <div class="dropdown-menu multi-level" role="menu">
                     <a class="dropdown-item" role="presentation" (click)="addMessage()">Message</a>
                     <div class="dropdown-divider" role="presentation"></div>
@@ -167,14 +167,18 @@
                         style="margin-bottom: 5px;">
                         <div class="input-group-prepend"><span
                             class="input-group-text">{{ currentNode.custom.choices[i].key }}</span></div>
-                        <input class="form-control" type="text" [(ngModel)]="currentNode.custom.choices[i].value"
-                          name="currentNode.custom.choices[{{i}}].value" (ngModelChange)="addChoice(i+1)">
+                        <input class="form-control" type="text" 
+                          [(ngModel)]="currentNode.custom.choices[i].value"
+                          name="currentNode.custom.choices[{{i}}].value" 
+                          (ngModelChange)="addChoice(i+1)"
+                          (ngModelChange)="setHighestChoiceScore()">
                         <div class="input-group-prepend" *ngIf="(i !== currentNode.custom.choices.length - 1 )"><span
                             class="input-group-text">=</span></div>
                         <input class="form-control" type="number" 
+                          name="currentNode.custom.choices[{{i}}].weight"
                           [(ngModel)]="currentNode.custom.choices[i].weight"
-                          name="currentNode.custom.choices[{{i}}].weight" 
                           (ngModelChange)="addChoice(i+1)"
+                          (ngModelChange)="setHighestChoiceScore()"
                           (ngModelChange)="calculateHighestPossibleScore()"
                           *ngIf="(i !== currentNode.custom.choices.length - 1 )"
                           >

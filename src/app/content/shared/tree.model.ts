@@ -1,5 +1,6 @@
 import { Lookup, ModelQuery } from 'src/app/shared/common-entities.model';
 import { Media } from './media.model';
+import { NumberValueAccessor } from '@angular/forms/src/directives';
 
 export interface Tree {
     id: number;
@@ -68,6 +69,7 @@ export interface Message {
 
 export interface Multichoice {
     choices: Array<Choice>; // Starts from 1
+    highestChoiceValue: NumberValueAccessor;
     choiceKeypresses: object; // {'1': '2'} // This represents the keys that should be pressed for which choice
     title:  string;
     branching:  boolean; // Not sure if this is neccessary 

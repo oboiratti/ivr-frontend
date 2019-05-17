@@ -400,7 +400,6 @@ export class TreeStudioComponent implements OnInit {
   }
 
   calculateHighestPossibleScore() {
-    console.log('am in')
     let score = 0;
     this.tree.nodes.forEach(node => {
       if (node.type === TreeConfig.nodeTypes.multichoice) {
@@ -412,6 +411,16 @@ export class TreeStudioComponent implements OnInit {
       }
     });
     this.tree.highestScore = score;
+  }
+
+  setHighestChoiceScore() {
+    if (this.currentNode.type === TreeConfig.nodeTypes.multichoice) {
+      const weights = [];
+      this.currentNode.custom.choices.forEach(choice => {
+        weights.push(choice.weight)
+      });
+      this.currentNode.custom.highestChoiceValue = Math.max(...weights)
+    }
   }
 
   generateNodeId() {
