@@ -732,6 +732,7 @@ export class TreeStudioComponent implements OnInit {
         this.tree = tree;
         console.log('TREE => ', this.tree)
         this.loadAudios();
+        this.calculateHighestPossibleScore();
       }
     }, () => this.blockUi.stop());
   }
