@@ -52,6 +52,8 @@ export class RouteNames {
     static scheduleFormEdit = 'outbound/:id/schedules/form/:sid'
     static outboundResults = 'outbound/results'
     static outboundResultsId = 'outbound/results/:id'
+    static scheduleResults = 'schedules/results'
+    static scheduleResultsId = 'outbound/:id/schedules/results/:sid'
 
     static profile = 'profile';
     static profileForm = 'profile-form';

@@ -11,9 +11,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ScheduleListComponent } from './schedule-list/schedule-list.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 import { OutboundResultsComponent } from './outbound-results/outbound-results.component';
+import { ScheduleResultsComponent } from './schedule-results/schedule-results.component';
 
 @NgModule({
-  declarations: [CampaignComponent, OutboundListComponent, OutboundFormComponent, ScheduleListComponent, ScheduleFormComponent, OutboundResultsComponent],
+  declarations: [CampaignComponent, OutboundListComponent, OutboundFormComponent, ScheduleListComponent, ScheduleFormComponent, OutboundResultsComponent, ScheduleResultsComponent],
   imports: [
     CommonModule,
     SharedModule,

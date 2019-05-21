@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { SubscriberGroup, Subscriber } from 'src/app/subscriber/shared/subscriber.model';
@@ -20,7 +20,7 @@ import { MessageDialog } from 'src/app/shared/message_helper';
   templateUrl: './schedule-form.component.html',
   styleUrls: ['./schedule-form.component.scss']
 })
-export class ScheduleFormComponent implements OnInit {
+export class ScheduleFormComponent implements OnInit, OnDestroy {
 
   recipientTypes = ['AllSubscribers', 'SelectedGroups', 'SelectedSubscribers']
   scheduleTypes = ['Now', 'FixedDate', 'Repeating']
@@ -66,6 +66,11 @@ export class ScheduleFormComponent implements OnInit {
     this.sid = +this.activatedRoute.snapshot.paramMap.get('sid')
     if (this.id) { this.findCampaign(this.id) }
     if (this.sid) { this.findCampaignSchedule(this.sid) }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next()
+    this.unsubscribe$.complete()
   }
 
   doToggle() {
