@@ -7,7 +7,7 @@
                     <div class="form-row">
                         <div class="form-group col-sm-12 col-md-12">
                             <label class="btn btn-secondary btn-file">Select File <i class="fa fa-asterisk color-maroon"></i>
-                            <input type="file" class="form-control"  accept=".mp3, .wav, .aac, .ogg, .wma" (change)="onFileChange($event.target.files)">
+                            <input type="file" class="form-control"  accept=".mp3, .wav, .ogg" (change)="onFileChange($event.target.files)">
                           </label>
                             <div class="invalid-feedback" *ngIf="filePath.dirty && filePath.invalid">
                                 <div *ngIf="filePath.errors.required">

@@ -21,11 +21,10 @@ export class TreeListComponent implements OnInit, OnDestroy {
   deleteTree: Subscription;
   lastFilter: TreeQuery;
   status: string;
+  pageSizes = [10, 20, 50, 100]
   totalRecords = 0;
   currentPage = 1;
-  recordSize = 20;
-  totalPages = 1;
-  pageNumber = 1;
+  size = this.pageSizes[1];
   languages$: Observable<Lookup[]>;
   currentRecId: number;
 
@@ -74,7 +73,7 @@ export class TreeListComponent implements OnInit, OnDestroy {
   }
 
   getTree(filter: TreeQuery) {
-    filter.pager = filter.pager || { page: 1, size: this.recordSize };
+    filter.pager = filter.pager || { page: 1, size: this.size };
     filter.status = this.status;
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading Trees...');
@@ -82,4 +81,9 @@ export class TreeListComponent implements OnInit, OnDestroy {
       finalize(() => this.blockUi.stop())
     );
   }
+  pageSizeChangeEvent() {
+    this.lastFilter.pager = { page: 1, size: this.size }
+    this.getTree(this.lastFilter)
+  }
+
 }

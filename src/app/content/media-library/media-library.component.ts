@@ -24,11 +24,10 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   activeTab: string;
   audioEl: any;
   audioElSource: any;
+  pageSizes = [10, 20, 50, 100]
   totalRecords = 0;
   currentPage = 1;
-  recordSize = 20;
-  totalPages = 1;
-  pageNumber = 1;
+  size = this.pageSizes[1];
   languages$: Observable<Lookup[]>;
   types = ['Message', 'Survey'];
   currentRecId: number;
@@ -78,13 +77,18 @@ export class MediaLibraryComponent implements OnInit, OnDestroy {
   }
 
   getMedia(filter: MediaQuery) {
-    filter.pager = filter.pager || { page: 1, size: this.recordSize };
+    filter.pager = filter.pager || { page: 1, size: this.size };
     filter.status = this.status;
     this.lastFilter = Object.assign({}, filter);
     this.blockUi.start('Loading Library...');
     this.records$ = this.mediaService.queryMedia(this.lastFilter).pipe(
       finalize(() => this.blockUi.stop())
     );
+  }
+
+  pageSizeChangeEvent() {
+    this.lastFilter.pager = { page: 1, size: this.size }
+    this.getMedia(this.lastFilter)
   }
 
   setLabel(type: string) {
