@@ -1,3 +1,155 @@
-<p>
-  outbound-results works!
-</p>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="p-2 text-uppercase h6 float-left" *ngIf="campaign">
+      {{campaign.area.name}} <i class="fa fa-chevron-right"></i> {{campaign.title}} : Results
+    </div>
+    <a class="btn btn-light border border-dark float-right" routerLink="/campaign/outbound">
+      <i class="fa fa-arrow-left"></i> Back
+    </a>
+  </div>
+</div>
+<hr>
+
+<div class="row">
+  <div class="col">
+    <div class="card border shadow-sm fixed-card-height mb-3">
+      <div class="card-body">
+        <div class="card-title text-muted h6 text-uppercase">Campaign Summary</div>
+        <div class="row">
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="activeDoughnut">
+              <canvas class="m-auto" #activeCanvas>{{ activeDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-dark-golder-rod"></i>&nbsp; Active Schedules <br>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="upcomingDoughnut">
+              <canvas class="m-auto" #upcomingCanvas>{{ upcomingDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-dark-golder-rod"></i>&nbsp; Upcoming Schedules <br>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="hangUpDoughnut">
+              <canvas class="m-auto" #hangUpCanvas>{{ hangUpDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-dark-golder-rod"></i>&nbsp; Hang Up Sessions <br>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="scoreDoughnut">
+              <canvas class="m-auto" #scoreCanvas>{{ scoreDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-dark-golder-rod"></i>&nbsp; Campaign Score <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card border shadow-sm fixed-card-height mb-3">
+      <div class="card-body">
+        <div class="card-title text-muted h6 text-uppercase">Campaign Subscriber Summary</div>
+        <div class="row">
+          <div class="col-sm-12 col-md-8">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                  <th scope="col"></th>
+                  <th scope="col">Average Ages</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Male</th>
+                  <td>230,000</td>
+                  <td>57%</td>
+                  <td>54</td>
+                </tr>
+                <tr>
+                  <th scope="row">Female</th>
+                  <td>120,000</td>
+                  <td>43%</td>
+                  <td>40</td>
+                </tr>
+                <tr>
+                  <th scope="row">TOTALS</th>
+                  <th>350,000</th>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="col-sm-12 col-md-4">
+            <div class="chart-container" *ngIf="summaryPie">
+              <canvas class="m-auto" #pieCanvas>{{ summaryPie }}</canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card border shadow-sm fixed-card-height mb-3">
+      <div class="card-body">
+        <div class="card-title text-muted h6 text-uppercase">Schedules Session Summary</div>
+        <div class="row">
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="activeDoughnut">
+              <canvas class="m-auto" #activeCanvas>{{ activeDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-medium-turquoise"></i>&nbsp; Active Schedules <br>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="upcomingDoughnut">
+              <canvas class="m-auto" #upcomingCanvas>{{ upcomingDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-medium-turquoise"></i>&nbsp; Upcoming Schedules <br>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="hangUpDoughnut">
+              <canvas class="m-auto" #hangUpCanvas>{{ hangUpDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-medium-turquoise"></i>&nbsp; Hang Up Sessions <br>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-md-3 px-1">
+            <div class="chart-container" *ngIf="scoreDoughnut">
+              <canvas class="m-auto" #scoreCanvas>{{ scoreDoughnut }}</canvas>
+            </div>
+            <div class="text-center text-muted mt-3">
+              <i class="fa fa-stop-circle fa-lg text-medium-turquoise"></i>&nbsp; Campaign Score <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
