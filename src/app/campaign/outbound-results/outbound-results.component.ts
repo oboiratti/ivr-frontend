@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CampaignService } from '../shared/campaign.service';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
 import { Campaign, CampaignScheduleQuery } from '../shared/campaign.models';
-import { Subject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Subject, Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Chart } from 'chart.js'
+import { RouteNames } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-outbound-results',
@@ -18,6 +19,7 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   unsubscribe$ = new Subject<void>()
   campaignId: number
   @BlockUI() blockUi: NgBlockUI
+  @BlockUI('trees') blockTrees: NgBlockUI
   activeDoughnut = {}
   upcomingDoughnut = {}
   hangUpDoughnut = {}
@@ -28,6 +30,7 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   hangUpCalls = {}
   scheduleScore = {}
   schedulesBar = {}
+  trees$: Observable<any>
   @ViewChild('activeCanvas') activeCanvas: ElementRef
   @ViewChild('upcomingCanvas') upcomingCanvas: ElementRef
   @ViewChild('hangUpCanvas') hangUpCanvas: ElementRef
@@ -40,12 +43,14 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild('schedulesBarCanvas') schedulesBarCanvas: ElementRef
 
   constructor(private activatedRoute: ActivatedRoute,
+    private router: Router,
     private campaignService: CampaignService) { }
 
   ngOnInit() {
     this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
     if (this.campaignId) {
       this.findCampaign(this.campaignId)
+      this.getCampaignTrees(this.campaignId)
     }
   }
 
@@ -59,6 +64,10 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   ngOnDestroy() {
     this.unsubscribe$.next()
     this.unsubscribe$.complete()
+  }
+
+  results(id: number) {
+    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.campaignId}/${RouteNames.treeResults}/${id}`)
   }
 
   private makeDoughnut(obj: any, canvas: ElementRef, data: any, labels: any, text?: string, backgroundColor?: any, sidePadding?: number) {
@@ -152,7 +161,7 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   private schedulesBarChart() {
     // this.blockUi.start('Loading...')
     // this.dashboardService.getCommoditySummary().subscribe(res => {
-      this.blockUi.stop()
+      // this.blockUi.stop()
       // if (res.success) {
         // const data = [];
         const labels = ['a', 'b', 'c', 'd', 'e', 'f', 'e'];
@@ -205,5 +214,12 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
           this.campaign = res.data
         }
       })
+  }
+
+  private getCampaignTrees(campaignId: number) {
+    this.blockTrees.start()
+    this.trees$ = this.campaignService.getCampaignTrees(campaignId).pipe(
+      finalize(() => this.blockTrees.stop())
+    )
   }
 }

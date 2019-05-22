@@ -53,11 +53,11 @@ export class CampaignService {
 
   fetchTopicsByPillar(pillarId: number) {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/topic/gettopics?pillarId=${pillarId}`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data }
-      })
-    )
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
   }
 
   saveCampaignSchedule(params: CampaignSchedule) {
@@ -90,7 +90,18 @@ export class CampaignService {
   }
 
   removeSubscriberFromSchedule(scheduleId: number, subscriberId: number) {
-// tslint:disable-next-line: max-line-length
+    // tslint:disable-next-line: max-line-length
     return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/campaignschedule/removesubscriberbyid?scheduleId=${scheduleId}&subscriberId=${subscriberId}`)
+  }
+
+  getCampaignTrees(campaignId: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/campaign/gettrees?campaignId=${campaignId}`)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            return res.data
+          }
+        })
+      )
   }
 }

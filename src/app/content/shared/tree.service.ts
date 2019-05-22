@@ -73,4 +73,16 @@ export class TreeService {
   saveNodes(params: Tree) {
     return this.http.post<ResponseObject<Tree>>(`${environment.baseUrl}/trees/savenodes`, params);
   }
+
+  getKeyMetrics(params: {treeId: number, campaignId: number}) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/keymetrics`, params);
+  }
+
+  getCompletedInteractions(params: {treeId: number, campaignId: number}) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/completedinteractions`, params);
+  }
+
+  getNodeStats(params: {treeId: number, campaignId: number}) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/nodestats`, params);
+  }
 }

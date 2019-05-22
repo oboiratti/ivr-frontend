@@ -8,7 +8,7 @@ import { OutboundFormComponent } from './outbound-form/outbound-form.component';
 import { ScheduleListComponent } from './schedule-list/schedule-list.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 import { OutboundResultsComponent } from './outbound-results/outbound-results.component';
-import { ScheduleResultsComponent } from './schedule-results/schedule-results.component';
+import { TreeResultsComponent } from './tree-results/tree-results.component';
 
 const routes: Routes = [
   {
@@ -57,8 +57,8 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path: RouteNames.scheduleResultsId,
-        component: ScheduleResultsComponent,
+        path: RouteNames.treeResultsId,
+        component: TreeResultsComponent,
         canActivate: [AuthGuard]
       }
     ]
