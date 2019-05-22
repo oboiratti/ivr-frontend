@@ -53,7 +53,7 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
     this.campaignSummary()
     this.subscriberSummaryPie()
     this.schedulesSessionSummary()
-    this.schedulesBarChart()
+    // this.schedulesBarChart()
   }
 
   ngOnDestroy() {
