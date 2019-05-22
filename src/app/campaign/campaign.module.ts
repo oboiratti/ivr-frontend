@@ -11,17 +11,27 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ScheduleListComponent } from './schedule-list/schedule-list.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 import { OutboundResultsComponent } from './outbound-results/outbound-results.component';
-import { ScheduleResultsComponent } from './schedule-results/schedule-results.component';
+import { TreeResultsComponent } from './tree-results/tree-results.component';
+import { BlockUIModule } from 'ng-block-ui';
 
 @NgModule({
-  declarations: [CampaignComponent, OutboundListComponent, OutboundFormComponent, ScheduleListComponent, ScheduleFormComponent, OutboundResultsComponent, ScheduleResultsComponent],
+  declarations: [
+    CampaignComponent,
+    OutboundListComponent,
+    OutboundFormComponent,
+    ScheduleListComponent,
+    ScheduleFormComponent,
+    OutboundResultsComponent,
+    TreeResultsComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
-    CampaignRoutingModule
+    CampaignRoutingModule,
+    BlockUIModule.forRoot()
   ]
 })
 export class CampaignModule { }

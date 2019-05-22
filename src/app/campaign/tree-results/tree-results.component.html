@@ -1,12 +1,14 @@
 <div class="row">
   <div class="col-sm-12">
-    <div class="p-2 text-uppercase h6 float-left" *ngIf="campaignSchedule">
-      {{campaignSchedule.campaign.name}} <i class="fa fa-chevron-right"></i>
-      {{campaignSchedule.campaign.title}} <i class="fa fa-chevron-right"></i>
+    <div class="p-2 text-uppercase h6 float-left" *ngIf="treeInfo">
+      Results for:
+      {{treeInfo.title}}
+      <!-- <i class="fa fa-chevron-right"></i> -->
+      <!-- {{campaignSchedule.campaign.title}} <i class="fa fa-chevron-right"></i>
       {{campaignSchedule.pillar.name}} <i class="fa fa-chevron-right"></i>
-      {{campaignSchedule.topic.name}} : Results
+      {{campaignSchedule.topic.name}} : Results -->
     </div>
-    <button type="button" class="btn btn-light border border-dark float-right" (click)="gotoSchedule()">
+    <button type="button" class="btn btn-light border border-dark float-right" (click)="gotoCampaignResults()">
       <i class="fa fa-arrow-left"></i> Back
     </button>
   </div>
@@ -15,9 +17,9 @@
 
 <div class="row">
   <div class="col">
-    <div class="card border shadow-sm fixed-card-height mb-3">
+    <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'keyMetrics'">
       <div class="card-body">
-        <div class="card-title text-muted h6 text-uppercase">Schedules Session Summary</div>
+        <div class="card-title text-muted h6 text-uppercase">Key Metrics</div>
         <div class="row">
           <div class="col-sm-6 col-md-3 px-1">
             <div class="chart-container" *ngIf="completedCalls">
@@ -55,6 +57,32 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card border shadow-sm mb-3" *blockUI="'completed'">
+      <div class="card-body">
+        <div class="card-title text-muted h6 text-uppercase">Completed Interactions per Block</div>
+        <div class="chart-container" *ngIf="completedInteractionsBar">
+          <canvas class="m-auto" #completedInteractionsCanvas>{{ completedInteractionsBar }}</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card border shadow-sm mb-3" *blockUI="'nodeStats'">
+      <div class="card-body">
+        <div class="card-title text-muted h6 text-uppercase">Environment: Biodiversity</div>
+        <!-- <div class="chart-container" *ngIf="schedulesBar">
+          <canvas class="m-auto" #schedulesBarCanvas>{{ schedulesBar }}</canvas>
+        </div> -->
       </div>
     </div>
   </div>

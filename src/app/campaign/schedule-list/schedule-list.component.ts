@@ -74,10 +74,6 @@ export class ScheduleListComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${id}/${RouteNames.schedules}`)
   }
 
-  results(id: number) {
-    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.campaignId}/${RouteNames.scheduleResults}/${id}`)
-  }
-
   pageChanged(page: number) {
     this.currentPage = page;
     this.lastFilter.pager.page = page;
