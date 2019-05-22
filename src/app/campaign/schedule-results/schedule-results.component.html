@@ -59,3 +59,16 @@
     </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col">
+    <div class="card border shadow-sm mb-3">
+      <div class="card-body">
+        <div class="card-title text-muted h6 text-uppercase">Environment: Biodiversity</div>
+        <div class="chart-container" *ngIf="schedulesBar">
+          <canvas class="m-auto" #schedulesBarCanvas>{{ schedulesBar }}</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

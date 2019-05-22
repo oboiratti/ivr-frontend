@@ -32,7 +32,7 @@ export class TreeService {
   }
 
   fetchTree() {
-    return this.http.get<ResponseObject<Tree[]>>(`${environment.baseUrl}/trees`)
+    return this.http.get<ResponseObject<Tree[]>>(`${environment.baseUrl}/trees/getcompleted`)
       .pipe(
         map(res => {
           if (res.success) { return res.data; }
