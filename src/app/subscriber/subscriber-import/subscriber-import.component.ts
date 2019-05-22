@@ -94,6 +94,7 @@ export class SubscriberImportComponent implements OnInit, OnDestroy {
       landSize: data.LAND_SIZE,
       language: data.LANGUAGE,
       district: data.DISTRICT,
+      program: data.PROGRAM,
       educationalLevel: data.EDUCATIONAL_LEVEL,
       type: data.SUBSCRIBER_TYPE,
       group1: data.SUBSCRIBER_GROUP_1,
