@@ -13,6 +13,7 @@ import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 import { OutboundResultsComponent } from './outbound-results/outbound-results.component';
 import { TreeResultsComponent } from './tree-results/tree-results.component';
 import { BlockUIModule } from 'ng-block-ui';
+import { TreeNodeStatComponent } from './tree-results/tree-node-stat/tree-node-stat.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { BlockUIModule } from 'ng-block-ui';
     ScheduleListComponent,
     ScheduleFormComponent,
     OutboundResultsComponent,
-    TreeResultsComponent
+    TreeResultsComponent,
+    TreeNodeStatComponent
   ],
   imports: [
     CommonModule,

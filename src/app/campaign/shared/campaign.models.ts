@@ -48,3 +48,34 @@ export interface CampaignScheduleQuery extends ModelQuery {
     receipientType: string
     scheduleType: string
 }
+
+export interface Node {
+    title: string
+    key: string
+    choices: number
+}
+
+export interface Aggregates {
+    completed: number
+    failed: number
+    hangup: number
+    totalCalls: number
+}
+
+export interface Interactions {
+    date: Date
+    subscribers: number
+}
+
+export interface ResponseDetails {
+    value: string
+    responses: number
+    total: number
+    percentage: number
+}
+
+export interface NodeStat {
+    aggregates: Aggregates
+    interactions: Interactions []
+    responseDetails: ResponseDetails []
+}

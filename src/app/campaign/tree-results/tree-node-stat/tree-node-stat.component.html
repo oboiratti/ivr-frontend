@@ -1,0 +1,99 @@
+<div class="card border shadow-sm mb-3">
+  <div class="card-body">
+    <div class="card-title text-muted h6 text-uppercase">Node Title: {{stat.node.title}}</div>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Dates</th>
+              <th scope="col">Subscribers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let interaction of stat.interactions">
+              <td>{{interaction.date | date:'medium'}}</td>
+              <td>{{interaction.subscribers}}</td>
+            </tr>
+            <!-- <tr>
+                      <th scope="row">TOTALS INTERACTIONS</th>
+                      <th>350,000</th>
+                    </tr> -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-sm-12 col-md-6">
+        <div class="chart-container" *ngIf="interactionsBar">
+          <canvas class="m-auto" #interactionsCanvas>{{ interactionsBar }}</canvas>
+        </div>
+      </div>
+    </div>
+    <hr>
+
+    <div class="row mt-5">
+      <div class="col-sm-12 col-md-6">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Responses</th>
+              <th scope="col">Number</th>
+              <th scope="col">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let response of stat.responseDetails">
+              <td>{{response.value}}</td>
+              <td>{{response.responses}}</td>
+              <td>{{response.percentage | number:'1.0-2'}}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-sm-12 col-md-6">
+        <div class="chart-container" *ngIf="responsesPie">
+          <canvas class="m-auto" #responsesCanvas>{{ responsesPie }}</canvas>
+        </div>
+      </div>
+    </div>
+    <hr>
+
+    <div class="row mt-5">
+      <div class="col-sm-12 col-md-6">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Aggregates</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Completed</td>
+              <td>{{stat.aggregates.completed}}</td>
+            </tr>
+            <tr>
+              <td>Failed</td>
+              <td>{{stat.aggregates.failed}}</td>
+            </tr>
+            <tr>
+              <td>Hang Up</td>
+              <td>{{stat.aggregates.hangup}}</td>
+            </tr>
+            <tr>
+              <td>Total Calls</td>
+              <th>{{stat.aggregates.totalCalls}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-sm-12 col-md-6">
+        <div class="chart-container" *ngIf="aggregatesBar">
+          <canvas class="m-auto" #aggregatesCanvas>{{ aggregatesBar }}</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
