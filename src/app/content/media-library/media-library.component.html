@@ -76,7 +76,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let x of records$ | async; let i = index" scope="row">
-                            <td>{{i + 1}}</td>
+                            <td>{{((currentPage - 1) * size) + i + 1}}</td>
                             <td>{{x.code}}</td>
                             <td>{{x.title}}</td>
                             <td>{{x.language}}</td>

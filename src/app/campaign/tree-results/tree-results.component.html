@@ -19,7 +19,10 @@
   <div class="col">
     <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'keyMetrics'">
       <div class="card-body">
-        <div class="card-title text-muted h6 text-uppercase">Key Metrics</div>
+        <div class="card-title text-muted h6 text-uppercase" *ngIf="keyMetrics">
+          Key Metrics: {{keyMetrics.subscribers}} Subscribers - {{keyMetrics.groups}} Groups - {{keyMetrics.districts}}
+          Districts
+        </div>
         <div class="row">
           <div class="col-sm-6 col-md-3 px-1">
             <div class="chart-container" *ngIf="completedCalls">
@@ -57,6 +60,14 @@
             </div>
           </div>
         </div>
+        <hr>
+
+        <div *ngIf="keyMetrics">
+          <span class="text-uppercase mr-3">Average Duration for all Calls:
+            {{secondsToTime(keyMetrics.allCallsDuration) | date:'mm:ss'}} minutes </span>
+          <span class="text-uppercase">Average Duration for completed Calls:
+            {{secondsToTime(keyMetrics.compCallsDuration) | date:'mm:ss'}} minutes</span>
+        </div>
       </div>
     </div>
   </div>
@@ -75,15 +86,10 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col">
-    <div class="card border shadow-sm mb-3" *blockUI="'nodeStats'">
-      <div class="card-body">
-        <div class="card-title text-muted h6 text-uppercase">Environment: Biodiversity</div>
-        <!-- <div class="chart-container" *ngIf="schedulesBar">
-          <canvas class="m-auto" #schedulesBarCanvas>{{ schedulesBar }}</canvas>
-        </div> -->
-      </div>
+<ng-container *ngFor="let stat of nodeStats">
+  <div class="row">
+    <div class="col">
+      <app-tree-node-stat [stat]="stat"></app-tree-node-stat>
     </div>
   </div>
-</div>
+</ng-container>

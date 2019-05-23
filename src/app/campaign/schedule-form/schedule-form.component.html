@@ -10,7 +10,12 @@
     <form [formGroup]="form">
       <div class="card">
         <div class="card-body mx-md-4">
-          <h5 class="card-title text-uppercase text-muted ml-md-n4">Campaign Schedule Form</h5><br>
+          <div class="card-title text-uppercase text-muted ml-md-n4">
+            <span class="h5">Campaign Schedule Form</span>
+            <button type="button" class="btn btn-light border border-dark float-right" (click)="closeForm()">
+              <i class="fa fa-arrow-left"></i> Back
+            </button>
+          </div><br>
           <div class="alert alert-info" role="alert" *ngIf="campaign">
             Campaign Scheduling for Campaign: <b>{{campaign.title}}</b> in the area of <b>{{campaign.area.name}}</b>
           </div>

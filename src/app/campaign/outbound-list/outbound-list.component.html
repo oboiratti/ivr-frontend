@@ -39,16 +39,16 @@
           </thead>
           <tbody>
             <tr *ngFor="let campaign of campaigns$ | async; let i = index">
-              <td>{{i + 1}}.</td>
+              <td>{{((currentPage - 1) * size) + i + 1}}.</td>
               <td>{{campaign.title}}</td>
               <td>{{campaign.area.name}}</td>
               <td>{{campaign.startDate | date:'mediumDate'}}</td>
               <td>{{campaign.endDate | date:'mediumDate'}}</td>
               <td>
-                <a class="pointer" (click)="editForm(campaign.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="editForm(campaign.id)" title="Edit"><i class="fa fa-edit" *ngIf="!campaign.isSent"></i></a> &nbsp;
                 <a class="pointer" (click)="gotoSchedule(campaign.id)" title="Schedule"><i class="fa fa-clock-o"></i></a> &nbsp;
                 <a class="pointer" (click)="results(campaign.id)" title="Results"><i class="fa fa-bar-chart"></i></a> &nbsp;
-                <a class="pointer" (click)="delete(campaign.id)" title="Delete"><i class="fa fa-trash"></i></a>
+                <a class="pointer" (click)="delete(campaign.id)" title="Delete"><i class="fa fa-trash" *ngIf="!campaign.isSent"></i></a>
               </td>
             </tr>
           </tbody>

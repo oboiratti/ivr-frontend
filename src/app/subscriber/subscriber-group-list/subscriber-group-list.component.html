@@ -22,7 +22,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let group of subscriberGroups$ | async; let i = index">
-              <td>{{i + 1}}</td>
+              <td>{{((currentPage - 1) * size) + i + 1}}</td>
               <td>{{group.name}}</td>
               <td>{{group.notes}}</td>
               <td>{{group.subscriberCount}}</td>
