@@ -30,6 +30,7 @@
               <th>Subscriber Code</th>
               <th>Name</th>
               <th>Phone</th>
+              <th>Program</th>
               <th>Start Date</th>
               <th>Language</th>
               <th>Type</th>
@@ -44,6 +45,7 @@
               <td>{{subscriber.code}}</td>
               <td>{{subscriber.name}}</td>
               <td>{{subscriber.phoneNumber}}</td>
+              <td>{{subscriber.program.name}}</td>
               <td>{{subscriber.startDate | date:'mediumDate'}}</td>
               <td>{{subscriber.language.name}}</td>
               <td>{{subscriber.subscriberType.name}}</td>
