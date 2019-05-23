@@ -40,7 +40,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let subscriber of subscribers$ | async; let i = index">
-              <td>{{i + 1}}</td>
+              <td>{{((currentPage - 1) * size) + i + 1}}</td>
               <td>{{subscriber.code}}</td>
               <td>{{subscriber.name}}</td>
               <td>{{subscriber.phoneNumber}}</td>

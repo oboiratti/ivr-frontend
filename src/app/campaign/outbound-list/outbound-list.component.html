@@ -39,7 +39,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let campaign of campaigns$ | async; let i = index">
-              <td>{{i + 1}}.</td>
+              <td>{{((currentPage - 1) * size) + i + 1}}.</td>
               <td>{{campaign.title}}</td>
               <td>{{campaign.area.name}}</td>
               <td>{{campaign.startDate | date:'mediumDate'}}</td>

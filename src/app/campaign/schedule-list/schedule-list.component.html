@@ -53,7 +53,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let schedule of campaignSchedules$ | async; let i = index">
-              <td>{{i + 1}}.</td>
+              <td>{{((currentPage - 1) * size) + i + 1}}.</td>
               <td>{{schedule.pillar.name}}</td>
               <td>{{schedule.topic.name}}</td>
               <td>{{schedule.tree.title}}</td>

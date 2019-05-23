@@ -54,7 +54,7 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let x of records$ | async; let i = index" scope="row">
-                            <td>{{i + 1}} <span class="badge badge-danger mr-1" *ngIf="!x.scenarioId">i</span></td>
+                            <td>{{((currentPage - 1) * size) + i + 1}} <span class="badge badge-danger mr-1" *ngIf="!x.scenarioId">i</span></td>
                             <td>{{x.code}}</td>
                             <td>
                                 {{x.title}} <br />
