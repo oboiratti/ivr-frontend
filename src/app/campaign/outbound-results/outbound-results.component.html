@@ -102,17 +102,14 @@
     <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'table'">
       <div class="card-body">
         <div class="card-title text-muted h6 text-uppercase">Campaign Subscriber Summary</div>
-        <!-- <div class="chart-container" *ngIf="schedulesBar">
-          <canvas class="m-auto" #schedulesBarCanvas>{{ schedulesBar }}</canvas>
-        </div> -->
-        <div class="row" *ngIf="subscriberSummary">
-          <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div class="col-sm-12 col-md-8" *ngIf="subscriberSummary">
             <table class="table">
               <thead>
                 <tr>
                   <th scope="col"></th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
+                  <th scope="col">No. of Calls</th>
+                  <th scope="col">% No. of Calls</th>
                   <th scope="col">Average Ages</th>
                 </tr>
               </thead>
