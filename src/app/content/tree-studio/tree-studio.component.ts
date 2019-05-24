@@ -398,7 +398,7 @@ export class TreeStudioComponent implements OnInit {
         )
     ))
   }
-
+ 
   calculateHighestPossibleScore() {
     let score = 0;
     this.tree.nodes.forEach(node => {
