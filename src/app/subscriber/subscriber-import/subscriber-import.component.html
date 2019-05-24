@@ -1,6 +1,9 @@
 <div class="row mx-5">
-    <div class="col-sm-12">
+    <div class="col-sm-8">
         <div class="p-2 text-uppercase form-header-text">Import Subscribers</div>
+    </div>
+    <div class="col-sm-4">
+        <button type="button" class="btn border border-dark pull-right" (click)="downloadTemplate()" style="background-color: #2fb1ec; color: white;">Download Template</button>
     </div>
 </div><br>
 
@@ -9,42 +12,39 @@
     <div class="ml-2">
         <ol>
             <li>
-                Upload an Excel spreadsheet <b>(.xlsx)</b> with a phone number field in the file. (View example)<br>
-                <em>Only columns that are specified will be updated. When creating subscribers, when columns are not provided,
-          the default columns for the following are: Language - Unknown; Start Date - Today; </em><br>
-                <em>If you provide a content type column, eg. "Receive Voice" or "Receive SMS", then newly-created subscribers
-          will have their setting for that content type set to ON or OFF based on that column. Any content type not
-          specified in the spreadsheet will be set to OFF.</em>
+                Upload an Excel spreadsheet <b>(.xlsx)</b> containing data in the template file that was downloaded. (<a (click)="downloadTemplate()">Download Template</a>>)<br>
+                <em>Only columns that are specified in the provided template will be uploaded. The supported columns are CODE, NAME, PHONE_NUMBER, GENDER, DATE_OF_BIRTH, LOCATION, START_DATE, VOICE, SMS, LAND_SIZE, LANGUAGE, DISTRICT, EDUCATIONAL_LEVEL, SUBSCRIBER_TYPE, SUBSCRIBER_GROUP_ (1 - 5), SUBSCRIBER_PRIMARY_COMMODITY, SUBSCRIBER_COMMODITY_ (2 - 5) and PROGRAM  </em><br>
+                <em>For some columns, you will have to select an option from the options list that will be provided for those columns.</em>
             </li>
             <li>
-                After clicking "Upload File", match the headings from your spreadsheet file with the existing subscriber headings in the drop-down menus.
+                To upload a file, click on the browse to slect the filled template file and then click on the Upload button to upload the data.
             </li>
             <li>
-                If a heading does not yet exist, select <b>New</b> and enter the name of the custom field. These can be edited later from the Subscriber Properties page.
+                If there are errors in the file, the system will prompt you and the upload file will be rejected.
             </li>
         </ol>
     </div>
 </div>
+<hr>
 
-<div class="row mx-5">
-    <div class="col-4">
-        <button type="button" class="btn border border-dark" (click)="downloadTemplate()" style="background-color: #2fb1ec; color: white;">Download Template</button>
-    </div>
+<div class="row mx-3">
     <div class="col-4">
         <div class="custom-file">
             <input type="file" class="custom-file-input" accept=".xlsx" (change)="selectFile($event)">
-            <label class="custom-file-label">Choose file</label>
+            <label class="custom-file-label"> {{filename || 'Choose file'}}</label>
         </div>
-        <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
+        <!--<label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>-->
+    </div>
+    <div class="col-8">
+        <button type="button" class="btn btn-primary-custom border border-dark" (click)="upload()" [disabled]="!file">Upload File</button>
     </div>
 </div>
 
 <!--<div class="ml-5 pl-3 mt-2">
     <label class="text-primary" *ngIf="filename">Filename: {{filename}}</label>
 </div>-->
-<hr>
 
-<div class="row">
+<!--<div class="row">
     <div class="col">
         <div class="card">
             <div class="table-responsive">
@@ -120,4 +120,4 @@
         </div>
 
     </div>
-</div>
+</div>-->

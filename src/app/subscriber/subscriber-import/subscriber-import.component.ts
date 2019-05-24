@@ -19,6 +19,7 @@ export class SubscriberImportComponent implements OnInit, OnDestroy {
   tempFile: any;
   @BlockUI() blockUi: NgBlockUI;
   form: FormGroup
+  file: any;
   filename: string
   imports$: Observable<any>
   rows: any[]
@@ -47,7 +48,7 @@ export class SubscriberImportComponent implements OnInit, OnDestroy {
       this.form.patchValue({file: reader.result})
     }
   }*/
-  selectFile(evt: any) {
+  selectFilexx(evt: any) {
     const target: DataTransfer = <DataTransfer>(evt.target);
     if (target.files.length !== 1) { throw new Error('Cannot use multiple files'); }
     this.filename = target.files[0].name
@@ -79,16 +80,29 @@ export class SubscriberImportComponent implements OnInit, OnDestroy {
     };
     reader.readAsBinaryString(target.files[0]);
   }
+  selectFile(evt: any) {
+    const target: DataTransfer = <DataTransfer>(evt.target);
+    if (target.files.length !== 1) { throw new Error('Cannot use multiple files'); }
+    this.filename = target.files[0].name
+    // this.file = target.files[0];
+    const reader = new FileReader();
+    reader.onload = this._handleReaderLoaded.bind(this);
+    reader.readAsDataURL(target.files[0]);
+  }
+  _handleReaderLoaded(e: any) {
+    const reader = e.target;
+    this.file = reader.result;
+  }
 
   private refactorRecord(data: any): any {
     const rec = <any>{
       code: data.CODE,
       name: data.NAME,
-      dateOfBirth: new Date(data.DATE_OF_BIRTH),
+      dateOfBirth: data.DATE_OF_BIRTH ? new Date(data.DATE_OF_BIRTH) : null,
       gender: data.GENDER,
       phoneNumber: data.PHONE_NUMBER,
       location: data.LOCATION,
-      startDate: new Date(data.START_DATE),
+      startDate: data.START_DATE ? new Date(data.START_DATE) : null,
       voice: data.VOICE,
       sms: data.SMS,
       landSize: data.LAND_SIZE,
@@ -130,6 +144,25 @@ export class SubscriberImportComponent implements OnInit, OnDestroy {
   saveUploadData() {
     this.blockUi.start('Saving...');
     this.subscriberService.saveUploadData(this.data)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((res: any) => {
+        this.blockUi.stop();
+        if (res.success) {
+          this.data = null
+        }
+      }, err => {
+        this.blockUi.stop();
+        console.log('Error -> ' + err.message);
+      });
+  }
+
+  upload() {
+    this.blockUi.start('Uploading File...');
+    const obj = {
+      file: this.file,
+      filename: this.filename,
+    };
+    this.subscriberService.upload(obj)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((res: any) => {
         this.blockUi.stop();

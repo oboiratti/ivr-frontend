@@ -130,6 +130,10 @@ export class SubscriberService {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/subscriber/saveuploaddata`, params)
   }
 
+  upload(params: any) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/subscriber/uploadfile`, params)
+  }
+
   removeSubscriberFromGroup(subscriberId: number, groupId: number) {
     return this.http.delete<ResponseObject<any>>(`${environment.baseUrl}/subscriber/removegroupbyid?subscriberId=${subscriberId}&groupId=${groupId}`)
   }
