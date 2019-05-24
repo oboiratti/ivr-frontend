@@ -75,6 +75,7 @@ export interface ResponseDetails {
 }
 
 export interface NodeStat {
+    node: Node
     aggregates: Aggregates
     interactions: Interactions []
     responseDetails: ResponseDetails []

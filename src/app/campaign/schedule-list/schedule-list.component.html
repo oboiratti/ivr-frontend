@@ -62,8 +62,8 @@
               <td>{{schedule.startDate | date:'mediumDate'}}</td>
               <td>{{schedule.endDate | date:'mediumDate'}}</td>
               <td>
-                <a class="pointer" (click)="editForm(schedule.id)" title="Edit"><i class="fa fa-edit"></i></a> &nbsp;
-                <a class="pointer" (click)="delete(schedule.id)" title="Delete"><i class="fa fa-trash"></i></a>
+                <a class="pointer" (click)="editForm(schedule.id)" title="Edit" *ngIf="!schedule.isSent"><i class="fa fa-edit"></i></a> &nbsp;
+                <a class="pointer" (click)="delete(schedule.id)" title="Delete" *ngIf="!schedule.isSent"><i class="fa fa-trash"></i></a>
               </td>
             </tr>
           </tbody>
