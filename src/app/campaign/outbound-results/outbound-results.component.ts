@@ -20,6 +20,9 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   campaignId: number
   @BlockUI() blockUi: NgBlockUI
   @BlockUI('trees') blockTrees: NgBlockUI
+  @BlockUI('csummary') blockCS: NgBlockUI
+  @BlockUI('table') blockTable: NgBlockUI
+  @BlockUI('session') blockSession: NgBlockUI
   activeDoughnut = {}
   upcomingDoughnut = {}
   hangUpDoughnut = {}
@@ -30,6 +33,7 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   hangUpCalls = {}
   scheduleScore = {}
   schedulesBar = {}
+  subscriberSummary: any
   trees$: Observable<any>
   @ViewChild('activeCanvas') activeCanvas: ElementRef
   @ViewChild('upcomingCanvas') upcomingCanvas: ElementRef
@@ -102,106 +106,115 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   private campaignSummary() {
-    const bgColor = ['#bf9500', '#dcedf6']
-    this.makeDoughnut(this.activeDoughnut, this.activeCanvas, [70, 0], ['Active', 'Inactive'], '70', bgColor, 60)
-    this.makeDoughnut(this.upcomingDoughnut, this.upcomingCanvas, [4, 6], ['Upcoming', 'Completed'], '4', bgColor, 75)
-    this.makeDoughnut(this.hangUpDoughnut, this.hangUpCanvas, [15, 20], ['Hanged Up', 'Receive'], '15', bgColor, 60)
-    this.makeDoughnut(this.scoreDoughnut, this.scoreCanvas, [1200, 1800], ['Current', 'Total'], '1200/1800', bgColor, -50)
+    this.blockCS.start()
+    this.campaignService.getConnectionSummary(this.campaignId).subscribe(res => {
+      this.blockCS.stop()
+      if (res.success) {
+        const bgColor = ['#bf9500', '#dcedf6']
+        this.makeDoughnut(this.activeDoughnut, this.activeCanvas, [res.data.activeSchedules, res.data.totalSchedules - res.data.activeSchedules], ['Active', 'Inactive'], `${res.data.activeSchedules}`, bgColor, 60)
+        this.makeDoughnut(this.upcomingDoughnut, this.upcomingCanvas, [res.data.upComingSchedules, res.data.totalSchedules - res.data.upComingSchedules], ['Upcoming', 'Completed'], `${res.data.upComingSchedules}`, bgColor, 75)
+        this.makeDoughnut(this.hangUpDoughnut, this.hangUpCanvas, [res.data.hangedUpSessions, res.data.totalSchedules - res.data.hangedUpSessions], ['Hanged Up', 'Completed'], `${res.data.hangedUpSessions}`, bgColor, 60)
+        this.makeDoughnut(this.scoreDoughnut, this.scoreCanvas, [res.data.campaignScore.choiceScore, res.data.campaignScore.totalScore], ['Current', 'Total'], `${res.data.campaignScore.choiceScore}/${res.data.campaignScore.totalScore}`, bgColor, -50)
+      }
+    }, () => this.blockCS.stop())
   }
 
   private schedulesSessionSummary() {
-    const bgColor = ['#31b0d5', '#d9d9c3']
-    this.makeDoughnut(this.completedCalls, this.completedCallsCanvas, [1200, 200], ['Completed', 'Not Completed'], '1200', bgColor, 30)
-    this.makeDoughnut(this.failedCalls, this.failedCallsCanvas, [100, 500], ['Failed', 'Not Failed'], '100', bgColor, 40)
-    this.makeDoughnut(this.hangUpCalls, this.hangUpCallsCanvas, [90, 2000], ['Hanged Up', 'Receive'], '90', bgColor, 60)
-    this.makeDoughnut(this.scheduleScore, this.scheduleScoreCanvas, [3500, 5000], ['Current', 'Total'], '3500/5000', bgColor, -30)
+    this.blockSession.start()
+    this.campaignService.getSchedulesSessionSummary(this.campaignId).subscribe(res => {
+      this.blockSession.stop()
+      if (res.success) {
+        const bgColor = ['#31b0d5', '#d9d9c3']
+        this.makeDoughnut(this.completedCalls, this.completedCallsCanvas, [1200, 200], ['Completed', 'Not Completed'], '1200', bgColor, 30)
+        this.makeDoughnut(this.failedCalls, this.failedCallsCanvas, [100, 500], ['Failed', 'Not Failed'], '100', bgColor, 40)
+        this.makeDoughnut(this.hangUpCalls, this.hangUpCallsCanvas, [90, 2000], ['Hanged Up', 'Receive'], '90', bgColor, 60)
+        this.makeDoughnut(this.scheduleScore, this.scheduleScoreCanvas, [3500, 5000], ['Current', 'Total'], '3500/5000', bgColor, -30)
+      }
+    })
   }
 
   private subscriberSummaryPie() {
-    // this.blockCommodity.start('Loading...')
-    // this.dashboardService.getCommoditySummary().subscribe(res => {
-    // this.blockCommodity.stop()
-    // if (res.success) {
-    // const data = [];
-    // const labels = [];
-    // (res.data as Array<any>).map(elm => {
-    //   data.push(elm.subscriberCount)
-    //   labels.push(elm.commodity)
-    // })
+    this.blockTable.start()
+    this.campaignService.getCampaignSubscriberSummary(this.campaignId).subscribe(res => {
+      this.blockTable.stop()
+      if (res.success) {
+        this.subscriberSummary = res.data
+        if (isNaN(this.subscriberSummary.malePercentage)) { this.subscriberSummary.malePercentage = 0 }
+        if (isNaN(this.subscriberSummary.femalePercentage)) { this.subscriberSummary.femalePercentage = 0 }
+        const data = [this.subscriberSummary.male, this.subscriberSummary.female];
+        const labels = ['Male', 'Female'];
 
-    const data = [230000, 120000]
-    const labels = ['Male', 'Female']
-    this.summaryPie = new Chart(this.pieCanvas.nativeElement, {
-      type: 'pie',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            data: data,
-            backgroundColor: ['#1a79ff', '#a3a1fb']
+        this.summaryPie = new Chart(this.pieCanvas.nativeElement, {
+          type: 'pie',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                data: data,
+                backgroundColor: ['#1a79ff', '#a3a1fb']
+              }
+            ]
+          },
+          options: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 10
+              }
+            },
+            responsive: true,
+            maintainAspectRatio: false
           }
-        ]
-      },
-      options: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            boxWidth: 10
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: false
+        })
       }
-    })
-    // }
-    // }, () => this.blockCommodity.stop())
+    }, () => this.blockTable.stop())
 
   }
 
   private schedulesBarChart() {
     // this.blockUi.start('Loading...')
     // this.dashboardService.getCommoditySummary().subscribe(res => {
-      // this.blockUi.stop()
-      // if (res.success) {
-        // const data = [];
-        const labels = ['a', 'b', 'c', 'd', 'e', 'f', 'e'];
-        // (res.data as Array<any>).map(elm => {
-        //   data.push(elm.subscriberCount)
-        //   labels.push(elm.commodity)
-        // })
+    // this.blockUi.stop()
+    // if (res.success) {
+    // const data = [];
+    const labels = ['a', 'b', 'c', 'd', 'e', 'f', 'e'];
+    // (res.data as Array<any>).map(elm => {
+    //   data.push(elm.subscriberCount)
+    //   labels.push(elm.commodity)
+    // })
 
-        const data = [20, 30, 40, 50, 63, 19, 79]
-        this.schedulesBar = new Chart(this.schedulesBarCanvas.nativeElement, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                data: data,
-                backgroundColor: '#a3a0fb'
-              }
-            ]
-          },
-          options: {
-            legend: {
-              display: false
-            },
-            scales: {
-              xAxes: [{
-                barPercentage: 0.5,
-                barThickness: 30
-              }],
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            },
-            responsive: true,
-            maintainAspectRatio: false
+    const data = [20, 30, 40, 50, 63, 19, 79]
+    this.schedulesBar = new Chart(this.schedulesBarCanvas.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: '#a3a0fb'
           }
-        })
-      // }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            barPercentage: 0.5,
+            barThickness: 30
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    })
+    // }
     // }, () => this.blockUi.stop())
 
   }

@@ -121,13 +121,9 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
         if (res.success) {
           this.keyMetrics = res.data
           const bgColor = ['#1a79ff', '#d9d9c3']
-          // tslint:disable-next-line: max-line-length
           this.makeDoughnut(this.completedCalls, this.completedCallsCanvas, [this.keyMetrics.completed, this.keyMetrics.subscribers - this.keyMetrics.completed], ['Completed', 'Not Completed'], `${this.keyMetrics.completed}`, bgColor, 60)
-          // tslint:disable-next-line: max-line-length
           this.makeDoughnut(this.failedCalls, this.failedCallsCanvas, [this.keyMetrics.failed, this.keyMetrics.subscribers - this.keyMetrics.failed], ['Failed', 'Not Failed'], `${this.keyMetrics.failed}`, bgColor, 60)
-          // tslint:disable-next-line: max-line-length
           this.makeDoughnut(this.hangUpCalls, this.hangUpCallsCanvas, [this.keyMetrics.hangup, this.keyMetrics.subscribers - this.keyMetrics.hangup], ['Hanged Up', 'Receive'], `${this.keyMetrics.hangup}`, bgColor, 60)
-          // tslint:disable-next-line: max-line-length
           this.makeDoughnut(this.scheduleScore, this.scheduleScoreCanvas, [this.keyMetrics.treeScore, this.keyMetrics.totalScore], ['Tree Score', 'Total Score'], `${this.keyMetrics.treeScore}/${this.keyMetrics.totalScore}`, bgColor, -30)
         }
       }, () => this.blockKeyMetrics.stop())

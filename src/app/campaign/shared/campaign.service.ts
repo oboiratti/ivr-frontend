@@ -104,4 +104,16 @@ export class CampaignService {
         })
       )
   }
+
+  getConnectionSummary(campaignId: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/results/connectionsummary?campaignId=${campaignId}`)
+  }
+
+  getCampaignSubscriberSummary(campaignId: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/results/campaignsubscribersummary?campaignId=${campaignId}`)
+  }
+
+  getSchedulesSessionSummary(campaignId: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/results/schedulessessionsummary?campaignId=${campaignId}`)
+  }
 }
