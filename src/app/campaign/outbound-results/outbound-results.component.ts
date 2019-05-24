@@ -61,7 +61,7 @@ export class OutboundResultsComponent implements OnInit, OnDestroy, AfterViewIni
   ngAfterViewInit() {
     this.campaignSummary()
     this.subscriberSummaryPie()
-    this.schedulesSessionSummary()
+    // this.schedulesSessionSummary()
     // this.schedulesBarChart()
   }
 
