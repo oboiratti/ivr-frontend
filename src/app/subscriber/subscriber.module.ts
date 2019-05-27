@@ -13,6 +13,7 @@ import { SubscriberGroupFormComponent } from './subscriber-group-form/subscriber
 import { SubscriberImportComponent } from './subscriber-import/subscriber-import.component';
 import { SubscriberExportComponent } from './subscriber-export/subscriber-export.component';
 import { SubscriberDetailsComponent } from './subscriber-details/subscriber-details.component';
+import { InternationalPhoneNumberModule } from 'ngx-international-phone-number';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SubscriberDetailsComponent } from './subscriber-details/subscriber-deta
     NgSelectModule,
     FormsModule,
     ReactiveFormsModule,
+    InternationalPhoneNumberModule,
     SubscriberRoutingModule
   ]
 })

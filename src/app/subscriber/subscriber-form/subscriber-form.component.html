@@ -13,15 +13,21 @@
           <h5 class="card-title text-uppercase text-muted ml-md-n4">Subscriber Form</h5><br>
           <div class="row">
             <div class="form-group col-sm-12 col-md-6">
-              <label>Phone Number</label>
-              <input type="text" class="form-control" formControlName="phoneNumber"
-                [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid">
-              <div class="invalid-feedback" *ngIf="phoneNumber.dirty && phoneNumber.invalid">
+              <label>Phone Number</label><br>
+              <!-- <input type="text" class="form-control" formControlName="phoneNumber"
+                [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid"> -->
+              <international-phone-number formControlName="phoneNumber" placeholder="Enter phone number"
+                [maxlength]="20" [defaultCountry]="'gh'" [required]="true" name="phoneNumber"
+                [allowedCountries]="['gh', 'ci', 'ng', 'bj', 'bf']"></international-phone-number>
+              <div class="invalid-msg" *ngIf="phoneNumber.dirty && phoneNumber.invalid">
                 <div *ngIf="phoneNumber.errors.required">
                   This field is required
                 </div>
-                <div *ngIf="phoneNumber.errors.pattern">
+                <!-- <div *ngIf="phoneNumber.errors.pattern">
                   Phone number must start with 0 and must be 10 digits long
+                </div> -->
+                <div *ngIf="!phoneNumber.valid">
+                  Invalid phone number
                 </div>
               </div>
             </div>

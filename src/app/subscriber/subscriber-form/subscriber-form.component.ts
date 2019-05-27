@@ -68,6 +68,7 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
 
   save(formData: any) {
     const params = formData
+    params.phoneNumber = (formData.phoneNumber as string).substring(1)
     if (params.subscriberGroups) {
       params.subscriberGroups = params.subscriberGroups.map(elm => {
         return { groupId: elm }
@@ -199,11 +200,11 @@ export class SubscriberFormComponent implements OnInit, OnDestroy {
   private setupForm() {
     this.form = this.fb.group({
       id: new FormControl(''),
-      phoneNumber: new FormControl('', Validators.compose([
+      phoneNumber: new FormControl(null, Validators.compose([
         Validators.required,
-        Validators.minLength(10),
-        Validators.maxLength(10),
-        Validators.pattern('^[0]+[0-9]{9}$')
+        // Validators.minLength(10),
+        // Validators.maxLength(10),
+        // Validators.pattern('^[0]+[0-9]{9}$')
       ])),
       name: new FormControl('', Validators.required),
       languageId: new FormControl('', Validators.required),
