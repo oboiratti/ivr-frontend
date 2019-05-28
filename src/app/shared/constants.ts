@@ -54,6 +54,8 @@ export class RouteNames {
     static outboundResultsId = 'outbound/results/:id'
     static treeResults = 'tree/results'
     static treeResultsId = 'outbound/:id/tree/results/:tid'
+    static treeNodeResponses = 'node-responses'
+    static treeNodeResponsesId = 'outbound/:id/tree/results/:tid/node-responses/:key'
 
     static profile = 'profile';
     static profileForm = 'profile-form';

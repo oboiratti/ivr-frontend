@@ -9,6 +9,8 @@ import { RouteNames } from 'src/app/shared/constants';
 import { Chart } from 'chart.js'
 import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
+import { NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { DateHelpers } from 'src/app/shared/Utils';
 
 @Component({
   selector: 'app-tree-results',
@@ -31,16 +33,24 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   completedInteractionsBar = {}
   keyMetrics: any
   nodeStats: any
+  dateRange = {}
   @ViewChild('completedCallsCanvas') completedCallsCanvas: ElementRef
   @ViewChild('failedCallsCanvas') failedCallsCanvas: ElementRef
   @ViewChild('hangUpCallsCanvas') hangUpCallsCanvas: ElementRef
   @ViewChild('scheduleScoreCanvas') scheduleScoreCanvas: ElementRef
   @ViewChild('completedInteractionsCanvas') completedInteractionsCanvas: ElementRef
+  hoveredDate: NgbDate;
+  fromDate: NgbDate;
+  toDate: NgbDate;
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
+    private calendar: NgbCalendar,
     private campaignService: CampaignService,
-    private treeService: TreeService) { }
+    private treeService: TreeService) {
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+  }
 
   ngOnInit() {
     this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
@@ -65,10 +75,30 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   secondsToTime(seconds: number) {
-    if (isNaN(seconds)) { seconds = 0 }
-    const d = new Date(null)
-    d.setSeconds(seconds)
-    return d.toISOString()
+    return DateHelpers.secondsToTime(seconds)
+  }
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || date.equals(this.toDate) || this.isInside(date) || this.isHovered(date);
   }
 
   private findTree(id: number) {

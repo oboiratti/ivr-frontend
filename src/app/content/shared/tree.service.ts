@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
-import { Numeric, Openended, Multichoice, Message, BlockNode , Connection, Tree, TreeQuery, Choice } from '../shared/tree.model';
+import { Numeric, Openended, Multichoice, Message, BlockNode, Connection, Tree, TreeQuery, Choice } from '../shared/tree.model';
 
 
 @Injectable({
@@ -15,20 +15,20 @@ export class TreeService {
 
   fetchLanguages() {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/language`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data; }
-      })
-    );
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data; }
+        })
+      );
   }
 
   fetchTags() {
     return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/tags`)
-    .pipe(
-      map(res => {
-        if (res.success) { return res.data; }
-      })
-    );
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data; }
+        })
+      );
   }
 
   fetchTree() {
@@ -74,15 +74,24 @@ export class TreeService {
     return this.http.post<ResponseObject<Tree>>(`${environment.baseUrl}/trees/savenodes`, params);
   }
 
-  getKeyMetrics(params: {treeId: number, campaignId: number}) {
+  getKeyMetrics(params: { treeId: number, campaignId: number }) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/keymetrics`, params);
   }
 
-  getCompletedInteractions(params: {treeId: number, campaignId: number}) {
+  getCompletedInteractions(params: { treeId: number, campaignId: number }) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/completedinteractions`, params);
   }
 
-  getNodeStats(params: {treeId: number, campaignId: number}) {
+  getNodeStats(params: { treeId: number, campaignId: number }) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/nodestats`, params);
+  }
+
+  getNodeResponses(params: { treeId: number, campaignId: number, key: string }) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/noderesponses`, params)
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data; }
+        })
+      );
   }
 }

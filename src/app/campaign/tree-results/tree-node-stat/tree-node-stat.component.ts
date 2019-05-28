@@ -2,6 +2,9 @@ import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '
 import { Chart } from 'chart.js'
 import { NodeStat } from '../../shared/campaign.models';
 import { formatDate } from '@angular/common';
+import { TreeService } from 'src/app/content/shared/tree.service';
+import { Router } from '@angular/router';
+import { RouteNames } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-tree-node-stat',
@@ -11,6 +14,8 @@ import { formatDate } from '@angular/common';
 export class TreeNodeStatComponent implements OnInit, AfterViewInit {
 
   @Input() stat: NodeStat
+  @Input() campaignId: number
+  @Input() treeId: number
   interactionsBar = {}
   @ViewChild('interactionsCanvas') interactionsCanvas: ElementRef
   aggregatesBar = {}
@@ -18,7 +23,7 @@ export class TreeNodeStatComponent implements OnInit, AfterViewInit {
   responsesPie = {}
   @ViewChild('responsesCanvas') responsesCanvas: ElementRef
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() { }
 
@@ -26,6 +31,10 @@ export class TreeNodeStatComponent implements OnInit, AfterViewInit {
     this.interactionsBarChart()
     this.aggregatesBarChart()
     this.responsesPieChart()
+  }
+
+  viewResponses(key: string) {
+    this.router.navigateByUrl(`${RouteNames.campaign}/${RouteNames.outbound}/${this.campaignId}/${RouteNames.treeResults}/${this.treeId}/${RouteNames.treeNodeResponses}/${key}`)
   }
 
   private makeBarChart(obj: any, canvas: ElementRef, data: any, labels: any, bgColor?: string) {

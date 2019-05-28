@@ -19,9 +19,29 @@
   <div class="col">
     <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'keyMetrics'">
       <div class="card-body">
-        <div class="card-title text-muted h6 text-uppercase" *ngIf="keyMetrics">
-          Key Metrics: {{keyMetrics.subscribers}} Subscriber(s) - {{keyMetrics.groups}} Group(s) - {{keyMetrics.districts}}
-          District(s)
+        <div class="card-title text-muted text-uppercase mb-5 row" *ngIf="keyMetrics">
+          <div class="h6 col-sm-9">
+            Key Metrics: {{keyMetrics.subscribers}} Subscriber(s) - {{keyMetrics.groups}} Group(s) -
+            {{keyMetrics.districts}}
+            District(s)
+          </div>
+          <!-- <div class="input-group col-sm-3 float-right">
+            <input class="form-control border-0" placeholder="" name="dp" [(ngModel)]="dateRange"
+              (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden"
+              ngbDatepicker #d="ngbDatepicker" [autoClose]="'outside'" [container]="body">
+            <div class="input-group-append">
+              <button type="button" class="btn btn-outline-secondary calendar" (click)="d.toggle()">
+                <i class="fa fa-calendar"></i> Date Range <i class="fa fa-caret-down"></i>
+              </button>
+            </div>
+            <ng-template #t let-date let-focused="focused">
+              <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                (mouseleave)="hoveredDate = null">
+                {{ date.day }}
+              </span>
+            </ng-template>
+          </div> -->
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-3 px-1">
@@ -89,7 +109,7 @@
 <ng-container *ngFor="let stat of nodeStats">
   <div class="row">
     <div class="col">
-      <app-tree-node-stat [stat]="stat"></app-tree-node-stat>
+      <app-tree-node-stat [stat]="stat" [campaignId]="campaignId" [treeId]="treeId"></app-tree-node-stat>
     </div>
   </div>
 </ng-container>

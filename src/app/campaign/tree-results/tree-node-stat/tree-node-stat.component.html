@@ -1,6 +1,9 @@
 <div class="card border shadow-sm mb-3">
   <div class="card-body">
-    <div class="card-title text-muted h6 text-uppercase">Node Title: {{stat.node.title}}</div>
+    <div class="card-title">
+      <span class="h6 text-muted text-uppercase">Question: {{stat.node.title}}</span>
+      <span><button class="btn btn-link text-muted mb-1 pointer" (click)="viewResponses(stat.node.key)">View All Responses</button></span>
+    </div>
     <div class="row">
       <div class="col-sm-12 col-md-6">
         <table class="table table-sm">

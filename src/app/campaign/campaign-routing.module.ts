@@ -9,6 +9,7 @@ import { ScheduleListComponent } from './schedule-list/schedule-list.component';
 import { ScheduleFormComponent } from './schedule-form/schedule-form.component';
 import { OutboundResultsComponent } from './outbound-results/outbound-results.component';
 import { TreeResultsComponent } from './tree-results/tree-results.component';
+import { TreeNodeResponseComponent } from './tree-results/tree-node-response/tree-node-response.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,11 @@ const routes: Routes = [
       {
         path: RouteNames.treeResultsId,
         component: TreeResultsComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: RouteNames.treeNodeResponsesId,
+        component: TreeNodeResponseComponent,
         canActivate: [AuthGuard]
       }
     ]

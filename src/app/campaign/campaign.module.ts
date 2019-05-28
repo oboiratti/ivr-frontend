@@ -14,6 +14,8 @@ import { OutboundResultsComponent } from './outbound-results/outbound-results.co
 import { TreeResultsComponent } from './tree-results/tree-results.component';
 import { BlockUIModule } from 'ng-block-ui';
 import { TreeNodeStatComponent } from './tree-results/tree-node-stat/tree-node-stat.component';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { TreeNodeResponseComponent } from './tree-results/tree-node-response/tree-node-response.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { TreeNodeStatComponent } from './tree-results/tree-node-stat/tree-node-s
     ScheduleFormComponent,
     OutboundResultsComponent,
     TreeResultsComponent,
-    TreeNodeStatComponent
+    TreeNodeStatComponent,
+    TreeNodeResponseComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +36,8 @@ import { TreeNodeStatComponent } from './tree-results/tree-node-stat/tree-node-s
     ReactiveFormsModule,
     NgSelectModule,
     CampaignRoutingModule,
-    BlockUIModule.forRoot()
+    BlockUIModule.forRoot(),
+    NgbDatepickerModule
   ]
 })
 export class CampaignModule { }

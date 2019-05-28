@@ -1,0 +1,53 @@
+<ng-container *ngIf="responses$ | async as response">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="p-2 text-uppercase h6 float-left">
+        {{response.info.area}} <i class="fa fa-chevron-right"></i>
+        {{response.info.campaign}} <i class="fa fa-chevron-right"></i>
+        {{response.info.tree}} <i class="fa fa-chevron-right"></i>
+        {{response.info.question}}
+      </div>
+      <button type="button" class="btn btn-light border border-dark float-right" (click)="results()">
+        <i class="fa fa-arrow-left"></i> Back
+      </button>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="table-responsive-sm">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Subscriber Code</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>District</th>
+                <th>Gender</th>
+                <th>Response</th>
+                <th>Call Date</th>
+                <th>Call Duration (minutes)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let obj of response.list; let i = index">
+                <td>{{i + 1}}.</td>
+                <td>{{obj.code}}</td>
+                <td>{{obj.name}}</td>
+                <td>{{obj.phoneNumber}}</td>
+                <td>{{obj.district}}</td>
+                <td>{{obj.gender}}</td>
+                <td>{{obj.response}}</td>
+                <td>{{obj.callDate | date:'mediumDate'}}</td>
+                <td>{{secondsToTime(obj.duration) | date:'mm:ss'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
