@@ -10,7 +10,7 @@ import { Chart } from 'chart.js'
 import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
 import { NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-import { DateHelpers } from 'src/app/shared/Utils';
+import { DateHelpers } from 'src/app/shared/utils';
 
 @Component({
   selector: 'app-tree-results',

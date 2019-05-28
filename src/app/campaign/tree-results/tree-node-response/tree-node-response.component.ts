@@ -4,7 +4,7 @@ import { TreeService } from 'src/app/content/shared/tree.service';
 import { Observable } from 'rxjs';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { finalize } from 'rxjs/operators';
-import { DateHelpers } from 'src/app/shared/Utils';
+import { DateHelpers } from 'src/app/shared/utils';
 import { RouteNames } from 'src/app/shared/constants';
 
 @Component({
