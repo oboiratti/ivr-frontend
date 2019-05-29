@@ -11,6 +11,8 @@ import { Numeric, Openended, Multichoice, Message, BlockNode, Connection, Tree, 
 })
 export class TreeService {
 
+  totalTreeNodeResponses: number
+
   constructor(private http: HttpClient) { }
 
   fetchLanguages() {
@@ -88,6 +90,18 @@ export class TreeService {
 
   getNodeResponses(params: { treeId: number, campaignId: number, key: string }) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/noderesponses`, params)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            this.totalTreeNodeResponses = res.total
+            return res.data;
+          }
+        })
+      );
+  }
+
+  findSlimTree(treeId: number, campaignId: number) {
+    return this.http.get<ResponseObject<Tree>>(`${environment.baseUrl}/trees/getslim?treeId=${treeId}&campaignId=${campaignId}`)
       .pipe(
         map(res => {
           if (res.success) { return res.data; }

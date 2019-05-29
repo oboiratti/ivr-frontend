@@ -3,7 +3,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Router, ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Campaign, CampaignSchedule } from '../shared/campaign.models';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { Chart } from 'chart.js'
@@ -25,20 +25,21 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   campaignId: number
   treeId: number
   unsubscribe$ = new Subject<void>()
-  treeInfo: Tree
-  completedCalls = {}
-  failedCalls = {}
-  hangUpCalls = {}
-  scheduleScore = {}
+  treeInfo$: Observable<Tree>
+  completedCalls: Chart
+  failedCalls: Chart
+  hangUpCalls: Chart
+  scheduleScore: Chart
   completedInteractionsBar = {}
   keyMetrics: any
   nodeStats: any
-  dateRange = {}
+  dateRange = ''
   @ViewChild('completedCallsCanvas') completedCallsCanvas: ElementRef
   @ViewChild('failedCallsCanvas') failedCallsCanvas: ElementRef
   @ViewChild('hangUpCallsCanvas') hangUpCallsCanvas: ElementRef
   @ViewChild('scheduleScoreCanvas') scheduleScoreCanvas: ElementRef
   @ViewChild('completedInteractionsCanvas') completedInteractionsCanvas: ElementRef
+  @ViewChild('d') dpc: any
   hoveredDate: NgbDate;
   fromDate: NgbDate;
   toDate: NgbDate;
@@ -55,11 +56,11 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
     this.treeId = +this.activatedRoute.snapshot.paramMap.get('tid')
-    if (this.treeId) { this.findTree(this.treeId) }
+    if (this.treeId) { this.findTree(this.treeId, this.campaignId) }
 
     this.getCompletedInteractions()
     this.getNodeStats()
-    this.getKeyMetrics()
+    this.getKeyMetrics({ treeId: this.treeId, campaignId: this.campaignId })
   }
 
   ngAfterViewInit() {
@@ -79,13 +80,26 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onDateSelection(date: NgbDate) {
+    let dateFrom = null
+    let dateTo = null
+    this.dateRange = ''
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+      dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
+      this.dateRange = dateFrom
     } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
       this.toDate = date;
+      dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
+      dateTo = DateHelpers.dateFromObj(this.toDate).toISOString().substring(0, 10)
+      this.dateRange = `${dateFrom} to ${dateTo}`
+      this.getKeyMetrics({ treeId: this.treeId, campaignId: this.campaignId, dateFrom: dateFrom, dateTo: dateTo })
+      this.dpc.close()
     } else {
       this.toDate = null;
       this.fromDate = date;
+      dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
+      dateTo = null
+      this.dateRange = dateFrom
     }
   }
 
@@ -101,17 +115,12 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
     return date.equals(this.fromDate) || date.equals(this.toDate) || this.isInside(date) || this.isHovered(date);
   }
 
-  private findTree(id: number) {
-    this.treeService.findTree(id)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(res => {
-        if (res.success) {
-          this.treeInfo = res.data
-        }
-      })
+  private findTree(treeId: number, campaignId: number) {
+    this.treeInfo$ = this.treeService.findSlimTree(treeId, campaignId)
   }
 
   private makeDoughnut(obj: any, canvas: ElementRef, data: any, labels: any, text?: string, backgroundColor?: any, sidePadding?: number) {
+    if (obj instanceof Chart) { obj.destroy() }
     obj = new Chart(canvas.nativeElement, {
       type: 'doughnut',
       data: {
@@ -142,19 +151,153 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-  private getKeyMetrics() {
+  private completedCallsDoughnut(data, labels, text) {
+    if (this.completedCalls instanceof Chart) { this.completedCalls.destroy() }
+    this.completedCalls = new Chart(this.completedCallsCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: ['#1a79ff', '#d9d9c3']
+          }
+        ]
+      },
+      options: {
+        cutoutPercentage: 80,
+        legend: {
+          display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          center: {
+            text: text,
+            color: '#797b85',
+            fontStyle: 'Helvetica',
+            sidePadding: 60
+          }
+        }
+      }
+    })
+  }
+
+  private failedCallsDoughnut(data, labels, text) {
+    if (this.failedCalls instanceof Chart) { this.failedCalls.destroy() }
+    this.failedCalls = new Chart(this.failedCallsCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: ['#1a79ff', '#d9d9c3']
+          }
+        ]
+      },
+      options: {
+        cutoutPercentage: 80,
+        legend: {
+          display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          center: {
+            text: text,
+            color: '#797b85',
+            fontStyle: 'Helvetica',
+            sidePadding: 60
+          }
+        }
+      }
+    })
+  }
+
+  private hangupCallsDoughnut(data, labels, text) {
+    if (this.hangUpCalls instanceof Chart) { this.hangUpCalls.destroy() }
+    this.hangUpCalls = new Chart(this.hangUpCallsCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: ['#1a79ff', '#d9d9c3']
+          }
+        ]
+      },
+      options: {
+        cutoutPercentage: 80,
+        legend: {
+          display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          center: {
+            text: text,
+            color: '#797b85',
+            fontStyle: 'Helvetica',
+            sidePadding: 60
+          }
+        }
+      }
+    })
+  }
+
+  private scheduleScoreDoughnut(data, labels, text) {
+    if (this.scheduleScore instanceof Chart) { this.scheduleScore.destroy() }
+    this.scheduleScore = new Chart(this.scheduleScoreCanvas.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: ['#1a79ff', '#d9d9c3']
+          }
+        ]
+      },
+      options: {
+        cutoutPercentage: 80,
+        legend: {
+          display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        elements: {
+          center: {
+            text: text,
+            color: '#797b85',
+            fontStyle: 'Helvetica',
+            sidePadding: -30
+          }
+        }
+      }
+    })
+  }
+
+  private getKeyMetrics(params) {
     this.blockKeyMetrics.start()
-    this.treeService.getKeyMetrics({ treeId: this.treeId, campaignId: this.campaignId })
+    this.treeService.getKeyMetrics(params)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockKeyMetrics.stop()
         if (res.success) {
           this.keyMetrics = res.data
           const bgColor = ['#1a79ff', '#d9d9c3']
-          this.makeDoughnut(this.completedCalls, this.completedCallsCanvas, [this.keyMetrics.completed, this.keyMetrics.subscribers - this.keyMetrics.completed], ['Completed', 'Not Completed'], `${this.keyMetrics.completed}`, bgColor, 60)
-          this.makeDoughnut(this.failedCalls, this.failedCallsCanvas, [this.keyMetrics.failed, this.keyMetrics.subscribers - this.keyMetrics.failed], ['Failed', 'Not Failed'], `${this.keyMetrics.failed}`, bgColor, 60)
-          this.makeDoughnut(this.hangUpCalls, this.hangUpCallsCanvas, [this.keyMetrics.hangup, this.keyMetrics.subscribers - this.keyMetrics.hangup], ['Hanged Up', 'Receive'], `${this.keyMetrics.hangup}`, bgColor, 60)
-          this.makeDoughnut(this.scheduleScore, this.scheduleScoreCanvas, [this.keyMetrics.treeScore, this.keyMetrics.totalScore], ['Tree Score', 'Total Score'], `${this.keyMetrics.treeScore}/${this.keyMetrics.totalScore}`, bgColor, -30)
+          this.completedCallsDoughnut([this.keyMetrics.completed, this.keyMetrics.subscribers - this.keyMetrics.completed], ['Completed', 'Not Completed'], `${this.keyMetrics.completed}`)
+          this.failedCallsDoughnut([this.keyMetrics.failed, this.keyMetrics.subscribers - this.keyMetrics.failed], ['Failed', 'Not Failed'], `${this.keyMetrics.failed}`)
+          this.hangupCallsDoughnut([this.keyMetrics.hangup, this.keyMetrics.subscribers - this.keyMetrics.hangup], ['Hanged Up', 'Receive'], `${this.keyMetrics.hangup}`)
+          this.scheduleScoreDoughnut([this.keyMetrics.treeScore, this.keyMetrics.totalScore], ['Tree Score', 'Total Score'], `${this.keyMetrics.treeScore}/${this.keyMetrics.totalScore}`)
+          // this.makeDoughnut(this.completedCalls, this.completedCallsCanvas, [this.keyMetrics.completed, this.keyMetrics.subscribers - this.keyMetrics.completed], ['Completed', 'Not Completed'], `${this.keyMetrics.completed}`, bgColor, 60)
+          // this.makeDoughnut(this.failedCalls, this.failedCallsCanvas, [this.keyMetrics.failed, this.keyMetrics.subscribers - this.keyMetrics.failed], ['Failed', 'Not Failed'], `${this.keyMetrics.failed}`, bgColor, 60)
+          // this.makeDoughnut(this.hangUpCalls, this.hangUpCallsCanvas, [this.keyMetrics.hangup, this.keyMetrics.subscribers - this.keyMetrics.hangup], ['Hanged Up', 'Receive'], `${this.keyMetrics.hangup}`, bgColor, 60)
+          // this.makeDoughnut(this.scheduleScore, this.scheduleScoreCanvas, [this.keyMetrics.treeScore, this.keyMetrics.totalScore], ['Tree Score', 'Total Score'], `${this.keyMetrics.treeScore}/${this.keyMetrics.totalScore}`, bgColor, -30)
+
+
         }
       }, () => this.blockKeyMetrics.stop())
   }

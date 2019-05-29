@@ -82,8 +82,8 @@ export class TreeNodeStatComponent implements OnInit, AfterViewInit {
 
   private aggregatesBarChart() {
     const agg = this.stat.aggregates
-    const data = [agg.totalCalls, agg.completed, agg.failed, agg.hangup]
-    const labels = ['Total Calls', 'Completed', 'Failed', 'Hangup']
+    const data = [agg.totalCalls, agg.pending, agg.completed, agg.failed, agg.hangup]
+    const labels = ['Total Calls', 'Pending', 'Completed', 'Failed', 'Hangup']
     this.makeBarChart(this.aggregatesBar, this.aggregatesCanvas, data, labels, '#31b0d5')
   }
 

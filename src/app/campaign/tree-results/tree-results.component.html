@@ -1,12 +1,10 @@
 <div class="row">
   <div class="col-sm-12">
-    <div class="p-2 text-uppercase h6 float-left" *ngIf="treeInfo">
+    <div class="p-2 text-uppercase h6 float-left" *ngIf="treeInfo$ | async as treeInfo">
       Results for:
+      {{treeInfo.area}} <i class="fa fa-chevron-right"></i>
+      {{treeInfo.campaign}} <i class="fa fa-chevron-right"></i>
       {{treeInfo.title}}
-      <!-- <i class="fa fa-chevron-right"></i> -->
-      <!-- {{campaignSchedule.campaign.title}} <i class="fa fa-chevron-right"></i>
-      {{campaignSchedule.pillar.name}} <i class="fa fa-chevron-right"></i>
-      {{campaignSchedule.topic.name}} : Results -->
     </div>
     <button type="button" class="btn btn-light border border-dark float-right" (click)="gotoCampaignResults()">
       <i class="fa fa-arrow-left"></i> Back
@@ -25,10 +23,10 @@
             {{keyMetrics.districts}}
             District(s)
           </div>
-          <!-- <div class="input-group col-sm-3 float-right">
-            <input class="form-control border-0" placeholder="" name="dp" [(ngModel)]="dateRange"
+          <div class="input-group col-sm-3 float-right">
+            <input class="form-control-plaintext border-0" placeholder="" name="dp" [value]="dateRange"
               (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden"
-              ngbDatepicker #d="ngbDatepicker" [autoClose]="'outside'" [container]="body">
+              ngbDatepicker #d="ngbDatepicker" [autoClose]="'outside'" [container]="body" readonly>
             <div class="input-group-append">
               <button type="button" class="btn btn-outline-secondary calendar" (click)="d.toggle()">
                 <i class="fa fa-calendar"></i> Date Range <i class="fa fa-caret-down"></i>
@@ -41,11 +39,11 @@
                 {{ date.day }}
               </span>
             </ng-template>
-          </div> -->
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container" *ngIf="completedCalls">
+            <div class="chart-container">
               <canvas class="m-auto" #completedCallsCanvas>{{ completedCalls }}</canvas>
             </div>
             <div class="text-center text-muted mt-3">
@@ -54,7 +52,7 @@
           </div>
 
           <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container" *ngIf="failedCalls">
+            <div class="chart-container">
               <canvas class="m-auto" #failedCallsCanvas>{{ failedCalls }}</canvas>
             </div>
             <div class="text-center text-muted mt-3">
@@ -63,7 +61,7 @@
           </div>
 
           <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container" *ngIf="hangUpCalls">
+            <div class="chart-container">
               <canvas class="m-auto" #hangUpCallsCanvas>{{ hangUpCalls }}</canvas>
             </div>
             <div class="text-center text-muted mt-3">
@@ -72,7 +70,7 @@
           </div>
 
           <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container" *ngIf="scheduleScore">
+            <div class="chart-container">
               <canvas class="m-auto" #scheduleScoreCanvas>{{ scheduleScore }}</canvas>
             </div>
             <div class="text-center text-muted mt-3">

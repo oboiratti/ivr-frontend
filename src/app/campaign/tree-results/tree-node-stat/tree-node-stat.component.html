@@ -2,7 +2,8 @@
   <div class="card-body">
     <div class="card-title">
       <span class="h6 text-muted text-uppercase">Question: {{stat.node.title}}</span>
-      <span><button class="btn btn-link text-muted mb-1 pointer" (click)="viewResponses(stat.node.key)">View All Responses</button></span>
+      <span><button class="btn btn-link text-muted mb-1 pointer" (click)="viewResponses(stat.node.key)">View All
+          Responses</button></span>
     </div>
     <div class="row">
       <div class="col-sm-12 col-md-6">
@@ -72,6 +73,10 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>Pending</td>
+              <td>{{stat.aggregates.pending}}</td>
+            </tr>
             <tr>
               <td>Completed</td>
               <td>{{stat.aggregates.completed}}</td>

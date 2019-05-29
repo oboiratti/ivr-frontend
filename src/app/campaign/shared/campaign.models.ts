@@ -56,6 +56,7 @@ export interface Node {
 }
 
 export interface Aggregates {
+    pending: number
     completed: number
     failed: number
     hangup: number
@@ -79,4 +80,17 @@ export interface NodeStat {
     aggregates: Aggregates
     interactions: Interactions []
     responseDetails: ResponseDetails []
+}
+
+export interface TreeNodeResponseQuery {
+    treeId: number
+    campaignId: number
+    key: string
+    phoneNumber: string
+    code: string
+    name: string
+    district: string
+    gender: 'Male' | 'Female'
+    page: number
+    size: number
 }
