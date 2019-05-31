@@ -25,6 +25,10 @@
     overflow: auto;
 }
 
+.min-card-height {
+    min-height: 300px;
+}
+
 .bg-pink {
     background-color: #e91e63 !important;
 }

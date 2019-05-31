@@ -10,14 +10,19 @@
     <form [formGroup]="form">
       <div class="card">
         <div class="card-body mx-md-4">
-          <h5 class="card-title text-uppercase text-muted ml-md-n4">Subscriber Form</h5><br>
+          <div class="card-title text-uppercase text-muted ml-md-n4">
+            <span class="h5">Subscriber Form</span>
+            <button type="button" class="btn btn-light border border-dark float-right" (click)="closeForm()">
+              <i class="fa fa-arrow-left"></i> Back
+            </button>
+          </div><br>
           <div class="row">
             <div class="form-group col-sm-12 col-md-6">
               <label>Phone Number</label><br>
               <!-- <input type="text" class="form-control" formControlName="phoneNumber"
                 [class.is-invalid]="phoneNumber.dirty && phoneNumber.invalid"> -->
               <international-phone-number formControlName="phoneNumber" placeholder="Enter phone number"
-                [maxlength]="20" [defaultCountry]="'gh'" [required]="true" name="phoneNumber"
+                [maxlength]="20" [required]="true" name="phoneNumber"
                 [allowedCountries]="['gh', 'ci', 'ng', 'bj', 'bf']"></international-phone-number>
               <div class="invalid-msg" *ngIf="phoneNumber.dirty && phoneNumber.invalid">
                 <div *ngIf="phoneNumber.errors.required">

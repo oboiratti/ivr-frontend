@@ -1,9 +1,9 @@
 <div class="input-group">
-  <input type="text" class="form-control" placeholder="{{placeholder}}" name="{{label}}" [(ngModel)]="model" (keyup.enter)="btnSearch.click()">
+  <input type="text" class="form-control" placeholder="{{placeholder}}" name="{{label}}" [(ngModel)]="model" (keyup.enter)="btnSearch.click()" *ngIf="simple">
   <div class="input-group-append">
-    <button #btnSearch type="button" class="btn btn-outline-secondary" (click)="doSearch()"><i class="fa fa-search"></i></button>
+    <button #btnSearch type="button" class="btn btn-outline-secondary" (click)="doSearch()" *ngIf="simple"><i class="fa fa-search"></i></button>
     <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
+      aria-haspopup="true" aria-expanded="false"> {{dropdownLabel}}
       <span class="sr-only">Toggle Dropdown</span>
     </button>
     <div class="dropdown-menu" (click)="$event.stopPropagation()">

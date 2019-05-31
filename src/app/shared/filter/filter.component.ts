@@ -12,6 +12,8 @@ export class FilterComponent implements OnInit {
   @Input() model: any
   @Input() label: any
   @Input() filter: any
+  @Input() simple = true
+  @Input() dropdownLabel = ''
 
   constructor() { }
 

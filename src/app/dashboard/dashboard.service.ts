@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ResponseObject } from '../shared/common-entities.model';
+import { ResponseObject, Lookup } from '../shared/common-entities.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -45,11 +45,20 @@ export class DashboardService {
       // )
   }
 
-  getCampaignSummary(startDate?: string, endDate?: string) {
-    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/dashboard/campaignsummary?startDate=${startDate}&endDate=${endDate}`).pipe(
+  getSustainabilityStatistics(params) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/dashboard/getsustainabilitystatistics`, params).pipe(
       map(res => {
         if (res.success) { return res.data }
       })
     )
+  }
+
+  fetchTopicsByPillar(pillarId: number) {
+    return this.http.get<ResponseObject<Lookup[]>>(`${environment.baseUrl}/topic/gettopics?pillarId=${pillarId}`)
+      .pipe(
+        map(res => {
+          if (res.success) { return res.data }
+        })
+      )
   }
 }

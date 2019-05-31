@@ -1,6 +1,8 @@
 <div class="page-header">
   <div class="header-content p-4">
-    <h5><span class="text-uppercase text-primary-custom">Dashboard</span> <span class="mx-3 text-muted">|</span> Solidaridad's IVR platform lets you bridge language, literacy, and distance barriers using the power of mobile communication.</h5>
+    <h5><span class="text-uppercase text-primary-custom">Dashboard</span> <span class="mx-3 text-muted">|</span>
+      Solidaridad's IVR platform lets you bridge language, literacy, and distance barriers using the power of mobile
+      communication.</h5>
   </div>
 </div>
 
@@ -51,18 +53,18 @@
             <div class="form-group mb-4">
               <div class="row">
                 <div class="col-sm-6">
-                    <label class=" font-12 font-weight-bold">Subscriber Type Summary</label>
+                  <label class=" font-12 font-weight-bold">Subscriber Type Summary</label>
                 </div>
                 <div class="col-sm-6">
                   <!-- <div class="col-sm-12 col-md-6"> -->
-                    <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id"
+                  <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id"
                     placeholder="Select Subscriber Type" [clearable]="false" [loading]="loadingSubscriberTypes"
                     [(ngModel)]="subscriberTypeId" (ngModelChange)="subscriberTypeOnChange()" class="form-control-sm">
                   </ng-select>
                   <!-- </div> -->
                 </div>
               </div>
-              
+
             </div>
           </div>
 
@@ -130,29 +132,52 @@
     </div>
 
     <div class="col-sm-12 col-md-8">
-      <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'campaign'">
+      <div class="card border shadow-sm min-card-height mb-3" *blockUI="'campaign'">
         <div class="card-body">
-          <div class="card-title text-muted font-12 font-weight-bold">Sustainability Status</div>
-          <div class="form-inline mb-3 ml-3">
-            <div class="input-group input-group-sm mr-2 mb-2">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  Start Date
-                </div>
-              </div>
-              <input type="date" class="form-control" name="startDate" [(ngModel)]="startDate">
+          <div class="row mb-3">
+            <div class="col-sm-12 col-md-6">
+              <div class="text-muted font-12 font-weight-bold float-left">Sustainability Status</div>
             </div>
-            <div class="input-group input-group-sm mr-2 mb-2">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  End Date
+            <div class="col-sm-12 col-md-6">
+              <filter class="float-right" [simple]="false" dropdownLabel="Filter" (search)="getSustainabilityStatistics($event)" [filter]="filter">
+                <div class="form-group">
+                  <input type="text" class="form-control" name="dateFrom" placeholder="Date From"
+                    onfocus="(this.type='date')" onblur="(this.type='text')" [(ngModel)]="filter.dateFrom">
                 </div>
-              </div>
-              <input type="date" class="form-control" name="endDate" [(ngModel)]="endDate">
+                <div class="form-group">
+                  <input type="text" class="form-control" name="dateTo" placeholder="Date To"
+                    onfocus="(this.type='date')" onblur="(this.type='text')" [(ngModel)]="filter.dateTo">
+                </div>
+                <div class="form-group">
+                  <ng-select [items]="areas$ | async" bindLabel="name" bindValue="id" placeholder="Select Area"
+                    [clearable]="true" [loading]="loadingAreas" [(ngModel)]="filter.areaId">
+                  </ng-select>
+                </div>
+                <div class="form-group">
+                  <ng-select [items]="pillars$ | async" bindLabel="name" bindValue="id" placeholder="Select Pillar"
+                    [clearable]="true" [loading]="loadingPillars" [(ngModel)]="filter.pillarId"
+                    (ngModelChange)="loadTopicsInPillar(filter.pillarId)">
+                  </ng-select>
+                </div>
+                <div class="form-group">
+                  <ng-select [items]="topics$ | async" bindLabel="name" bindValue="id" placeholder="Select Topic"
+                    [clearable]="true" [loading]="loadingTopics" [(ngModel)]="filter.topicId">
+                  </ng-select>
+                </div>
+                <div class="form-group">
+                  <ng-select [items]="programs$ | async" bindLabel="name" bindValue="id" placeholder="Select Program"
+                    [clearable]="true" [loading]="loadingPrograms" [(ngModel)]="filter.programId">
+                  </ng-select>
+                </div>
+                <div class="form-group">
+                  <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
+                    [clearable]="true" [loading]="loadingDistricts" [(ngModel)]="filter.districtId">
+                  </ng-select>
+                </div>
+              </filter>
             </div>
-            <button type="button" class="btn btn-primary btn-sm mb-2" (click)="getCampaignSummary(startDate, endDate)">Submit</button>
           </div>
-          
+
           <div class="row" *ngIf="susStatus$ | async as sus">
             <div class="col-sm-3 text-center text-muted">
               <i class="fa fa-dot-circle-o fa-lg text-dark-golder-rod"></i>&nbsp; Total Campaigns <br>

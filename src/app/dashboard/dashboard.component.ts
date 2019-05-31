@@ -7,6 +7,16 @@ import { DashboardService } from './dashboard.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Chart } from 'chart.js'
 
+interface SustainabilityStatusQuery {
+  areaId: number
+  pillarId: number
+  topicId: number
+  programId: number
+  districtId: number
+  dateFrom: Date
+  dateTo: Date
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -16,6 +26,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   subscriberTypes$: Observable<Lookup[]>
   loadingSubscriberTypes: boolean
+  areas$: Observable<Lookup[]>
+  loadingAreas: boolean
+  pillars$: Observable<Lookup[]>
+  loadingPillars: boolean
+  topics$: Observable<Lookup[]>
+  loadingTopics: boolean
+  programs$: Observable<Lookup[]>
+  loadingPrograms: boolean
+  districts$: Observable<Lookup[]>
+  loadingDistricts: boolean
   subscriberTypeId: number
   subscriberTypeSummary$: Observable<any>
   subscriberSummary$: Observable<any>
@@ -31,6 +51,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('piecanvas') piecanvas: ElementRef
   startDate: string
   endDate: string
+  filter = <SustainabilityStatusQuery>{}
 
   constructor(private settingsService: SettingsService,
     private dashboardService: DashboardService) { }
@@ -39,7 +60,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.initDates()
     this.loadSubscriberTypes()
     this.getSubscriberSummary()
-    this.getCampaignSummary(this.startDate, this.endDate)
+    this.loadAreas()
+    this.loadPillars()
+    this.loadPrograms()
+    this.loadDistrict()
+    this.getSustainabilityStatistics(this.filter)
   }
 
   ngAfterViewInit() {
@@ -163,9 +188,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }, () => this.blockLand.stop())
   }
 
-  private getCampaignSummary(startDate: string, endDate: string) {
+  getSustainabilityStatistics(params) {
     this.blockCampaign.start('Loading')
-    this.susStatus$ = this.dashboardService.getCampaignSummary(startDate, endDate).pipe(
+    this.susStatus$ = this.dashboardService.getSustainabilityStatistics(params).pipe(
       finalize(() => this.blockCampaign.stop())
     )
   }
@@ -178,5 +203,38 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   private initDates() {
     this.startDate = new Date().toISOString().substring(0, 10)
     this.endDate = this.increaseMonth(new Date(), 1).toISOString().substring(0, 10)
+  }
+
+  private loadAreas() {
+    this.loadingAreas = true
+    this.areas$ = this.settingsService.fetch2('area').pipe(
+      finalize(() => this.loadingAreas = false)
+    )
+  }
+
+  private loadPillars() {
+    this.loadingPillars = true
+    this.pillars$ = this.settingsService.fetch2('pillar').pipe(
+      finalize(() => this.loadingPillars = false)
+    )
+  }
+
+  loadTopicsInPillar(pillarId: number) {
+    this.loadingTopics = true
+    this.topics$ = this.dashboardService.fetchTopicsByPillar(pillarId).pipe(
+      finalize(() => this.loadingTopics = false)
+    )
+  }
+  private loadPrograms() {
+    this.loadingPrograms = true
+    this.programs$ = this.settingsService.fetch2('program').pipe(
+      finalize(() => this.loadingPrograms = false)
+    )
+  }
+  private loadDistrict() {
+    this.loadingDistricts = true
+    this.districts$ = this.settingsService.fetch2('district').pipe(
+      finalize(() => this.loadingDistricts = false)
+    )
   }
 }
