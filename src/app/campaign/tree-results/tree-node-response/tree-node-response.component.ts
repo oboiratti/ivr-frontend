@@ -29,9 +29,10 @@ export class TreeNodeResponseComponent implements OnInit {
   totalRecords = 0;
   currentPage = 1;
   size = this.pageSizes[1];
-  genders = ['Male', 'Female']
-  districts$: Observable<District>
-  groups$: Observable<Lookup>
+  genders = []
+  districts: District
+  groups: Lookup
+  responseFilter: Lookup
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -43,8 +44,9 @@ export class TreeNodeResponseComponent implements OnInit {
     this.treeId = +this.activatedRoute.snapshot.paramMap.get('tid')
     this.key = this.activatedRoute.snapshot.paramMap.get('key')
     this.getNodeResponses(<TreeNodeResponseQuery>{treeId: this.treeId, campaignId: this.campaignId, key: this.key})
-    this.loadDistricts()
-    this.loadGroups()
+    // this.loadDistricts()
+    // this.loadGroups()
+    this.getResponseFilters({treeId: this.treeId, campaignId: this.campaignId, key: this.key})
   }
 
   secondsToTime(seconds: number) {
@@ -86,11 +88,21 @@ export class TreeNodeResponseComponent implements OnInit {
     this.getNodeResponses(this.filter)
   }
 
-  private loadDistricts() {
-    this.districts$ = this.settingsService.fetch2('district')
-  }
+  // private loadDistricts() {
+  //   this.districts$ = this.settingsService.fetch2('district')
+  // }
 
-  private loadGroups() {
-    this.groups$ = this.settingsService.fetch2('group')
+  // private loadGroups() {
+  //   this.groups$ = this.settingsService.fetch2('group')
+  // }
+
+  private getResponseFilters(params) {
+    this.treeService.getNodeResponsesFilterList(params).subscribe(res => {
+      if (res.success) {
+        this.districts = res.data.districts
+        this.genders = res.data.genderList
+        this.responseFilter = res.data.responses
+      }
+    })
   }
 }

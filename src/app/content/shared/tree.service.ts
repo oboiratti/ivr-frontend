@@ -113,4 +113,8 @@ export class TreeService {
   getTreeResultsFilterList(params: { treeId: number, campaignId: number }) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/getfilterlists`, params);
   }
+
+  getNodeResponsesFilterList(params: { treeId: number, campaignId: number, key: string }) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/responsesfiltertypes`, params);
+  }
 }

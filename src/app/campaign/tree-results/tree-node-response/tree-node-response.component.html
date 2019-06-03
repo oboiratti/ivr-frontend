@@ -26,19 +26,22 @@
           <input type="text" class="form-control" name="code" placeholder="Code" [(ngModel)]="filter.code">
         </div>
         <div class="form-group">
-          <ng-select [items]="genders"
-            placeholder="Select Gender" [clearable]="true" [(ngModel)]="filter.gender">
+          <ng-select [items]="genders" placeholder="Select Gender" [clearable]="true" [(ngModel)]="filter.gender">
           </ng-select>
         </div>
         <div class="form-group">
-          <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id"
-            placeholder="Select District" [clearable]="true" [(ngModel)]="filter.districtId">
+          <ng-select [items]="districts" bindLabel="district" bindValue="districtId" placeholder="Select District"
+            [clearable]="true" [(ngModel)]="filter.districtId">
           </ng-select>
         </div>
         <div class="form-group">
-          <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id"
-            placeholder="Select Group" [clearable]="true" [(ngModel)]="filter.groupId">
+          <ng-select [items]="responseFilter" placeholder="Select Response"
+            [clearable]="true" [(ngModel)]="filter.response">
           </ng-select>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="callDate" placeholder="Call Date" onfocus="(this.type='date')"
+            onblur="(this.type='text')" [(ngModel)]="filter.callDate">
         </div>
       </filter>
     </div>

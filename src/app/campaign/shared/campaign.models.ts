@@ -93,6 +93,7 @@ export interface TreeNodeResponseQuery {
     gender: 'Male' | 'Female'
     groupId: number
     response: string
+    callDate: Date
     page: number
     size: number
 }
