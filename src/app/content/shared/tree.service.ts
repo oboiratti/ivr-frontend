@@ -4,6 +4,7 @@ import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { Numeric, Openended, Multichoice, Message, BlockNode, Connection, Tree, TreeQuery, Choice } from '../shared/tree.model';
+import { TreeResultsQuery } from 'src/app/campaign/shared/campaign.models';
 
 
 @Injectable({
@@ -76,15 +77,15 @@ export class TreeService {
     return this.http.post<ResponseObject<Tree>>(`${environment.baseUrl}/trees/savenodes`, params);
   }
 
-  getKeyMetrics(params: { treeId: number, campaignId: number }) {
+  getKeyMetrics(params: TreeResultsQuery) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/keymetrics`, params);
   }
 
-  getCompletedInteractions(params: { treeId: number, campaignId: number }) {
+  getCompletedInteractions(params: TreeResultsQuery) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/completedinteractions`, params);
   }
 
-  getNodeStats(params: { treeId: number, campaignId: number }) {
+  getNodeStats(params: TreeResultsQuery) {
     return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/nodestats`, params);
   }
 
@@ -107,5 +108,9 @@ export class TreeService {
           if (res.success) { return res.data; }
         })
       );
+  }
+
+  getTreeResultsFilterList(params: { treeId: number, campaignId: number }) {
+    return this.http.post<ResponseObject<any>>(`${environment.baseUrl}/trees/getfilterlists`, params);
   }
 }

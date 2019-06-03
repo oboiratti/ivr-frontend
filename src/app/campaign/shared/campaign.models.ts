@@ -89,8 +89,20 @@ export interface TreeNodeResponseQuery {
     phoneNumber: string
     code: string
     name: string
-    district: string
+    districtId: number
     gender: 'Male' | 'Female'
+    groupId: number
+    response: string
     page: number
     size: number
+}
+
+export interface TreeResultsQuery {
+    treeId: number
+    campaignId: number
+    key: string
+    districtId: number
+    groupId: number
+    dateFrom: Date
+    dateTo: Date
 }

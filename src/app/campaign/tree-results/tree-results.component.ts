@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } fr
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Router, ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Campaign, CampaignSchedule } from '../shared/campaign.models';
+import { Campaign, CampaignSchedule, TreeResultsQuery } from '../shared/campaign.models';
 import { Subject, Observable } from 'rxjs';
 import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
@@ -11,6 +11,8 @@ import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
 import { NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { DateHelpers } from 'src/app/shared/utils';
+import { District, Lookup } from 'src/app/shared/common-entities.model';
+import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 
 @Component({
   selector: 'app-tree-results',
@@ -43,12 +45,15 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   hoveredDate: NgbDate;
   fromDate: NgbDate;
   toDate: NgbDate;
+  filter: TreeResultsQuery
+  districts: District
+  groups: Lookup
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private calendar: NgbCalendar,
-    private campaignService: CampaignService,
-    private treeService: TreeService) {
+    private treeService: TreeService,
+    private settingsService: SettingsService) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -57,10 +62,11 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.campaignId = +this.activatedRoute.snapshot.paramMap.get('id')
     this.treeId = +this.activatedRoute.snapshot.paramMap.get('tid')
     if (this.treeId) { this.findTree(this.treeId, this.campaignId) }
-
-    this.getCompletedInteractions()
-    this.getNodeStats()
-    this.getKeyMetrics({ treeId: this.treeId, campaignId: this.campaignId })
+    this.filter = <TreeResultsQuery>{campaignId: this.campaignId, treeId: this.treeId}
+    this.getCompletedInteractions(this.filter)
+    this.getNodeStats(this.filter)
+    this.getKeyMetrics(this.filter)
+    this.getTreeResultsFilterList({ treeId: this.treeId, campaignId: this.campaignId })
   }
 
   ngAfterViewInit() {
@@ -92,7 +98,7 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
       dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
       dateTo = DateHelpers.dateFromObj(this.toDate).toISOString().substring(0, 10)
       this.dateRange = `${dateFrom} to ${dateTo}`
-      this.getKeyMetrics({ treeId: this.treeId, campaignId: this.campaignId, dateFrom: dateFrom, dateTo: dateTo })
+      this.getKeyMetrics(this.filter)
       this.dpc.close()
     } else {
       this.toDate = null;
@@ -113,6 +119,12 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isRange(date: NgbDate) {
     return date.equals(this.fromDate) || date.equals(this.toDate) || this.isInside(date) || this.isHovered(date);
+  }
+
+  performSearch(filter: TreeResultsQuery) {
+    this.getCompletedInteractions(filter)
+    this.getNodeStats(filter)
+    this.getKeyMetrics(filter)
   }
 
   private findTree(treeId: number, campaignId: number) {
@@ -279,9 +291,9 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-  private getKeyMetrics(params) {
+  private getKeyMetrics(filter: TreeResultsQuery) {
     this.blockKeyMetrics.start()
-    this.treeService.getKeyMetrics(params)
+    this.treeService.getKeyMetrics(filter)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockKeyMetrics.stop()
@@ -302,9 +314,9 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
       }, () => this.blockKeyMetrics.stop())
   }
 
-  private getCompletedInteractions() {
+  private getCompletedInteractions(filter: TreeResultsQuery) {
     this.blockCompleted.start()
-    this.treeService.getCompletedInteractions({ treeId: this.treeId, campaignId: this.campaignId })
+    this.treeService.getCompletedInteractions(filter)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockCompleted.stop()
@@ -357,9 +369,9 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
       }, () => this.blockCompleted.stop())
   }
 
-  private getNodeStats() {
+  private getNodeStats(filter: TreeResultsQuery) {
     this.blockNodeStats.start()
-    this.treeService.getNodeStats({ treeId: this.treeId, campaignId: this.campaignId })
+    this.treeService.getNodeStats(filter)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.blockNodeStats.stop()
@@ -367,5 +379,14 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
           this.nodeStats = res.data
         }
       }, () => this.blockNodeStats.stop())
+  }
+
+  private getTreeResultsFilterList(params) {
+    this.treeService.getTreeResultsFilterList(params).subscribe(res => {
+      if (res.success) {
+        this.groups = res.data.groups
+        this.districts = res.data.districts
+      }
+    })
   }
 }

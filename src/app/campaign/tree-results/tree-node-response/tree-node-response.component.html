@@ -31,8 +31,13 @@
           </ng-select>
         </div>
         <div class="form-group">
-          <ng-select [items]="districts$ | async" bindLabel="name" bindValue="name"
-            placeholder="Select District" [clearable]="true" [(ngModel)]="filter.district">
+          <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id"
+            placeholder="Select District" [clearable]="true" [(ngModel)]="filter.districtId">
+          </ng-select>
+        </div>
+        <div class="form-group">
+          <ng-select [items]="groups$ | async" bindLabel="name" bindValue="id"
+            placeholder="Select Group" [clearable]="true" [(ngModel)]="filter.groupId">
           </ng-select>
         </div>
       </filter>

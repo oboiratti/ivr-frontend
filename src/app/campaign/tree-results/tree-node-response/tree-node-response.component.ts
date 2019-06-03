@@ -8,7 +8,7 @@ import { DateHelpers } from 'src/app/shared/utils';
 import { RouteNames } from 'src/app/shared/constants';
 import { TreeNodeResponseQuery } from '../../shared/campaign.models';
 import { SettingsService } from 'src/app/app-settings/settings/settings.service';
-import { District } from 'src/app/shared/common-entities.model';
+import { District, Lookup } from 'src/app/shared/common-entities.model';
 
 @Component({
   selector: 'app-tree-node-response',
@@ -31,6 +31,7 @@ export class TreeNodeResponseComponent implements OnInit {
   size = this.pageSizes[1];
   genders = ['Male', 'Female']
   districts$: Observable<District>
+  groups$: Observable<Lookup>
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -43,6 +44,7 @@ export class TreeNodeResponseComponent implements OnInit {
     this.key = this.activatedRoute.snapshot.paramMap.get('key')
     this.getNodeResponses(<TreeNodeResponseQuery>{treeId: this.treeId, campaignId: this.campaignId, key: this.key})
     this.loadDistricts()
+    this.loadGroups()
   }
 
   secondsToTime(seconds: number) {
@@ -86,5 +88,9 @@ export class TreeNodeResponseComponent implements OnInit {
 
   private loadDistricts() {
     this.districts$ = this.settingsService.fetch2('district')
+  }
+
+  private loadGroups() {
+    this.groups$ = this.settingsService.fetch2('group')
   }
 }
