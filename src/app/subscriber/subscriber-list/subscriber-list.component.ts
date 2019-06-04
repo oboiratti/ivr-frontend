@@ -28,6 +28,8 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   currentPage = 1;
   size = this.pageSizes[1];
   subscriberTypes$: Observable<Lookup>
+  districts$: Observable<Lookup>
+  program$: Observable<Lookup>
 
   constructor(private router: Router,
     private subscriberService: SubscriberService,
@@ -36,6 +38,8 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getSubscribers(<SubscriberQuery>{});
     this.loadSubscriberTypes()
+    this.loadDistricts()
+    this.loadProgram()
   }
 
   ngOnDestroy() {
@@ -105,5 +109,13 @@ export class SubscriberListComponent implements OnInit, OnDestroy {
 
   private loadSubscriberTypes() {
     this.subscriberTypes$ = this.settingsService.fetch2('subscribertype')
+  }
+
+  private loadDistricts() {
+    this.districts$ = this.settingsService.fetch2('district')
+  }
+
+  private loadProgram() {
+    this.program$ = this.settingsService.fetch2('program')
   }
 }

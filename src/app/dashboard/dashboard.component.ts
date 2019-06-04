@@ -155,9 +155,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       if (res.success) {
         const data = [];
         const labels = [];
+        let total = 0;
         (res.data as Array<any>).map(elm => {
           data.push(elm.landArea)
           labels.push(elm.commodity + ' ' + elm.landArea + ' Hectares')
+          total += elm.landArea
         })
 
         // const data = [20, 30, 40, 50]
@@ -173,7 +175,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             ]
           },
           options: {
-            cutoutPercentage: 60,
+            cutoutPercentage: 80,
             legend: {
               position: 'bottom',
               labels: {
@@ -181,7 +183,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
               }
             },
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            elements: {
+              center: {
+                text: total,
+                color: '#797b85',
+                fontStyle: 'Helvetica',
+                sidePadding: -30
+              }
+            }
           }
         })
       }

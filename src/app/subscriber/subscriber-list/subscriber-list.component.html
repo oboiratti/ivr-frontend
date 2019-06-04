@@ -6,11 +6,24 @@
         <input type="text" class="form-control" name="phone" placeholder="Phone Number" [(ngModel)]="filter.phone">
       </div>
       <div class="form-group">
+        <input type="text" class="form-control" name="code" placeholder="Code" [(ngModel)]="filter.code">
+      </div>
+      <div class="form-group">
         <input type="text" class="form-control" name="location" placeholder="Location" [(ngModel)]="filter.location">
       </div>
       <div class="form-group">
         <ng-select [items]="subscriberTypes$ | async" bindLabel="name" bindValue="id" placeholder="Select Subscriber Type"
           [clearable]="true" [(ngModel)]="filter.subscriberTypeId">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <ng-select [items]="districts$ | async" bindLabel="name" bindValue="id" placeholder="Select District"
+          [clearable]="true" [(ngModel)]="filter.districtId">
+        </ng-select>
+      </div>
+      <div class="form-group">
+        <ng-select [items]="program$ | async" bindLabel="name" bindValue="id" placeholder="Select Program"
+          [clearable]="true" [(ngModel)]="filter.programId">
         </ng-select>
       </div>
     </filter>
