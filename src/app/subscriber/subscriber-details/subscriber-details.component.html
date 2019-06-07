@@ -9,8 +9,9 @@
   <div class="col-sm-12 col-md-10 offset-md-1">
     <div class="card">
       <div class="card-header">
-        <strong>Details</strong>
-        <button type="button" class="btn btn-secondary btn-sm rounded-circle float-right" title="Close" (click)="closeForm()">
+        <!-- <strong>Details</strong> -->
+        <button type="button" class="btn btn-secondary btn-sm rounded-circle float-right" title="Close"
+          (click)="closeForm()">
           <i class="fa fa-close"></i>
         </button>
         <button type="button" class="btn btn-primary btn-sm rounded-circle float-right" title="Edit"
@@ -18,114 +19,222 @@
           <i class="fa fa-edit"></i>
         </button>
       </div>
-      <div class="card-body p-5">
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div>Phone Number</div>
-            <div class="font-weight-bold ml-2">{{subscriber.phoneNumber}}</div>
-          </div>
+      <div class="card-body pl-5">
+        <ngb-tabset>
+          <ngb-tab>
+            <ng-template ngbTabTitle><b>Details</b></ng-template>
+            <ng-template ngbTabContent>
+              <div class="row mb-3 mt-5">
+                <div class="col-sm-12 col-md-6">
+                  <div>Phone Number</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.phoneNumber}}</div>
+                </div>
 
-          <div class="col-sm-12 col-md-6">
-            <div>Name</div>
-            <div class="font-weight-bold ml-2">{{subscriber.name}}</div>
-          </div>
-        </div>
+                <div class="col-sm-12 col-md-6">
+                  <div>Name</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.name}}</div>
+                </div>
+              </div>
 
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div>Preferred Language</div>
-            <div class="font-weight-bold ml-2">{{subscriber.language.name}}</div>
-          </div>
+              <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                  <div>Preferred Language</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.language}}</div>
+                </div>
 
-          <div class="col-sm-12 col-md-6">
-            <div>Gender</div>
-            <div class="font-weight-bold ml-2">{{subscriber.gender}}</div>
-          </div>
-        </div>
+                <div class="col-sm-12 col-md-6">
+                  <div>Gender</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.gender}}</div>
+                </div>
+              </div>
 
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div>Date of Birth</div>
-            <div class="font-weight-bold ml-2">{{subscriber.dateOfBirth | date:'mediumDate'}}</div>
-          </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div>Date of Birth</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.dateOfBirth | date:'mediumDate'}}</div>
+                </div>
 
-          <div class="col-sm-12 col-md-6">
-            <div>Highest Education Level</div>
-            <div class="font-weight-bold ml-2">{{subscriber.educationalLevel.name}}</div>
-          </div>
-        </div>
-        <hr>
+                <div class="col-sm-12 col-md-6">
+                  <div>Highest Education Level</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.educationalLevel}}</div>
+                </div>
+              </div>
+              <hr>
 
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div>Region</div>
-            <div class="font-weight-bold ml-2">{{subscriber.region.name}}</div>
-          </div>
+              <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                  <div>Region</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.region}}</div>
+                </div>
 
-          <div class="col-sm-12 col-md-6">
-            <div>District</div>
-            <div class="font-weight-bold ml-2">{{subscriber.district.name}}</div>
-          </div>
-        </div>
+                <div class="col-sm-12 col-md-6">
+                  <div>District</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.district}}</div>
+                </div>
+              </div>
 
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div>Community</div>
-            <div class="font-weight-bold ml-2">{{subscriber.location}}</div>
-          </div>
-        </div>
-        <hr>
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div>Community</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.location}}</div>
+                </div>
+              </div>
+              <hr>
 
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div>Subscriber Type</div>
-            <div class="font-weight-bold ml-2">{{subscriber.subscriberType.name}}</div>
-          </div>
+              <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                  <div>Subscriber Type</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.subscriberType}}</div>
+                </div>
 
-          <div class="col-sm-12 col-md-6">
-            <div>Primary Commodity</div>
-            <div class="font-weight-bold ml-2">{{subscriber.primaryComodity.name}}</div>
-          </div>
-        </div>
+                <div class="col-sm-12 col-md-6">
+                  <div>Primary Commodity</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.primaryComodity}}</div>
+                </div>
+              </div>
 
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div>Other Commodities</div>
-            <span class="badge badge-info mr-1"
-              *ngFor="let commodity of subscriber.otherCommodities">{{commodity.commodity}}</span>
-          </div>
+              <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                  <div>Other Commodities</div>
+                  <span class="badge badge-info mr-1"
+                    *ngFor="let commodity of subscriber.otherCommodities">{{commodity.commodity}}</span>
+                </div>
 
-          <div class="col-sm-12 col-md-6">
-            <div>Program</div>
-            <div class="font-weight-bold ml-2">{{subscriber.program.name}}</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <div>Land Size (in hectares)</div>
-            <div class="font-weight-bold ml-2">{{subscriber.landSize}}</div>
-          </div>
-        </div>
-        <hr>
+                <div class="col-sm-12 col-md-6">
+                  <div>Program</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.program}}</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div>Land Size (in hectares)</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.landSize}}</div>
+                </div>
 
-        <div class="row mb-3">
-          <div class="col-sm-12 col-md-6">
-            <div>Start Date</div>
-            <div class="font-weight-bold ml-2">{{subscriber.startDate | date:'mediumDate'}}</div>
-          </div>
+                <div class="col-sm-12 col-md-6">
+                  <div>Status</div>
+                  <div class="font-weight-bold ml-2 badge"
+                    [ngClass]="{'badge-success': subscriber.status === 'Active', 'badge-danger': subscriber.status === 'InActive'}">
+                    {{subscriber.status}}</div>
+                </div>
+              </div>
+              <hr>
 
-          <div class="col-sm-12 col-md-6">
-            <div>Receive</div>
-            <div class="font-weight-bold ml-2">{{subscriber.voice ? 'Voice' : 'SMS'}}</div>
-          </div>
-        </div>
+              <div class="row mb-3">
+                <div class="col-sm-12 col-md-6">
+                  <div>Start Date</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.startDate | date:'mediumDate'}}</div>
+                </div>
 
-        <div class="row">
-          <div class="col-sm-12">
-            <div>Subscriber Group</div>
-            <span class="badge badge-info mr-1" *ngFor="let group of subscriber.subscriberGroups">{{group.name}}</span>
-          </div>
-        </div>
+                <div class="col-sm-12 col-md-6">
+                  <div>Receive</div>
+                  <div class="font-weight-bold ml-2">{{subscriber.voice ? 'Voice' : 'SMS'}}</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div>Subscriber Group</div>
+                  <span class="badge badge-info mr-1" *ngFor="let group of subscriber.groups">{{group}}</span>
+                </div>
+              </div>
+              <hr>
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div>Campaigns</div>
+                  <span class="badge badge-info mr-1" *ngFor="let campaign of subscriber.campaigns">{{campaign.title}} -
+                    {{campaign.startDate | date:'mediumDate'}}</span>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+
+          <ngb-tab>
+            <ng-template ngbTabTitle><b>Call History</b></ng-template>
+            <ng-template ngbTabContent>
+              <div *blockUI="'calllogs'">
+                <div class="row m-3">
+                  <div class="col">
+                    <filter class="float-right" [simple]="false" dropdownLabel="Call Log Filter"
+                      (search)="getSubscriberCallLogs($event)" [filter]="filter" *ngIf="callLogFilters$ | async as callLogFilters">
+                      <div class="form-group">
+                        <ng-select [items]="callLogFilters.campaigns" bindLabel="title" bindValue="id"
+                          placeholder="Select Campaign" [clearable]="true" [(ngModel)]="filter.campaignId">
+                        </ng-select>
+                      </div>
+                      <div class="form-group">
+                        <ng-select [items]="callLogFilters.areas" bindLabel="name" bindValue="id"
+                          placeholder="Select Area" [clearable]="true" [(ngModel)]="filter.areaId">
+                        </ng-select>
+                      </div>
+                      <div class="form-group">
+                        <ng-select [items]="callLogFilters.topics" bindLabel="name" bindValue="id"
+                          placeholder="Select Topic" [clearable]="true" [(ngModel)]="filter.topicId">
+                        </ng-select>
+                      </div>
+                      <div class="form-group">
+                        <ng-select [items]="callLogFilters.pillars" bindLabel="name" bindValue="id"
+                          placeholder="Select Pillar" [clearable]="true" [(ngModel)]="filter.pillarId">
+                        </ng-select>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" class="form-control" name="callDate" placeholder="Call Date"
+                          onfocus="(this.type='date')" onblur="(this.type='text')" [(ngModel)]="filter.callDate">
+                      </div>
+                    </filter>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <!-- <div class="card"> -->
+                    <div class="table-responsive-sm">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Date Sent</th>
+                            <th>Duration (minutes)</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let callLog of callLogs$ | async; let i = index">
+                            <td>{{((currentPage - 1) * size) + i + 1}}</td>
+                            <td>{{callLog.sentAt | date:'medium'}}</td>
+                            <td>{{secondsToTime(callLog.duration) | date:'mm:ss'}}</td>
+                            <td><span [ngClass]="setStatusColor(callLog.status)">{{callLog.status}}</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <!-- </div> -->
+                  </div>
+                </div>
+
+                <div class="row mt-3">
+                  <div class="col-3">
+                    <div class="input-group mb-3 float-left">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Records per page</label>
+                      </div>
+                      <select class="custom-select" id="inputGroupSelect01" [(ngModel)]="size"
+                        (ngModelChange)="pageSizeChangeEvent()">
+                        <option *ngFor="let size of pageSizes" [ngValue]="size">{{size}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <ngb-pagination class="float-right" [(page)]="currentPage" [pageSize]="size"
+                      [collectionSize]="totalRecords" [maxSize]="5" (pageChange)="pageChanged($event)"></ngb-pagination>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-tab>
+        </ngb-tabset>
+
       </div>
     </div>
   </div>

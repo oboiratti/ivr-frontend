@@ -2,17 +2,14 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } fr
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Router, ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Campaign, CampaignSchedule, TreeResultsQuery } from '../shared/campaign.models';
+import { TreeResultsQuery } from '../shared/campaign.models';
 import { Subject, Observable } from 'rxjs';
-import { CampaignService } from '../shared/campaign.service';
 import { RouteNames } from 'src/app/shared/constants';
 import { Chart } from 'chart.js'
 import { TreeService } from 'src/app/content/shared/tree.service';
 import { Tree } from 'src/app/content/shared/tree.model';
-import { NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { DateHelpers } from 'src/app/shared/utils';
 import { District, Lookup } from 'src/app/shared/common-entities.model';
-import { SettingsService } from 'src/app/app-settings/settings/settings.service';
 
 @Component({
   selector: 'app-tree-results',
@@ -41,21 +38,13 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('hangUpCallsCanvas') hangUpCallsCanvas: ElementRef
   @ViewChild('scheduleScoreCanvas') scheduleScoreCanvas: ElementRef
   @ViewChild('completedInteractionsCanvas') completedInteractionsCanvas: ElementRef
-  @ViewChild('d') dpc: any
-  hoveredDate: NgbDate;
-  fromDate: NgbDate;
-  toDate: NgbDate;
   filter: TreeResultsQuery
   districts: District
   groups: Lookup
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
-    private calendar: NgbCalendar,
-    private treeService: TreeService,
-    private settingsService: SettingsService) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    private treeService: TreeService) {
   }
 
   ngOnInit() {
@@ -83,42 +72,6 @@ export class TreeResultsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   secondsToTime(seconds: number) {
     return DateHelpers.secondsToTime(seconds)
-  }
-
-  onDateSelection(date: NgbDate) {
-    let dateFrom = null
-    let dateTo = null
-    this.dateRange = ''
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-      dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
-      this.dateRange = dateFrom
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-      this.toDate = date;
-      dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
-      dateTo = DateHelpers.dateFromObj(this.toDate).toISOString().substring(0, 10)
-      this.dateRange = `${dateFrom} to ${dateTo}`
-      this.getKeyMetrics(this.filter)
-      this.dpc.close()
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-      dateFrom = DateHelpers.dateFromObj(this.fromDate).toISOString().substring(0, 10)
-      dateTo = null
-      this.dateRange = dateFrom
-    }
-  }
-
-  isHovered(date: NgbDate) {
-    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
-  }
-
-  isInside(date: NgbDate) {
-    return date.after(this.fromDate) && date.before(this.toDate);
-  }
-
-  isRange(date: NgbDate) {
-    return date.equals(this.fromDate) || date.equals(this.toDate) || this.isInside(date) || this.isHovered(date);
   }
 
   performSearch(filter: TreeResultsQuery) {

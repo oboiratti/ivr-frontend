@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseObject, Lookup } from 'src/app/shared/common-entities.model';
-import { Subscriber, SubscriberGroup, SubscriberQuery, SubscriberGroupQuery } from './subscriber.model';
+import { Subscriber, SubscriberGroup, SubscriberQuery, SubscriberGroupQuery, SubscriberCallLogsQuery } from './subscriber.model';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -12,6 +12,7 @@ export class SubscriberService {
 
   totalSubscribers = 0
   totalGroups = 0
+  totalCallLogs = 0
 
   constructor(private http: HttpClient) { }
 
@@ -149,5 +150,38 @@ export class SubscriberService {
 
   toggleStatus(id: number) {
     return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/subscriber/updatestatus?id=${id}`)
+  }
+
+  getSubscriberDetails(id: number) {
+    return this.http.get<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/details?id=${id}`)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            return res.data
+          }
+        })
+      )
+  }
+
+  getSubscriberCallLogs(params: SubscriberCallLogsQuery) {
+    return this.http.post<ResponseObject<Subscriber>>(`${environment.baseUrl}/subscriber/calllogs`, params)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            this.totalCallLogs = res.total
+            return res.data
+          }
+        })
+      )
+  }
+  getCallLogsFilterList(id: number) {
+    return this.http.get<ResponseObject<any>>(`${environment.baseUrl}/subscriber/calllogsfilterlists?id=${id}`)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            return res.data
+          }
+        })
+      )
   }
 }

@@ -14,6 +14,8 @@ import { SubscriberImportComponent } from './subscriber-import/subscriber-import
 import { SubscriberExportComponent } from './subscriber-export/subscriber-export.component';
 import { SubscriberDetailsComponent } from './subscriber-details/subscriber-details.component';
 import { InternationalPhoneNumberModule } from 'ngx-international-phone-number';
+import { NgbTabsetModule } from '@ng-bootstrap/ng-bootstrap';
+import { BlockUIModule } from 'ng-block-ui';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { InternationalPhoneNumberModule } from 'ngx-international-phone-number';
     FormsModule,
     ReactiveFormsModule,
     InternationalPhoneNumberModule,
-    SubscriberRoutingModule
+    NgbTabsetModule,
+    SubscriberRoutingModule,
+    BlockUIModule.forRoot()
   ]
 })
 export class SubscriberModule { }

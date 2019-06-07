@@ -43,3 +43,14 @@ export interface SubscriberUploadModel {
     NAME: string
     PHONE_NUMBER: string
 }
+
+export interface SubscriberCallLogsQuery {
+    subscriberId: number
+    areaId: number
+    topicId: number
+    pillarId: number
+    campaignId: number
+    callDate: Date
+    page: number
+    size: number
+}
