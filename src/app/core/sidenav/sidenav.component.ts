@@ -63,6 +63,6 @@ export class SidenavComponent implements OnInit {
   }
 
   private setVersion() {
-    this.version = 'v0.0.9'
+    this.version = 'v0.1.0'
   }
 }

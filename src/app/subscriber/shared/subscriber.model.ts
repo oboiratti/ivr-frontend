@@ -32,6 +32,9 @@ export interface SubscriberQuery extends ModelQuery {
     phone: string
     location: string
     subscriberTypeId: number
+    code: string
+    districtId: number
+    programId: number
 }
 
 export interface SubscriberGroupQuery extends ModelQuery {
