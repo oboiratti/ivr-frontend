@@ -1,0 +1,42 @@
+<div class="page-header">
+  <div class="p-3">
+    <span class="p-2 title">Reports</span>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <ng-select [items]="reports" bindLabel="title" placeholder="Select Report" [clearable]="false"
+        [(ngModel)]="selectedReport">
+      </ng-select>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row" *ngIf="selectedReport">
+    <div class="col-sm-12 col-md-3">
+      <app-report-filter [filters]="selectedReport.filters" (generate)="getReportData($event)"></app-report-filter>
+    </div>
+    <div class="col-sm-12 col-md-9">
+      <div class="card fixed-height">
+        <div class="card-header font-weight-bold">
+          <div class="float-left">Report Data</div>
+          <div class="float-right" *ngIf="selectedReport.data.length > 0">
+            <button class="btn btn-outline-light btn-sm border border-primary" (click)="downloadWord()">
+              <i class="fa fa-file-word-o text-primary"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm border border-success" (click)="downloadExcel()">
+              <i class="fa fa-file-excel-o text-success"></i>
+            </button>
+            <button class="btn btn-outline-light btn-sm border border-danger" (click)="downloadPdf()">
+              <i class="fa fa-file-pdf-o text-danger"></i>
+            </button>
+          </div>
+        </div>
+        <app-dynamic-table [columns]="selectedReport.columns" [data]="selectedReport.data"></app-dynamic-table>
+      </div>
+
+    </div>
+  </div>
+</div>

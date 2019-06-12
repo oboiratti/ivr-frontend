@@ -21,8 +21,8 @@ import { ContentModule } from './content/content.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { AppSettingsModule } from './app-settings/app-settings.module';
-import { SettingsService } from './app-settings/settings/settings.service';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ReportModule } from './report/report.module';
 
 
 @NgModule({
@@ -50,6 +50,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     CampaignModule,
     AppSettingsModule,
     DashboardModule,
+    ReportModule,
     CoreModule,
     BlockUIModule.forRoot()
   ],

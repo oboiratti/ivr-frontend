@@ -8,20 +8,26 @@ import { SubmenuComponent } from './submenu/submenu.component';
 import { RouterModule } from '@angular/router';
 import { FilterComponent } from './filter/filter.component';
 import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
+import { DynamicTableComponent } from './dynamic-table/dynamic-table.component';
+import { ReportFilterComponent } from './report-filter/report-filter.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    NgSelectModule
   ],
   declarations: [
     PageHeaderComponent,
     ValidateFormDirective,
     SearchComponent,
     SubmenuComponent,
-    FilterComponent
+    FilterComponent,
+    DynamicTableComponent,
+    ReportFilterComponent
   ],
   exports: [
     PageHeaderComponent,
@@ -29,6 +35,8 @@ import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
     SearchComponent,
     SubmenuComponent,
     FilterComponent,
+    DynamicTableComponent,
+    ReportFilterComponent,
     NgbPaginationModule
   ]
 })

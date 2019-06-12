@@ -60,4 +60,6 @@ export class RouteNames {
     static profile = 'profile';
     static profileForm = 'profile-form';
     static changePassword = 'change-password';
+
+    static reports = 'reports'
 }

@@ -1,0 +1,29 @@
+<form (submit)="generateReport()">
+  <div class="card">
+    <div class="card-header font-weight-bold">
+      Filter Parameters
+    </div>
+    <div class="card-body fixed-height">
+      <div class="form-group">
+        <small class="form-text text-muted">
+          *Number of records to load
+        </small>
+        <input type="number" class="form-control" placeholder="Record Size" name="size" [(ngModel)]="model.size">
+      </div>
+      <div class="form-group" *ngFor="let item of filters">
+        <!-- <label>{{item.label}}</label> -->
+        <input type="text" class="form-control" name="phone" placeholder="{{item.label}}" name="{{item.model}}"
+          [(ngModel)]="model[item.model]" *ngIf="item.type === 'text'">
+        <ng-select [items]="lookups[item.lookupStore]" bindLabel="name" bindValue="id" placeholder="{{item.label}}"
+          [clearable]="true" name="{{item.model}}" [(ngModel)]="model[item.model]" *ngIf="item.type === 'select'">
+        </ng-select>
+        <input type="text" class="form-control" name="startDate" placeholder="{{item.label}}"
+          onfocus="(this.type='date')" onblur="(this.type='text')" name="{{item.model}}" [(ngModel)]="model[item.model]"
+          *ngIf="item.type === 'date'">
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary btn-block">Generate</button>
+    </div>
+  </div>
+</form>
