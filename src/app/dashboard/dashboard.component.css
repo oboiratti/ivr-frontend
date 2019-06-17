@@ -1,10 +1,10 @@
 .header-content {
     padding: 12px;
     font-size: 13px;
-    font-weight: 500;   
+    font-weight: 500;
 }
 
-.border{
+.border {
     border-color: #e6dcb8 !important;
 }
 
@@ -35,4 +35,8 @@
 
 .text-dark-golder-rod {
     color: #bf9500 !important;
+}
+
+.centered {
+    text-align: center;
 }
