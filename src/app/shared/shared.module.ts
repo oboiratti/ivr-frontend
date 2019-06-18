@@ -11,6 +11,7 @@ import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
 import { DynamicTableComponent } from './dynamic-table/dynamic-table.component';
 import { ReportFilterComponent } from './report-filter/report-filter.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AuthorizeDirective } from './directives/authorize.directive';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     SubmenuComponent,
     FilterComponent,
     DynamicTableComponent,
-    ReportFilterComponent
+    ReportFilterComponent,
+    AuthorizeDirective
   ],
   exports: [
     PageHeaderComponent,
@@ -37,6 +39,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FilterComponent,
     DynamicTableComponent,
     ReportFilterComponent,
+    AuthorizeDirective,
     NgbPaginationModule
   ]
 })

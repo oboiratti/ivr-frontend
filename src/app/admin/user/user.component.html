@@ -2,8 +2,7 @@
     <div class="col-sm-12">
         <!-- <div class="p-2 text-uppercase form-header-text" *ngIf="showForm">User Form</div> -->
         <button type="button" class="btn btn-primary-custom border border-dark float-right" *ngIf="!showForm"
-            (click)="openForm()">New
-            User</button>
+            (click)="openForm()" appAuthorize="CanCreateUser">New User</button>
     </div>
 </div>
 <hr *ngIf="!showForm">
