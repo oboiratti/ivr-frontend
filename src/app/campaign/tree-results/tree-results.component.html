@@ -1,121 +1,112 @@
 <div class="row">
-  <div class="col-sm-12">
-    <div class="p-2 text-uppercase h6 float-left" *ngIf="treeInfo$ | async as treeInfo">
-      Results for:
-      {{treeInfo.area}} <i class="fa fa-chevron-right"></i>
-      {{treeInfo.campaign}} <i class="fa fa-chevron-right"></i>
-      {{treeInfo.title}}
-    </div>
-    <button type="button" class="btn btn-light border border-dark float-right" (click)="gotoCampaignResults()">
+    <div class="col-sm-12">
+        <div class="p-2 text-uppercase h6 float-left" *ngIf="treeInfo$ | async as treeInfo">
+            Results for: {{treeInfo.area}} <i class="fa fa-chevron-right"></i> {{treeInfo.campaign}} <i class="fa fa-chevron-right"></i> {{treeInfo.title}}
+        </div>
+        <button type="button" class="btn btn-light border border-dark float-right" (click)="gotoCampaignResults()">
       <i class="fa fa-arrow-left"></i> Back
     </button>
-  </div>
+    </div>
 </div>
 <hr>
 
 <div class="row mb-3">
-  <div class="col">
-    <filter class="float-right" [simple]="false" dropdownLabel="Advanced Filter" (search)="performSearch($event)" [filter]="filter">
-      <div class="form-group">
-        <ng-select [items]="districts" bindLabel="name" bindValue="id" placeholder="Select District"
-          [clearable]="true" [(ngModel)]="filter.districtId">
-        </ng-select>
-      </div>
-      <div class="form-group">
-        <ng-select [items]="groups" bindLabel="name" bindValue="id" placeholder="Select Group"
-          [clearable]="true" [(ngModel)]="filter.groupId">
-        </ng-select>
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="dateFrom" placeholder="Date From" onfocus="(this.type='date')"
-          onblur="(this.type='text')" [(ngModel)]="filter.dateFrom">
-      </div>
-      <div class="form-group">
-        <input type="text" class="form-control" name="dateTo" placeholder="Date To" onfocus="(this.type='date')"
-          onblur="(this.type='text')" [(ngModel)]="filter.dateTo">
-      </div>
-    </filter>
-  </div>
+    <div class="col">
+        <filter class="float-right" [simple]="false" dropdownLabel="Advanced Filter" (search)="performSearch($event)" [filter]="filter">
+            <div class="form-group">
+                <ng-select [items]="districts" bindLabel="name" bindValue="id" placeholder="Select District" [clearable]="true" [(ngModel)]="filter.districtId">
+                </ng-select>
+            </div>
+            <div class="form-group">
+                <ng-select [items]="groups" bindLabel="name" bindValue="id" placeholder="Select Group" [clearable]="true" [(ngModel)]="filter.groupId">
+                </ng-select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="dateFrom" placeholder="Date From" onfocus="(this.type='date')" onblur="(this.type='text')" [(ngModel)]="filter.dateFrom">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="dateTo" placeholder="Date To" onfocus="(this.type='date')" onblur="(this.type='text')" [(ngModel)]="filter.dateTo">
+            </div>
+        </filter>
+    </div>
 </div>
 
 <div class="row">
-  <div class="col">
-    <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'keyMetrics'">
-      <div class="card-body">
-        <div class="card-title text-muted text-uppercase mb-5 row" *ngIf="keyMetrics">
-          <div class="h6">
-            Key Metrics: {{keyMetrics.subscribers}} Subscriber(s) - {{keyMetrics.groups}} Group(s) -
-            {{keyMetrics.districts}}
-            District(s)
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container">
-              <canvas class="m-auto" #completedCallsCanvas>{{ completedCalls }}</canvas>
-            </div>
-            <div class="text-center text-muted mt-3">
-              <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Completed Sessions <br>
-            </div>
-          </div>
+    <div class="col">
+        <div class="card border shadow-sm fixed-card-height mb-3" *blockUI="'keyMetrics'">
+            <div class="card-body">
+                <div class="card-title text-muted text-uppercase mb-5 row" *ngIf="keyMetrics">
+                    <div class="h6">
+                        Key Metrics: {{keyMetrics.calls}} Call(s) - {{keyMetrics.subscribers}} Subscriber(s) - {{keyMetrics.groups}} Group(s) - {{keyMetrics.districts}} District(s)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 px-1">
+                        <div class="chart-container">
+                            <canvas class="m-auto" #completedCallsCanvas>{{ completedCalls }}</canvas>
+                        </div>
+                        <div class="text-center text-muted mt-3">
+                            <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Completed Sessions <br>
+                        </div>
+                    </div>
 
-          <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container">
-              <canvas class="m-auto" #failedCallsCanvas>{{ failedCalls }}</canvas>
-            </div>
-            <div class="text-center text-muted mt-3">
-              <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Failed Sessions <br>
-            </div>
-          </div>
+                    <div class="col-sm-6 col-md-3 px-1">
+                        <div class="chart-container">
+                            <canvas class="m-auto" #failedCallsCanvas>{{ failedCalls }}</canvas>
+                        </div>
+                        <div class="text-center text-muted mt-3">
+                            <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Failed Sessions <br>
+                        </div>
+                    </div>
 
-          <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container">
-              <canvas class="m-auto" #hangUpCallsCanvas>{{ hangUpCalls }}</canvas>
-            </div>
-            <div class="text-center text-muted mt-3">
-              <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Hang Up Sessions <br>
-            </div>
-          </div>
+                    <div class="col-sm-6 col-md-3 px-1">
+                        <div class="chart-container">
+                            <canvas class="m-auto" #hangUpCallsCanvas>{{ hangUpCalls }}</canvas>
+                        </div>
+                        <div class="text-center text-muted mt-3">
+                            <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Hang Up Sessions <br>
+                        </div>
+                    </div>
 
-          <div class="col-sm-6 col-md-3 px-1">
-            <div class="chart-container">
-              <canvas class="m-auto" #scheduleScoreCanvas>{{ scheduleScore }}</canvas>
-            </div>
-            <div class="text-center text-muted mt-3">
-              <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Schedule Score <br>
-            </div>
-          </div>
-        </div>
-        <hr>
+                    <div class="col-sm-6 col-md-3 px-1">
+                        <div class="chart-container">
+                            <canvas class="m-auto" #scheduleScoreCanvas>{{ scheduleScore }}</canvas>
+                        </div>
+                        <div class="text-center text-muted mt-3">
+                            <i class="fa fa-stop-circle fa-lg text-dodger-blue "></i>&nbsp; Schedule Score <br>
+                        </div>
+                    </div>
+                </div>
+                <hr>
 
-        <div *ngIf="keyMetrics">
-          <span class="text-uppercase mr-3">Average Duration for all Calls:
+                <div *ngIf="keyMetrics">
+                    <span class="text-uppercase mr-3">Average Duration for all Calls:
             {{secondsToTime(keyMetrics.allCallsDuration) | date:'mm:ss'}} minutes </span>
-          <span class="text-uppercase">Average Duration for completed Calls:
+                    <span class="text-uppercase">Average Duration for completed Calls:
             {{secondsToTime(keyMetrics.compCallsDuration) | date:'mm:ss'}} minutes</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <div class="row">
-  <div class="col">
-    <div class="card border shadow-sm mb-3" *blockUI="'completed'">
-      <div class="card-body">
-        <div class="card-title text-muted h6 text-uppercase">Completed Interactions per Block</div>
-        <div class="chart-container" *ngIf="completedInteractionsBar">
-          <canvas class="m-auto" #completedInteractionsCanvas>{{ completedInteractionsBar }}</canvas>
+    <div class="col">
+        <div class="card border shadow-sm mb-3" *blockUI="'completed'">
+            <div class="card-body">
+                <div class="card-title text-muted h6 text-uppercase">Completed Interactions per Block</div>
+                <div class="chart-container" *ngIf="completedInteractionsBar">
+                    <canvas class="m-auto" #completedInteractionsCanvas>{{ completedInteractionsBar }}</canvas>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <ng-container *ngFor="let stat of nodeStats">
-  <div class="row">
-    <div class="col">
-      <app-tree-node-stat [stat]="stat" [campaignId]="campaignId" [treeId]="treeId"></app-tree-node-stat>
+    <div class="row">
+        <div class="col">
+            <app-tree-node-stat [stat]="stat" [campaignId]="campaignId" [treeId]="treeId"></app-tree-node-stat>
+        </div>
     </div>
-  </div>
 </ng-container>
